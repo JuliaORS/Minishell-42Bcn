@@ -15,7 +15,7 @@ NAME		:= minishell
 HEADER      := minishell.h 
 
 SRC_DIR		:= srcs
-SRCS 		:= minishell.c create_tokens.c list_tokens.c 
+SRCS 		:= minishell.c list_tokens.c ft_lst_tokens.c list_process.c ft_lst_process.c
 SRCS		:= $(SRCS:%=$(SRC_DIR)/%)
 
 LIBFT_DIR 	:= includes/libft/
@@ -34,12 +34,12 @@ RM			:= rm -f
 	$(CC) $(CFLAGS) -I ${HEADER} -c $< -o $@
 
 # My methods
-all:	$(LIBFT) $(NAME)
+all:	subsystems $(NAME)
 
 $(NAME): $(OBJS)
 	@$(CC) $(OBJS) -o $(NAME) -lreadline -L $(LIBFT_DIR) -lft
 
-LIBFT:
+subsystems:
 	@make -s -C $(LIBFT_DIR)
 
 clean:
