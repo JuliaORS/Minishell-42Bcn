@@ -40,7 +40,7 @@ t_proc *create_chain(void)
 	static char *arg4[] = {"wc", NULL};
 	t_proc *cmd1 = create_node(arg1, "test.txt", NULL, 0);
 	t_proc *cmd2 = create_node(arg2, NULL, NULL, 1);
-	t_proc *cmd3 = create_node(arg3, NULL, NULL, 2);
+	t_proc *cmd3 = create_node(arg3, "midin.txt", "midout.txt", 2); //"midin.txt", "midout.txt"
 	t_proc *cmd4 = create_node(arg4, NULL, "outfile_test.txt", 3);
 
 	cmd1->next = cmd2;
