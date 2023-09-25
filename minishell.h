@@ -18,6 +18,8 @@
 # include <fcntl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <string.h>
+# include <errno.h>
 # include "./includes/libft/libft.h"
 
 typedef struct s_proc {
@@ -40,8 +42,13 @@ typedef struct s_exec {
 	int		*pipes;
 	pid_t	*pids;
 	int		total_pcs;
-	char	*path; 
+	char	*path;  
 }	t_exec;
+
+typedef struct s_env{
+	char	*var;
+	struct s_env *next;
+}	t_env;
 
 /*toakenisation process*/
 int		minishell(int argc, char **argv);
@@ -72,6 +79,17 @@ int		measure_list(t_proc **lst);
 void	redirect_input(int	input_fd);
 void	redirect_output(int output_fd);
 void	close_all_pipes(t_exec *exec);
+
+/*buil-tins and environtment prototypes*/
+void	builtins(char **arg, t_env *env);
+void	ft_pwd(void);
+void	ft_cd(char **arg);
+void	ft_echo(char **arg);
+t_env	*node_env(char *s);
+t_env	*list_env(char **env);
+void	free_listenv(t_env *list);
+void	ft_env(t_env *env, char **arg);
+void	ft_export(t_env **head, char **arg);
 
 /* exec total malloc : pids, pipes, valid_path,   */
 #endif
