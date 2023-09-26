@@ -1,39 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lst_process.c                                   :+:      :+:    :+:   */
+/*   ft_lst_tokens.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/20 15:25:38 by julolle-          #+#    #+#             */
-/*   Updated: 2023/09/21 19:18:58 by julolle-         ###   ########.fr       */
+/*   Created: 2023/09/19 20:24:48 by julolle-          #+#    #+#             */
+/*   Updated: 2023/09/26 15:19:56 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_proc	*ft_lstnew_proc()
+t_tok	*ft_lstnew_tok(char *str, int type)
 {
-	t_proc	*newcont;
+	t_tok	*newcont;
 
-	newcont= malloc(sizeof(t_proc));
+	newcont = malloc(sizeof(t_tok));
 	if (!newcont)
 		return (NULL);
-    newcont->arg = NULL;
-	newcont->pos = 0;
-	newcont->fd[0] = 0;
-	newcont->fd[1] = 0;
-	newcont->intype = -1;
-	newcont->infile = NULL;
-	newcont->outfile = NULL;
+	newcont->str = str;
+	newcont->type = type;
 	newcont->prev = NULL;
 	newcont->next = NULL;
 	return (newcont);
 }
 
-t_proc	*ft_lstlast_proc(t_proc *lst)
+t_tok	*ft_lstlast_tok(t_tok *lst)
 {
-	t_proc	*temp;
+	t_tok	*temp;
 
 	temp = lst;
 	if (!lst)
@@ -43,16 +38,16 @@ t_proc	*ft_lstlast_proc(t_proc *lst)
 	return (temp);
 }
 
-void	ft_lstadd_back_proc(t_proc **lst, t_proc *new)
+void	ft_lstadd_back_tok(t_tok **lst, t_tok *new)
 {
-    t_proc	*tmp;
-	
+	t_tok	*tmp;
+
 	if (lst != NULL)
 	{
 		if (*lst != NULL)
 		{
-			tmp = ft_lstlast_proc(*lst);
-			ft_lstlast_proc(*lst)->next = new;
+			tmp = ft_lstlast_tok(*lst);
+			ft_lstlast_tok(*lst)->next = new;
 			new->prev = tmp;
 		}
 		else
