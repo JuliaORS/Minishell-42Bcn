@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 17:05:20 by julolle-          #+#    #+#             */
-/*   Updated: 2023/09/26 16:38:35 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/09/27 16:05:50 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,13 @@ typedef struct s_tok {
 }	t_tok;
 
 int		minishell(int argc, char **argv);
-t_tok	*ft_lstnew_tok(char *str, int type);
-void	ft_lstadd_back_tok(t_tok **lst, t_tok *new);
+int		parsing_input(char *line, int *exit_status);
+t_tok	*ft_lstnew_tok(char *str, int type, int *exit_status);
+void	ft_lstadd_back_tok(t_tok **lst, t_tok *new, int *exit_status);
 t_proc	*ft_lstnew_proc(void);
 t_proc	*ft_lstlast_proc(t_proc *lst);
 void	ft_lstadd_back_proc(t_proc **lst, t_proc *new);
-int		create_tokens(t_tok **lst_tok, char *line);
+int		create_tokens(t_tok **lst_tok, char *line, int *exit_status);
 void	ft_print_list_tok(t_tok **lst_tok);
 void	ft_print_process(t_proc **lst_proc);
 void	create_process(t_proc **lst_proc, t_tok **lst_tok);

@@ -15,8 +15,9 @@ NAME		:= minishell
 HEADER      := minishell.h 
 
 SRC_DIR		:= srcs
-SRCS 		:= minishell.c token_list.c token_expand.c token_list_utils.c \
-				process_list.c process_list_utils.c print_free_list.c
+SRCS 		:= minishell.c parse_input.c token_list.c token_expand.c \
+				token_list_utils.c process_list.c process_list_utils.c \
+				print_free_list.c
 SRCS		:= $(SRCS:%=$(SRC_DIR)/%)
 
 LIBFT_DIR 	:= includes/libft/
