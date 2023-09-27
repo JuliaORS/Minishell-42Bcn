@@ -9,8 +9,7 @@
 /*   Updated: 2023/09/20 21:04:41 by rjobert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "../minishell.h"
+#include "../../includes/minishell.h"
 
 void	redirect_input(int	input_fd)
 {

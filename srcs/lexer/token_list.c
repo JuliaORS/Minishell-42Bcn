@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../includes/minishell.h"
 
 void	new_tok(t_tok **lst_tok, char *str, int type, int *exit_status)
 {

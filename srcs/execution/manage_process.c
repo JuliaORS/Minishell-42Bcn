@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 
-#include "../minishell.h"
+#include "../../includes/minishell.h"
 
 /*
 wait for each process to finish, starting by the last one - to make sure
@@ -105,7 +105,7 @@ void	command_process(t_proc **pcs_chain, t_exec **exec, int pos)
 		exec_trgt = exec_trgt->next;
 		i++;
 	}
-	if (exec_trgt->position == 0)
+	if (exec_trgt->pos == 0)
 	{
 		if (exec_trgt->fd[0] == -1 || exec_trgt->fd[1] == -1)
 		{
@@ -125,7 +125,7 @@ void	command_process(t_proc **pcs_chain, t_exec **exec, int pos)
 		if (exec_trgt->next != NULL)
 			redirect_output((*exec)->pipes[1]);
 	}
-	if (exec_trgt->position == (*exec)->total_pcs - 1) 
+	if (exec_trgt->pos == (*exec)->total_pcs - 1) 
 	{
 		if (exec_trgt->fd[0] == -1 || exec_trgt->fd[1] == -1)
 		{
@@ -138,7 +138,7 @@ void	command_process(t_proc **pcs_chain, t_exec **exec, int pos)
 			close(exec_trgt->fd[0]);
 		}
 		else if (exec_trgt->prev != NULL) // if no infile redirection and prev command we pipe
-			redirect_input((*exec)->pipes[(exec_trgt->position - 1) * 2]);
+			redirect_input((*exec)->pipes[(exec_trgt->pos - 1) * 2]);
 		if (exec_trgt->fd[1]) // if outfile redirect >
 		{
 			redirect_output(exec_trgt->fd[1]);
@@ -158,14 +158,14 @@ void	command_process(t_proc **pcs_chain, t_exec **exec, int pos)
 			close(exec_trgt->fd[0]);
 		}
 		else
-			redirect_input((*exec)->pipes[(exec_trgt->position - 1) * 2]);
+			redirect_input((*exec)->pipes[(exec_trgt->pos - 1) * 2]);
 		if (exec_trgt->fd[1])
 		{
 			redirect_output(exec_trgt->fd[1]);
 			close(exec_trgt->fd[1]);
 		}
 		else
-			redirect_output((*exec)->pipes[(exec_trgt->position) * 2 + 1]);
+			redirect_output((*exec)->pipes[(exec_trgt->pos) * 2 + 1]);
 	}
 	close_all_pipes(*exec);
 	build_execve(&exec_trgt, exec);

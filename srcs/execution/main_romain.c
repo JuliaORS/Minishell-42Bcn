@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../includes/minishell.h"
 
 
 // int main(int argc, char **argv, char **env)
@@ -70,7 +70,7 @@ t_proc *create_node(char **cmd, char *f_input, char *f_output, int position)
 		fd_out = 0;
 	node->fd[0] = fd_in;
 	node->fd[1] = fd_out;
-	node->position = position;
+	node->pos = position;
 	node->next = NULL;
 	node->prev = NULL;
 	return (node);

@@ -1,37 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token_list_utils.c                                 :+:      :+:    :+:   */
+/*   ft_lst_process.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/19 20:24:48 by julolle-          #+#    #+#             */
-/*   Updated: 2023/09/27 16:04:39 by julolle-         ###   ########.fr       */
+/*   Created: 2023/09/20 15:25:38 by julolle-          #+#    #+#             */
+/*   Updated: 2023/09/26 15:19:03 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../includes/minishell.h"
 
-t_tok	*ft_lstnew_tok(char *str, int type, int *exit_status)
+t_proc	*ft_lstnew_proc(void)
 {
-	t_tok	*newcont;
+	t_proc	*newcont;
 
-	newcont = malloc(sizeof(t_tok));
+	newcont = malloc(sizeof(t_proc));
 	if (!newcont)
-	{
-		*exit_status = 1;
 		return (NULL);
-	}
-	newcont->str = str;
-	newcont->type = type;
+	newcont->arg = NULL;
+	newcont->pos = 0;
+	newcont->fd[0] = 0;
+	newcont->fd[1] = 0;
+	newcont->intype = -1;
+	newcont->infile = NULL;
+	newcont->outfile = NULL;
 	newcont->prev = NULL;
 	newcont->next = NULL;
 	return (newcont);
 }
 
-t_tok	*ft_lstlast_tok(t_tok *lst)
+t_proc	*ft_lstlast_proc(t_proc *lst)
 {
-	t_tok	*temp;
+	t_proc	*temp;
 
 	temp = lst;
 	if (!lst)
@@ -41,18 +43,16 @@ t_tok	*ft_lstlast_tok(t_tok *lst)
 	return (temp);
 }
 
-void	ft_lstadd_back_tok(t_tok **lst, t_tok *new, int *exit_status)
+void	ft_lstadd_back_proc(t_proc **lst, t_proc *new)
 {
-	t_tok	*tmp;
-	
-	if (*exit_status)
-		return ;
+	t_proc	*tmp;
+
 	if (lst != NULL)
 	{
 		if (*lst != NULL)
 		{
-			tmp = ft_lstlast_tok(*lst);
-			ft_lstlast_tok(*lst)->next = new;
+			tmp = ft_lstlast_proc(*lst);
+			ft_lstlast_proc(*lst)->next = new;
 			new->prev = tmp;
 		}
 		else

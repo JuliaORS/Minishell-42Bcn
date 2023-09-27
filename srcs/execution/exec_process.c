@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
 
+#include "../../includes/minishell.h"
 
 int	exec_machine(t_proc *pcs_chain, char *env[])
 {

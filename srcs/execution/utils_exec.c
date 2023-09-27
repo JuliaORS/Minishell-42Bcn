@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 
-#include "../minishell.h"
+#include "../../includes/minishell.h"
 
 void	init_exec(t_exec *exec, t_proc *pcs_chain, char **env)
 {
