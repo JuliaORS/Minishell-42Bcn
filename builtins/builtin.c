@@ -13,31 +13,30 @@
 
 #include "../minishell.h"
 
-int main(int argc, char **argv, char **env)
-{
-	char **arg;
-	t_env	*list;
-	t_env	*head;
+// int main(int argc, char **argv, char **env)
+// {
+// 	char	**arg;
+// 	char	**dup_env;
+// 	t_exec	exec;
 
-	arg = malloc(sizeof(char *) * (argc - 1));
-	int i = -1;
-	while (++i < argc - 1)
-		arg[i] = argv[i + 1];
-	list = list_env(env);
-	head = list;
-	// while (list)
-	// {
-	// 	printf("%s\n", list->var);
-	// 	list = list->next;
-	// }
-	builtins(arg, list);
-	free(arg);
-	free_listenv(head);
-	return (0);
-}
+// 	arg = NULL;
+// 	if (argc > 1)
+// 	{
+// 		arg = malloc(sizeof(char *) * (argc - 1));
+// 		int i = -1;
+// 		while (++i < argc - 1)
+// 			arg[i] = argv[i + 1];
+// 	}
+// 	exec.env = env_dup(env);
+// 	builtins(arg, &exec);
+// 	ft_env(exec.env, NULL);
+// 	return (0);
+// }
 
-void	builtins(char **arg, t_env *env)
+void	builtins(char **arg, t_exec *exec)
 {
+	if (!arg)
+		return ;
 	if (!ft_strncmp(arg[0], "cd", 3))
 		ft_cd(arg);
 	else if (!ft_strncmp(arg[0], "pwd", 4))
@@ -45,13 +44,9 @@ void	builtins(char **arg, t_env *env)
 	else if (!ft_strncmp(arg[0], "echo", 5))
 		ft_echo(arg);
 	else if (!ft_strncmp(arg[0], "env", 5))
-		ft_env(env, arg);
+		ft_env(exec->env, arg);
 	else if (!ft_strncmp(arg[0], "export", 7))
-		ft_export(&env, arg);
-	
-	// printf("TO CHECK THE MODIFY ENV");
-	// char *quick_test[] = {"env", NULL};
-	// ft_env(env, quick_test);
+		ft_export(exec, arg);
 }
 
 void	ft_pwd(void)
@@ -121,105 +116,129 @@ void	ft_echo(char **arg)
 converting the env array to a list (for export builtin)
 front insertion
 */
-t_env	*list_env(char **env)
-{
-	int		i;
-	t_env	*env_node;
-	t_env	*list_env;
+// t_env	*list_env(char **env)
+// {
+// 	int		i;
+// 	t_env	*env_node;
+// 	t_env	*list_env;
 
 
-	if (!*env)
-		return (NULL);
-	i = -1;
-	list_env = NULL;
-	while (env[++i])
-	{
-		env_node = node_env(env[i]);
-		if (!env_node)
-		{
-			free_listenv(list_env);
-			return (NULL);
-		}
-		env_node->next = list_env;
-		list_env = env_node;
-	}
-	return (list_env);
-}
+// 	if (!*env)
+// 		return (NULL);
+// 	i = -1;
+// 	list_env = NULL;
+// 	while (env[++i])
+// 	{
+// 		env_node = node_env(env[i]);
+// 		if (!env_node)
+// 		{
+// 			free_listenv(list_env);
+// 			return (NULL);
+// 		}
+// 		env_node->next = list_env;
+// 		list_env = env_node;
+// 	}
+// 	return (list_env);
+// }
 
-t_env	*node_env(char *s)
-{
-	t_env *env_node;
+// t_env	*node_env(char *s)
+// {
+// 	t_env *env_node;
 	
-	env_node = malloc(sizeof(t_env));
-	if (!env_node)
-		return (NULL);
-	env_node->var = s;
-	env_node->next = NULL;
-	return (env_node);
-}
+// 	env_node = malloc(sizeof(t_env));
+// 	if (!env_node)
+// 		return (NULL);
+// 	env_node->var = s;
+// 	env_node->next = NULL;
+// 	return (env_node);
+// }
 
-void	free_listenv(t_env *list)
+// void	free_listenv(t_env *list)
+// {
+// 	t_env	*tmp;
+
+// 	if (!list)
+// 		return;
+// 	while(list)
+// 	{
+// 		tmp = list->next;
+// 		free(list);
+// 		list = tmp;
+// 	}
+// }
+
+void	ft_env(char **env, char **arg)
 {
-	t_env	*tmp;
+	int	i;
 
-	if (!list)
-		return;
-	while(list)
-	{
-		tmp = list->next;
-		free(list);
-		list = tmp;
-	}
-}
-
-void	ft_env(t_env *env, char **arg)
-{
-	if (arg[1])
+	if (arg && arg[1])
 	{
 		printf("env: %s: command not found\n", arg[1]);
 		return ;
 	}
-	while(env)
+	i = 0;
+	while(env && env[i] && i < count_var_env(env))
 	{
-		printf("%s\n", env->var);
-		env = env->next;
+		printf("%s\n", env[i]);
+		i++;
 	}
 	return ;
 }
 
-void	ft_export(t_env **head, char **arg)
+int	ft_export(t_exec *exec, char **arg)
 {
 		int		i;
-		int		j;
-		t_env	*env;
+		int		idx;
 
-		if (!*head)
-			return ;
-		env = *head;
+		if (!exec->env)
+			return (0);
+		i = -1;
 		if (!arg[1])
 		{
-			while(env)
-			{
-				printf("declare -x %s\n", env->var);
-				env = env->next;
-			}
-			return ;
+			while(exec->env && exec->env[++i])
+				printf("declare -x %s\n", exec->env[i]);
+			return (0);
 		}
-		if (!ft_isalpha(arg[1][0]) && arg[1][0] != '_')
+		if (!check_syntax_export(arg[1]))
+			return (0);
+		idx = search_env_var(exec->env, arg[1]);
+		if (idx == -1 )
+			exec->env = realloc_mem_env(exec->env, arg[1]);
+		else
 		{
-			
-			printf("minishell: export: `%s': not a valid identifier\n", arg[1]); //replace by official minishell name
-			//printf("THUS %i\n", ft_isalpha(arg[1][0]));
-			return ; 
+			i = 0;
+			while(arg[1][i] != '=')
+				i++;
+			free(exec->env[i]);
+			exec->env[i] = ft_substr(arg[1], i, ft_strlen(arg[1]));
+			if (!exec->env[i]) //HANDLE MALLOC DEEEPER HERE
+				return (-1);
 		}
-		i = 0;
-		while (arg[1][++i])
-			if (!ft_isalnum(arg[1][0]) && arg[1][0] != '_' && arg[1][0] != '=')
-			{
-				printf("minishell: export: `%s': not a valid identifier\n", arg[1]); //replace by official minishell name
-				return ;
-			}
-		while (env->next)
-			env = env->next;
-		env->next = node_env(arg[1]); // SHOULD WE PROTECT MALLOC HERE IN CASE OUTOFMEM ?
+		return (0);
+}
+
+int	check_syntax_export(char *var)
+{
+	int	i;
+	int	valid;
+
+	if (!var)
+		return (0);
+	if (!ft_isalpha(var[0]) && var[0] != '_')
+	{
+		printf("minishell: export: `%s': not a valid identifier\n", var); //replace by official minishell name
+		return (0);
+	}
+	i = -1;
+	valid = 0;
+	while(var[++i])
+		if (var[i] == '=')
+			valid = 1;
+	if (valid == 0)
+		return (0);
+	i = -1;
+	while (var[++i] && var[i] != '=')
+		if (!ft_isalnum(var[i]) && var[i] != '_')
+			return (0);
+	return (1);
 }

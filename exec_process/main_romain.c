@@ -13,23 +13,23 @@
 #include "../minishell.h"
 
 
-int main(int argc, char **argv, char **env)
-{
-	if (argc > 100 || argv[1])
-		return (1);
-	t_proc *h_chain = create_chain();
-	t_proc *chain = h_chain;
-	while(chain)
-	{
-		printf("process position is  %i\n", chain->position);
-		printf("	command is %s and flag is %s \n", chain->arg[0], chain->arg[1]);
-		printf("	fd inputs is %i and output is %i\n", chain->fd[0], chain->fd[1]);
-		printf("\n");
-		chain = chain->next;
-	}
-	exec_machine(h_chain, env);
-	return (0);
-}
+// int main(int argc, char **argv, char **env)
+// {
+// 	if (argc > 100 || argv[1])
+// 		return (1);
+// 	t_proc *h_chain = create_chain();
+// 	t_proc *chain = h_chain;
+// 	while(chain)
+// 	{
+// 		printf("process position is  %i\n", chain->position);
+// 		printf("	command is %s and flag is %s \n", chain->arg[0], chain->arg[1]);
+// 		printf("	fd inputs is %i and output is %i\n", chain->fd[0], chain->fd[1]);
+// 		printf("\n");
+// 		chain = chain->next;
+// 	}
+// 	exec_machine(h_chain, env);
+// 	return (0);
+// }
 t_proc *create_chain(void)
 {
 	t_proc **head;

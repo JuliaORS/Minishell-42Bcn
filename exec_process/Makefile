@@ -1,7 +1,7 @@
 CC = CC
 
 FLAGS = -MMD -I/.
-SRC =  main_romain.c exec_process.c manage_process.c utils_exec.c pipes.c
+SRC =  main_romain.c exec_process.c manage_process.c utils_exec.c pipes.c ../builtins/env_setup.c
 OBJS = $(SRC:.c=.o)
 DEPS = $(SRC:.c=.d)
 

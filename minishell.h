@@ -81,15 +81,24 @@ void	redirect_output(int output_fd);
 void	close_all_pipes(t_exec *exec);
 
 /*buil-tins and environtment prototypes*/
-void	builtins(char **arg, t_env *env);
+void	builtins(char **arg, t_exec *exec);
 void	ft_pwd(void);
 void	ft_cd(char **arg);
 void	ft_echo(char **arg);
-t_env	*node_env(char *s);
-t_env	*list_env(char **env);
-void	free_listenv(t_env *list);
-void	ft_env(t_env *env, char **arg);
-void	ft_export(t_env **head, char **arg);
+void	ft_env(char **env, char **arg);
+int		ft_export(t_exec *exec, char **arg);
+int		check_syntax_export(char *var);
 
-/* exec total malloc : pids, pipes, valid_path,   */
+/* environment setup and modification */
+char	**env_dup(char **env);
+int		count_var_env(char **env);
+void	free_env(char	**env);
+char	*extract_variable(char *key_value);
+int		search_env_var(char **env, char *var);
+char	**realloc_mem_env(char **env, char *var);
+char	**dealloc_mem_env(char **env, char *var);
+
+
+
+/* exec total malloc : pids, pipes, valid_path,  X2 in env_dup*/
 #endif
