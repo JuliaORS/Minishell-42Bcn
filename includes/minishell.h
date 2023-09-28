@@ -80,12 +80,12 @@ void	close_all_pipes(t_exec *exec);
 
 /*buil-tins and environtment prototypes*/
 void	builtins(char **arg, t_exec *exec);
-void	ft_pwd(void);
-void	ft_cd(char **arg);
-void	ft_echo(char **arg);
-void	ft_env(char **env, char **arg);
+void	ft_pwd(t_exec *exec, char **arg);
+void	ft_cd(t_exec *exec, char **arg);
+void	ft_echo(t_exec *exec, char **arg);
+void	ft_env(t_exec *exec, char **arg);
 int		ft_export(t_exec *exec, char **arg);
-int		check_syntax_export(char *var);
+int		check_syntax_var(char *var);
 
 /* environment setup and modification */
 char	**env_dup(char **env);
@@ -94,6 +94,6 @@ void	free_env(char	**env);
 char	*extract_variable(char *key_value);
 int		search_env_var(char **env, char *var);
 char	**realloc_mem_env(char **env, char *var);
-char	**dealloc_mem_env(char **env, char *var);
+char	**downsize_mem_env(char **env, char *var);
 
 #endif

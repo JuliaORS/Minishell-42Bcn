@@ -42,11 +42,11 @@ char	**realloc_mem_env(char **env, char *var)
 we allocate memory of previous array size - 1 (as we will delete
 one char *). We then we traverse the array and look at each variable 
 by extracting its characters before the '='. if they match, the term 
-we are looking for we skip it (don't copy it, otherwise wed do a deep copy).
+we are looking for we skip it (don't copy it, otherwise we do a deep copy).
 meanwhile we delete the previous environment
 
 */
-char	**dealloc_mem_env(char **env, char *var)
+char	**downsize_mem_env(char **env, char *var)
 {
 	char	**new_env;
 	char	*temp;
@@ -61,7 +61,7 @@ char	**dealloc_mem_env(char **env, char *var)
 	while (env && env[i])
 	{
 		temp = extract_variable(env[i]);
-		if (ft_strncmp(temp, var, ft_strlen(var)) ** temp)
+		if (ft_strncmp(temp, var, ft_strlen(var)) && temp)
 			i++;
 		free(temp);
 		temp = ft_strdup(env[i]);
@@ -77,26 +77,34 @@ char	**dealloc_mem_env(char **env, char *var)
 /*
 search for the variable in the environment
 and return the index if found, -1 otherwise
+1. we extract the key part of key_value pair in our key=value
+2. if this value isn't null we extratt the key of all env value
+	and if one match -> we return it's index and free all extracted
+	value (as come from ft_substring)
 */
 int	search_env_var(char **env, char *var)
 {
 	int	i;
 	char *var_extract;
+	char *target;
 
 	if (!env)
 		return (-1);
+	target = extract_variable(var);
 	i = 0;
-	while (env && env[i])
+	while (target && env && env[i])
 	{
 		var_extract = extract_variable(env[i]);
-		if (!ft_strncmp(var_extract, var, ft_strlen(var)) && var_extract)
+		if (!ft_strncmp(var_extract, target, ft_strlen(target) + 1) && var_extract)
 		{
+			free(target);
 			free(var_extract);
 			return(i);
 		}
 		free(var_extract);
 		i++;
 	}
+	free(target);
 	return (-1);
 }
 /*
@@ -119,6 +127,6 @@ char	*extract_variable(char *key_value)
 	}
 	if (len == 0)
 		return (NULL);
-	return (ft_substr(key_value, 0, len - 1));
+	return (ft_substr(key_value, 0, len));
 }
 

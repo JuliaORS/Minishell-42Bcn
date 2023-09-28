@@ -14,32 +14,19 @@
 #include "../../includes/minishell.h"
 
 
-void	builtins(char **arg, t_exec *exec)
-{
-	if (!arg)
-		return ;
-	if (!ft_strncmp(arg[0], "cd", 3))
-		ft_cd(arg);
-	else if (!ft_strncmp(arg[0], "pwd", 4))
-		ft_pwd();
-	else if (!ft_strncmp(arg[0], "echo", 5))
-		ft_echo(arg);
-	else if (!ft_strncmp(arg[0], "env", 5))
-		ft_env(exec->env, arg);
-	else if (!ft_strncmp(arg[0], "export", 7))
-		ft_export(exec, arg);
-}
-
-void	ft_pwd(void)
+void	ft_pwd(t_exec *exec, char **arg)
 {
 	char buffer[1024];
+
+	(void) arg;
+	(void) exec;
 	if (getcwd(buffer, sizeof(buffer)) != NULL)
 		printf("%s\n", buffer);
 	else	
 		perror("Error finding current directory");
 }
  
-void	ft_cd(char **arg)
+void	ft_cd(t_exec *exec, char **arg)
 {
 	char *home_path;
 
@@ -55,100 +42,7 @@ void	ft_cd(char **arg)
 	}
 }
 
-/*
-	receive arguments array and execute eco-liek function
-	1. if second argument is not -n, execute echo on all following
-		value in array of args until it is NULL. 
-	2. if second argument is -n -> flag value is 1 and no trailing nl
-		and array of words to echo start one value after in the 
-		array of arguments. words are separated by a space until the 
-		last word
-*/
-void	ft_echo(char **arg)
-{
-	int	i;
-	int	flag;
-
-	if (arg[1])
-	{
-		if (!ft_strncmp(arg[1], "-n", 3))
-		{
-			i = 2;
-			flag = 1;
-		}
-		else 
-		{
-			i = 1;
-			flag = 0;
-		}
-	}
-	while (arg[i])
-	{
-		printf("%s", arg[i++]);
-		if (arg[i])
-			printf(" ");
-	}
-	if (flag == 1)
-		return ;
-	printf("\n");
-}
-
-/*
-converting the env array to a list (for export builtin)
-front insertion
-*/
-// t_env	*list_env(char **env)
-// {
-// 	int		i;
-// 	t_env	*env_node;
-// 	t_env	*list_env;
-
-
-// 	if (!*env)
-// 		return (NULL);
-// 	i = -1;
-// 	list_env = NULL;
-// 	while (env[++i])
-// 	{
-// 		env_node = node_env(env[i]);
-// 		if (!env_node)
-// 		{
-// 			free_listenv(list_env);
-// 			return (NULL);
-// 		}
-// 		env_node->next = list_env;
-// 		list_env = env_node;
-// 	}
-// 	return (list_env);
-// }
-
-// t_env	*node_env(char *s)
-// {
-// 	t_env *env_node;
-	
-// 	env_node = malloc(sizeof(t_env));
-// 	if (!env_node)
-// 		return (NULL);
-// 	env_node->var = s;
-// 	env_node->next = NULL;
-// 	return (env_node);
-// }
-
-// void	free_listenv(t_env *list)
-// {
-// 	t_env	*tmp;
-
-// 	if (!list)
-// 		return;
-// 	while(list)
-// 	{
-// 		tmp = list->next;
-// 		free(list);
-// 		list = tmp;
-// 	}
-// }
-
-void	ft_env(char **env, char **arg)
+void	ft_env(t_exec *exec, char **arg)
 {
 	int	i;
 
@@ -158,14 +52,28 @@ void	ft_env(char **env, char **arg)
 		return ;
 	}
 	i = 0;
-	while(env && env[i] && i < count_var_env(env))
+	while(exec->env && exec->env[i] && i < count_var_env(exec->env))
 	{
-		printf("%s\n", env[i]);
+		printf("%s\n", exec->env[i]);
 		i++;
 	}
 	return ;
 }
 
+/*
+1. if there is no argument, print the environment with "declare -x" prefix
+2. check that variable follow bash syntax requirement (start with alpha or '_')
+	and following workds only alpha or "_"
+3. look if the variable already exist. if it doesn't use funciton realloc_mem_env
+	to allocate same memory of current env + 1 char * and copy our env then add 
+	variable. then free previous env
+ 3.b - Otherwise, if the var already exist, we look for the part after the '=' 
+ example :
+ runing export USER=bobmorane TERM=aventurier 123 _76
+ would change the two variable USER and TERM, display errror for 123 and 
+ do nothing for _75 (as valid syntax but no '=' sign)
+
+*/
 int	ft_export(t_exec *exec, char **arg)
 {
 		int		i;
@@ -180,25 +88,53 @@ int	ft_export(t_exec *exec, char **arg)
 				printf("declare -x %s\n", exec->env[i]);
 			return (0);
 		}
-		if (!check_syntax_export(arg[1]))
-			return (0);
-		idx = search_env_var(exec->env, arg[1]);
-		if (idx == -1 )
-			exec->env = realloc_mem_env(exec->env, arg[1]);
-		else
+		i = 0;
+		while (arg && arg[++i])
 		{
-			i = 0;
-			while(arg[1][i] != '=')
-				i++;
-			free(exec->env[i]);
-			exec->env[i] = ft_substr(arg[1], i, ft_strlen(arg[1]));
-			if (!exec->env[i]) //HANDLE MALLOC DEEEPER HERE
-				return (-1);
+			if (check_syntax_var(arg[i]))
+			{
+				idx = search_env_var(exec->env, arg[i]);
+				if (idx == -1 )
+					exec->env = realloc_mem_env(exec->env, arg[i]);
+				else
+				{
+					free(exec->env[idx]);
+					exec->env[idx] = ft_strdup(arg[i]);
+					if (!exec->env[idx]) //HANDLE MALLOC DEEEPER HERE
+						return (-1);
+				}
+			}
 		}
 		return (0);
 }
 
-int	check_syntax_export(char *var)
+/*
+int	ft_unset(t_exec *exec, char **arg)
+{
+	int	i;
+	int idx;
+
+	if (!exec || !arg || !arg[1])
+		return ;
+	i = 1;
+	while (arg[i])
+	{
+		if (check_syntax_var(arg[i]))
+		
+		idx = search_env_var(exec->env, arg[i]);
+	
+	
+}
+*/
+
+/*
+check that the string respect the variabel environment syntax
+1. doesn't start by anything else than alpahbets or '_'
+2. followed by alphanumericals or '_'
+3. contains at least one '='
+4. return an error 'invalid identifier' only if case 1 and 2 wrong
+*/
+int	check_syntax_var(char *var)
 {
 	int	i;
 	int	valid;
@@ -219,7 +155,12 @@ int	check_syntax_export(char *var)
 		return (0);
 	i = -1;
 	while (var[++i] && var[i] != '=')
+	{
 		if (!ft_isalnum(var[i]) && var[i] != '_')
+		{
+			printf("minishell: export: `%s': not a valid identifier\n", var); //replace by official minishell name
 			return (0);
+		}
+	}
 	return (1);
 }
