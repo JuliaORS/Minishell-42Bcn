@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   pipes.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rjobert <rjobert@student.42barcelo>        +#+  +:+       +#+        */
+/*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 21:04:39 by rjobert           #+#    #+#             */
-/*   Updated: 2023/09/20 21:04:41 by rjobert          ###   ########.fr       */
+/*   Updated: 2023/09/28 11:31:43 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 void	redirect_input(int	input_fd)
 {
@@ -31,18 +31,18 @@ return noting but update the exec object with an array of initialized pipes.
 if n process -> (n - 1) pipes -> (n - 1) * 2 fd pointing to mem buffer and 
 not to open file tble.
 */
-void	pipefd_calibrate(t_exec *exec)
+void	pipefd_calibrate(t_exec **exec)
 {
 	int	*pipes;
 	int	i;
 	int	nb_cmds;
 
-	if (!exec)
+	if (*exec)
 		return;
-	nb_cmds = (exec)->total_pcs;
+	nb_cmds = (*exec)->total_pcs;
 	pipes = malloc(sizeof(int) * (nb_cmds - 1) * 2);
 	if (!pipes)
-		return ;
+		return (NULL);
 	i = 0;
 	while (i < nb_cmds - 1)
 	{
@@ -50,7 +50,7 @@ void	pipefd_calibrate(t_exec *exec)
 			exit(EXIT_FAILURE);
 		i++;
 	}
-	(exec)->pipes = pipes;
+	(*exec)->pipes = pipes;
 }
 
 /*
