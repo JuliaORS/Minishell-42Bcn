@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 19:06:32 by julolle-          #+#    #+#             */
-/*   Updated: 2023/09/28 14:38:20 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/09/28 16:50:22 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void check_redir_pipes(char *line, int *i, int *err)
 	while (line[*i + 1] == ' ')
 		*i += 1;
 	if (!line[*i + 1] || line[*i + 1] == '|')
-		*err = 258;
+		msg_error_parsing(258, err);
 	if	((line[*i] == '>' || line[*i] == '<') && (line[*i + 1] == '>' || line[*i + 1] == '<'))
 		msg_error_parsing(258, err);
 }
@@ -82,7 +82,6 @@ int	manage_input(char *line, t_proc **lst_proc, int *err)
 	t_tok	*lst_tok;
 
 	lst_tok = NULL;
-	(void)lst_proc; //OJO!!
 	*err = 0;
 	if (parsing_input(line, err))
 		return (1);

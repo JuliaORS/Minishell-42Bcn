@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 19:04:54 by julolle-          #+#    #+#             */
-/*   Updated: 2023/09/28 14:53:25 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/09/28 16:56:40 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,11 +148,9 @@ int	create_process(t_proc **lst_proc, t_tok **lst_tok, int *err)
 	
 	tmp = lst_proc;
 	pos_proc = 0;
-	printf("hola\n");
 	while (*lst_tok)
 	{
 		new_process(lst_proc, *lst_tok, pos_proc++, err);
-		ft_print_process(lst_proc);
 		if (*err)
 			break ;
 		while (*lst_tok && (*lst_tok)->type != 8)

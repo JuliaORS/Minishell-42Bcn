@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 16:19:21 by julolle-          #+#    #+#             */
-/*   Updated: 2023/09/28 14:36:21 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/09/28 16:46:45 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	main(int argc, char **argv, char **env)
 		if (!ft_strncmp(line, "exit", 5))
 			break ;
 		if (!manage_input(line, &lst_proc, &err))
-		{	
+		{
 			printf("go ahead with execution!\n");
 			///EXECUTION
 		}

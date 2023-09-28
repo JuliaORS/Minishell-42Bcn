@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 10:32:06 by julolle-          #+#    #+#             */
-/*   Updated: 2023/09/28 13:44:05 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/09/28 16:53:24 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ char	*check_expand(char *str, int *i, int *err)
 
 	str_final = str;
 	j = 0;
-	while (str[*i + 1 + j] && (ft_isalnum(str[*i + j + 1]) || (str[*i + j + 1]) == '_'))
+	while (str[*i + 1 + j] && (ft_isalnum(str[*i + j + 1]) || \
+		(str[*i + j + 1]) == '_'))
 		j++;
 	if (j != 0)
 	{

@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 12:52:12 by julolle-          #+#    #+#             */
-/*   Updated: 2023/09/28 14:50:01 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/09/28 16:52:56 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,20 @@ void	create_tok_quote(t_tok **lst_tok, char *line, int *i, int *err)
 {
 	char	*pos;
 
-	if (line[*i] == '"')
+	if (line[0] == '"')
 	{
 		pos = ft_strchr(line + 1, '"');
-		new_tok(lst_tok, ft_substr(line, 0, ft_strlen(line) - ft_strlen(pos)), 0, err);
+		new_tok(lst_tok, ft_substr(line, 1, ft_strlen(line) - \
+			ft_strlen(pos) - 1), 0, err);
 	}
 	else
 	{
-		pos = ft_strchr(line, '\'');
-		new_tok(lst_tok, ft_substr(line, 0, ft_strlen(line) - ft_strlen(pos)), 1, err);
+		pos = ft_strchr(line + 1, '\'');
+		new_tok(lst_tok, ft_substr(line, 1, ft_strlen(line) - \
+			ft_strlen(pos) - 1), 1, err);
 	}
-	*i = *i + (ft_strlen(line) - ft_strlen(pos)) + 2;
+	if (!*err)
+		*i = *i + (ft_strlen(line) - ft_strlen(pos));
 }
 
 void	create_tok_redir(t_tok **lst_tok, char *line, int *i, int *err)
@@ -68,8 +71,9 @@ void	create_tok_str(t_tok **lst_tok, char *line, int *i, int *err)
 	int	len;
 
 	len = 0;
-	while(line[len] != '"' && line[len] != '\'' && line[len] != '>' && line[len] != '<' && \
-		line[len] != '|' && line[len] != ' ' && line[len] != '\\' && line[len] != '\0')
+	while (line[len] != '"' && line[len] != '\'' && line[len] != '>' && \
+		line[len] != '<' && line[len] != '|' && line[len] != ' ' && \
+		line[len] != '\\' && line[len] != '\0')
 		len++;
 	new_tok(lst_tok, ft_substr(line, 0, len), 2, err);
 	*i = *i + len - 1;
@@ -77,7 +81,7 @@ void	create_tok_str(t_tok **lst_tok, char *line, int *i, int *err)
 
 int	create_tok_slash(t_tok **lst_tok, char c, int *i, int *err)
 {
-	char *str;
+	char	*str;
 
 	str = malloc (sizeof(char) * 2);
 	if (!str)
@@ -87,7 +91,7 @@ int	create_tok_slash(t_tok **lst_tok, char c, int *i, int *err)
 	}
 	str[0] = c;
 	str[1] = '\0';
- 	new_tok(lst_tok, str, 2, err);
+	new_tok(lst_tok, str, 2, err);
 	*i = *i + 1;
 	return (0);
 }
@@ -111,9 +115,9 @@ int	create_tokens(t_tok **lst_tok, char *line, int *err)
 	while (line[i] && !*err)
 	{
 		if (line[i] == '"')
-			create_tok_quote(lst_tok, line + i + 1, &i, err);
+			create_tok_quote(lst_tok, line + i, &i, err);
 		else if (line[i] == '\'')
-			create_tok_quote(lst_tok, line + i + 1, &i, err);
+			create_tok_quote(lst_tok, line + i, &i, err);
 		else if (line[i] == '\\')
 			create_tok_slash(lst_tok, line[i + 1], &i, err);
 		else if (line[i] == '>' || line[i] == '<')
