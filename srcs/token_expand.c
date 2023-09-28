@@ -1,49 +1,66 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand_tokens.c                                    :+:      :+:    :+:   */
+/*   token_expand.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 10:32:06 by julolle-          #+#    #+#             */
-/*   Updated: 2023/09/26 15:57:01 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/09/28 13:44:05 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
-char	*check_expand(char *str, int *i)
+char	*get_str_exp(char *str, int *i, int j, int *err)
+{
+	char	*sub_str;
+	char	*str_exp;
+	char	*str_final;
+
+	sub_str = ft_substr(str, *i + 1, j);
+	if (!sub_str)
+	{
+		msg_error_parsing(12, err);
+		return (NULL);
+	}
+	str_exp = getenv(sub_str); //utilitzar el nostre ft_getenv
+	if (!str_exp)
+	{
+		str_final = ft_strjoin(ft_substr(str, 0, *i), ft_substr(str, \
+				*i + 1 + j, ft_strlen(str) - *i - j));
+		*i = *i - 1;
+	}
+	else
+	{
+		str_final = ft_strjoin(ft_substr(str, 0, *i), ft_strjoin(str_exp, \
+			ft_substr(str, *i + 1 + j, ft_strlen(str) - *i - j)));
+		*i = *i + ft_strlen(str_exp) - 1;
+	}
+	free(sub_str);
+	return (str_final);
+}
+
+char	*check_expand(char *str, int *i, int *err)
 {
 	int		j;
-	char	*str_exp;
 	char	*str_final;
 
 	str_final = str;
 	j = 0;
 	while (str[*i + 1 + j] && (ft_isalnum(str[*i + j + 1]) || (str[*i + j + 1]) == '_'))
-			j++;
+		j++;
 	if (j != 0)
 	{
-		str_exp = getenv(ft_substr(str, *i + 1, j)); //utilitzar el nostre ft_getenv
-		if (!str_exp)
+		str_final = get_str_exp(str, i, j, err);
+		if (!str_final)
 		{
-			str_final = ft_strjoin(ft_substr(str, 0, *i), ft_substr(str, \
-				*i + 1 + j, ft_strlen(str) - *i - j));
-			*i = *i - 1;
-		}
-		else
-		{	
-			str_final = ft_strjoin(ft_substr(str, 0, *i), ft_strjoin(str_exp, \
-				ft_substr(str, *i + 1 + j, ft_strlen(str) - *i - j)));
-			*i = *i + ft_strlen(str_exp) - 1;
+			msg_error_parsing(12, err);
+			return (NULL);
 		}
 	}
+	free (str);
 	return (str_final);
-}
-
-void	free_node_tok(t_tok *node_tok)
-{
-	free(node_tok);
 }
 
 void	remove_token(t_tok **lst_tok, t_tok **start)
@@ -73,10 +90,10 @@ void	remove_token(t_tok **lst_tok, t_tok **start)
 		(*lst_tok) = NULL;
 		*start = NULL;
 	}
-	free_node_tok(tmp);
+	free(tmp);
 }
 
-void	expand_tokens(t_tok **lst_tok)
+void	expand_tokens(t_tok **lst_tok, int *err)
 {
 	int		i;
 	t_tok	*tmp;
@@ -90,7 +107,7 @@ void	expand_tokens(t_tok **lst_tok)
 			while ((*lst_tok)->str[i])
 			{
 				if ((*lst_tok)->str[i] == '$')
-					(*lst_tok)->str = check_expand((*lst_tok)->str, &i);
+					(*lst_tok)->str = check_expand((*lst_tok)->str, &i, err);
 				i++;
 			}
 			if (ft_strlen((*lst_tok)->str) == 0)

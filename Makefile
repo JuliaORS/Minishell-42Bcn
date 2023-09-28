@@ -12,12 +12,12 @@
 
 NAME		:= minishell
 
-HEADER      := minishell.h 
+HEADER      := includes/
 
 SRC_DIR		:= srcs
 SRCS 		:= minishell.c parse_input.c token_list.c token_expand.c \
 				token_list_utils.c process_list.c process_list_utils.c \
-				print_free_list.c
+				print_free_list.c error_parsing.c
 SRCS		:= $(SRCS:%=$(SRC_DIR)/%)
 
 LIBFT_DIR 	:= includes/libft/

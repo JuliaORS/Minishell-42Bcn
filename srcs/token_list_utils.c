@@ -6,20 +6,20 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 20:24:48 by julolle-          #+#    #+#             */
-/*   Updated: 2023/09/27 16:04:39 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/09/28 14:44:22 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
-t_tok	*ft_lstnew_tok(char *str, int type, int *exit_status)
+t_tok	*ft_lstnew_tok(char *str, int type, int *err)
 {
 	t_tok	*newcont;
 
 	newcont = malloc(sizeof(t_tok));
 	if (!newcont)
 	{
-		*exit_status = 1;
+		msg_error_parsing(12, err);
 		return (NULL);
 	}
 	newcont->str = str;
@@ -41,11 +41,11 @@ t_tok	*ft_lstlast_tok(t_tok *lst)
 	return (temp);
 }
 
-void	ft_lstadd_back_tok(t_tok **lst, t_tok *new, int *exit_status)
+void	ft_lstadd_back_tok(t_tok **lst, t_tok *new, int *err)
 {
 	t_tok	*tmp;
 	
-	if (*exit_status)
+	if (*err)
 		return ;
 	if (lst != NULL)
 	{

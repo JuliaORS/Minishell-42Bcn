@@ -1,24 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lst_process.c                                   :+:      :+:    :+:   */
+/*   process_list_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 15:25:38 by julolle-          #+#    #+#             */
-/*   Updated: 2023/09/26 15:19:03 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/09/28 14:48:00 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
-t_proc	*ft_lstnew_proc(void)
+t_proc	*ft_lstnew_proc(int *err)
 {
 	t_proc	*newcont;
 
 	newcont = malloc(sizeof(t_proc));
 	if (!newcont)
+	{
+		msg_error_parsing(12, err);
 		return (NULL);
+	}
 	newcont->arg = NULL;
 	newcont->pos = 0;
 	newcont->fd[0] = 0;
@@ -43,10 +46,12 @@ t_proc	*ft_lstlast_proc(t_proc *lst)
 	return (temp);
 }
 
-void	ft_lstadd_back_proc(t_proc **lst, t_proc *new)
+void	ft_lstadd_back_proc(t_proc **lst, t_proc *new, int *err)
 {
 	t_proc	*tmp;
 
+	if (*err)
+		return ;
 	if (lst != NULL)
 	{
 		if (*lst != NULL)

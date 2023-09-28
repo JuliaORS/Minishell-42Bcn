@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 17:05:20 by julolle-          #+#    #+#             */
-/*   Updated: 2023/09/28 11:30:01 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/09/28 14:48:56 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <fcntl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include "includes/libft/libft.h"
+# include "libft/libft.h"
 
 typedef struct s_proc {
 	char			**arg;
@@ -47,15 +47,19 @@ typedef struct s_exec {
 }	t_exec;
 
 /*toakenisation process*/
-int		minishell(int argc, char **argv);
-t_tok	*ft_lstnew_tok(char *str, int type);
-void	ft_lstadd_back_tok(t_tok **lst, t_tok *new);
-t_proc	*ft_lstnew_proc();
+int		manage_input(char *line, t_proc **lst_proc, int *err);
+int		create_tokens(t_tok **lst_tok, char *line, int *err);
+t_tok	*ft_lstnew_tok(char *str, int type, int *err);
+t_tok	*ft_lstlast_tok(t_tok *lst);
+void	ft_lstadd_back_tok(t_tok **lst, t_tok *new, int *err);
+void	expand_tokens(t_tok **lst_tok, int *err);
+void	ft_print_list_tok(t_tok **lst_tok);
+int		msg_error_parsing(int type, int *err);
+int		create_process(t_proc **lst_proc, t_tok **lst_tok, int *err);
+t_proc	*ft_lstnew_proc(int *err);
 t_proc	*ft_lstlast_proc(t_proc *lst);
-void	ft_lstadd_back_proc(t_proc **lst, t_proc *new);
-int		create_tokens(t_tok **lst_tok, char *line);
-void	ft_print_list(t_tok *lst_tok);
-void	ft_print_process(t_proc *lst_proc);
+void	ft_lstadd_back_proc(t_proc **lst, t_proc *new, int *err);
+void	ft_print_process(t_proc **lst_proc);
 void	sep_process(t_proc **lst_proc, t_tok **lst_tok);
 
 

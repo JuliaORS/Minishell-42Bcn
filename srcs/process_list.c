@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   list_process.c                                     :+:      :+:    :+:   */
+/*   process_list.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 19:04:54 by julolle-          #+#    #+#             */
-/*   Updated: 2023/09/26 15:47:51 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/09/28 14:53:25 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 void	create_outfile(t_proc *lst_proc, t_tok **lst_tok)
 {
@@ -93,7 +93,7 @@ void	create_array(t_proc *lst_proc, t_tok **lst_tok, int *i)
 	*i = *i + 1;
 }
 
-void	create_node_process(t_proc **lst_proc, t_tok **lst_tok, int pos, t_proc **proc)
+void	create_node_process(t_proc **lst_proc, t_tok **lst_tok, int pos, t_proc **proc, int *err)
 {
 	int		n_arg;
 	t_tok	*tmp;
@@ -110,21 +110,23 @@ void	create_node_process(t_proc **lst_proc, t_tok **lst_tok, int pos, t_proc **p
 		*lst_tok = (*lst_tok)->next;
 	}
 	*lst_tok = tmp;
-	ft_lstadd_back_proc(lst_proc, ft_lstnew_proc());
+	ft_lstadd_back_proc(lst_proc, ft_lstnew_proc(err), err);
 	*proc = ft_lstlast_proc(*lst_proc);
 	(*proc)->pos = pos;
 	(*proc)->arg = malloc(sizeof(char *) * (n_arg + 1));
+	if (!(*proc)->arg)
+		msg_error_parsing(12, err);
 	(*proc)->arg[n_arg] = NULL;
 }
 
-void	new_process(t_proc **lst_proc, t_tok *lst_tok, int pos)
+void	new_process(t_proc **lst_proc, t_tok *lst_tok, int pos, int *err)
 {
 	t_proc	*proc;
 	int		pos_str;
 
 	proc = NULL;
 	pos_str = 0;
-	create_node_process(lst_proc, &lst_tok, pos, &proc);
+	create_node_process(lst_proc, &lst_tok, pos, &proc, err);
 	while (lst_tok && lst_tok->type != 8)
 	{
 		if (lst_tok->type == 4 || lst_tok->type == 5)
@@ -139,17 +141,26 @@ void	new_process(t_proc **lst_proc, t_tok *lst_tok, int pos)
 	}
 }
 
-void	create_process(t_proc **lst_proc, t_tok **lst_tok)
+int	create_process(t_proc **lst_proc, t_tok **lst_tok, int *err)
 {
 	int		pos_proc;
-
+	t_proc	**tmp;
+	
+	tmp = lst_proc;
 	pos_proc = 0;
+	printf("hola\n");
 	while (*lst_tok)
 	{
-		new_process(lst_proc, *lst_tok, pos_proc++);
+		new_process(lst_proc, *lst_tok, pos_proc++, err);
+		ft_print_process(lst_proc);
+		if (*err)
+			break ;
 		while (*lst_tok && (*lst_tok)->type != 8)
 			*lst_tok = (*lst_tok)->next;
 		if ((*lst_tok))
 			*lst_tok = (*lst_tok)->next;
 	}
+	lst_proc = tmp;
+	//ft_print_process(lst_proc);
+	return (*err);
 }

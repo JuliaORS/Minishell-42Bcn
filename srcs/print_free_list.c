@@ -6,11 +6,11 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 12:54:07 by julolle-          #+#    #+#             */
-/*   Updated: 2023/09/26 15:32:07 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/09/28 12:08:55 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 void	free_lst_proc(t_proc **lst_proc)
 {
