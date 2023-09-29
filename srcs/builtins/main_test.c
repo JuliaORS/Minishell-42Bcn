@@ -15,8 +15,8 @@ void	builtins(char **arg, t_exec *exec)
 		ft_env(exec, arg);
 	else if (!ft_strncmp(arg[0], "export", 7))
 		ft_export(exec, arg);
-	//else if (!ft_strncmp(arg[0], "unset", 6))
-	//	ft_unset(exec, arg);
+	else if (!ft_strncmp(arg[0], "unset", 6))
+		ft_unset(exec, arg);
 }
 
 int main(int argc, char **argv, char **env)
@@ -38,7 +38,7 @@ int main(int argc, char **argv, char **env)
 	exec.env = env_dup(env);
 	ft_env(&exec, NULL);
 	builtins(arg, &exec);
-	printf("\n\n\n ============ now after the unset ======== \n\n\n");
+	printf("\n\n\n ============ now after builtin ======== \n\n\n");
 	ft_env(&exec, NULL);
 	return (0);
 }

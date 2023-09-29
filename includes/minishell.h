@@ -18,6 +18,7 @@
 # include <fcntl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <sys/stat.h>
 # include "./libft/libft.h"
 
 typedef struct s_proc {
@@ -80,12 +81,12 @@ void	close_all_pipes(t_exec *exec);
 
 /*buil-tins and environtment prototypes*/
 void	builtins(char **arg, t_exec *exec);
-void	ft_pwd(t_exec *exec, char **arg);
-void	ft_cd(t_exec *exec, char **arg);
-void	ft_echo(t_exec *exec, char **arg);
-void	ft_env(t_exec *exec, char **arg);
+int		ft_pwd(t_exec *exec, char **arg);
+int		ft_cd(t_exec *exec, char **arg);
+int		ft_echo(t_exec *exec, char **arg);
+int		ft_env(t_exec *exec, char **arg);
 int		ft_export(t_exec *exec, char **arg);
-int		check_syntax_var(char *var);
+int		ft_unset(t_exec *exec, char **arg);
 
 /* environment setup and modification */
 char	**env_dup(char **env);
@@ -93,7 +94,9 @@ int		count_var_env(char **env);
 void	free_env(char	**env);
 char	*extract_variable(char *key_value);
 int		search_env_var(char **env, char *var);
-char	**realloc_mem_env(char **env, char *var);
-char	**downsize_mem_env(char **env, char *var);
+char	**realloc_env(char **env, char *var);
+char	**downsize_env(char **env, int idx, int i, int j);
+char    *ft_getenv(char **env, char *target);
+void	replace_env_var(char **env, char *target, char *replace);
 
 #endif

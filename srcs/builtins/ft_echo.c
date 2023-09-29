@@ -37,7 +37,7 @@ int	check_arg_flag(char **arg)
     3. words are separated by a space until the 
 		last word
 */
-void	ft_echo(t_exec *exec, char **arg)
+int	ft_echo(t_exec *exec, char **arg)
 {
 	int	i;
 	int	flag;
@@ -57,7 +57,7 @@ void	ft_echo(t_exec *exec, char **arg)
 			i++;
 		}
 	}
-	if (flag == 1)
-		return ;
-	printf("\n");
+	if (flag == 0)
+		printf("\n");
+	return (0);
 }
