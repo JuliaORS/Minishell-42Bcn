@@ -21,6 +21,12 @@
 # include <sys/stat.h>
 # include "./libft/libft.h"
 
+# define EBADF 9
+# define ENOMEM 12
+# define NOPERM 126
+# define CMNOFOUND 127
+# define STDIN	0
+
 typedef struct s_proc {
 	char			**arg;
 	int				pos;
@@ -71,6 +77,9 @@ char	*exec_path(char **all_path, t_proc *exec_trgt);
 void	build_execve(t_proc **exec_trgt, t_exec **exec);
 void	exec_bash(t_proc **exec_trgt, t_exec **exec);
 char	**search_path(char *env[]);
+void	first_process(t_proc *exec_trgt, t_exec **exec);
+void	last_process(t_proc *exec_trgt, t_exec **exec);
+void	mid_process(t_proc *exec_trgt, t_exec **exec);
 
 /*utils for process and env*/
 void	init_exec(t_exec *exec, t_proc *pcs_chain, char **env);
@@ -78,6 +87,11 @@ int		measure_list(t_proc **lst);
 void	redirect_input(int	input_fd);
 void	redirect_output(int output_fd);
 void	close_all_pipes(t_exec *exec);
+void	free_chain(t_proc **pcs_chain);
+void	free_arg(char **arg);
+void	free_exec(t_exec **exec);
+int		error_msg(char *msg, int nb, t_exec *exec, t_proc *pcs);
+
 
 /*buil-tins and environtment prototypes*/
 void	builtins(char **arg, t_exec *exec);

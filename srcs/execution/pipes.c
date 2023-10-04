@@ -10,17 +10,28 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "../../includes/minishell.h"
+#include <string.h>
+#include <errno.h>
 
 void	redirect_input(int	input_fd)
 {
 	if (dup2(input_fd, STDIN_FILENO) == -1)
-		return ; // later on treat here exit case and clean mem
+	{
+		//printf("\n process with bugs fd input is %i and duped is %i\n", input_fd, STDIN_FILENO);
+		//printf("\n process with bugs is %i\n", exec_trgt->pos);
+		//perror("what is the issue");
+		//printf("bug is %s\n",strerror(errno));
+		//error_msg("dup2 input: bad file descriptor", EBADF, NULL, NULL); //return ;
+		return;
+	}
+	return ; // later on treat here exit case and clean mem
 }
 
 void	redirect_output(int output_fd)
 {
 	if (dup2(output_fd, STDOUT_FILENO) == -1)
-		return ; // same as above
+		error_msg("dup2 output: bad file descriptor", EBADF, NULL, NULL);
+	return ;
 }
 
 /*

@@ -61,6 +61,17 @@ char	**search_path(char *env[])
 	return (path_matrix);
 }
 
+/* 
+now let's look for a command line function in the path and 
+return the path exec 
+ 1 - we iterate over all path (if there are some) and
+ use strjoin to to first go from cmd (like cat) to a
+ cmd path (like /cat) and use strjoin again on a potential path
+ 2 - we free free the path_cmd and we now use the access function 
+ to check if path/cmd  (like /bin/cat) exist with F_OK. 
+ 3 - if it does, we return (and free in another function) else
+ we free and move to next potential from in all_path 
+ */
 char	*exec_path(char **all_path, t_proc *exec_trgt)
 {
 	char	*test_path;
@@ -101,8 +112,7 @@ void	exec_bash(t_proc **exec_trgt, t_exec **exec)
 	if (access((*exec)->path, F_OK) == 0)
 	{
 		if (access((*exec)->path, X_OK) != 0)
-			exit(EXIT_FAILURE);
-			//exit_error(126, strerror(errno), (*exec_trgt)->args[0], p_cmd);
+			error_msg("Permission denied", NOPERM, *exec, *exec_trgt);
 		if (execve((*exec)->path, (*exec_trgt)->arg, (*exec)->env) == -1)
 			exit(EXIT_FAILURE);
 			//exit_error(errno, strerror(errno), (*p_cmd)->args[0], p_cmd);
@@ -113,6 +123,5 @@ void	exec_bash(t_proc **exec_trgt, t_exec **exec)
 			exit(EXIT_FAILURE);
 			//exit_error(errno, strerror(errno), (*p_cmd)->args[0], p_cmd);
 	}
-	exit(EXIT_FAILURE);
-	//exit_error(127, "command not found", (*exec_trgt)->arg[0], p_cmd);
+	error_msg("command not found", CMNOFOUND, *exec, *exec_trgt);
 }

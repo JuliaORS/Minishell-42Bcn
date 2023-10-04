@@ -55,7 +55,7 @@ void	launch_process(t_exec *exec, t_proc **pcs_chain)
 	if (!pids)
 		return ; //extra clean exit later on
 	(exec)->pids = pids;
-	printf("there is an env and it is : %s \n", exec->env[2]);
+	//printf("there is an env and it is : %s \n", exec->env[2]);
 	i = 0;
 	while (i < (exec)->total_pcs && *pcs_chain)
 	{
@@ -71,12 +71,12 @@ void	launch_process(t_exec *exec, t_proc **pcs_chain)
 	return ;
 }
 /*
-we first check no empty data structure, then traverse to then node
+we first check no empty data structure, then traverse to the node
 being our execution target.
 - if this is the first node and a file descriptor is open (due to a 
-< caught during parsing and valid file) : we redirect the input (stdin)
-to this fd. if there is a following command, we redirect output (stdout)
-to the corresponding piep (pipe[1]) -> see for pipe sync. we then close the 
+< caught during parsing and valid file) : we redirect the stdin
+to this fd. if there is a following command, we redirect stdout to 
+the corresponding pipe (pipe[1]) -> see for pipe sync. we then close the 
 fd.
 - if this is the last command (position == nb_cmmd - 1 bcause of array pos):
 if there is a fd for output and we redirect out to it. fi there were a cmd
@@ -86,10 +86,6 @@ stdin redirect to read of previous pipe and stdout redirect to write
 of next pipe. arithmetic explained outside of this program
 - we then close all pipes to avoid hanging pipes
 - execute the command
-WARNING : REDIRECTION NOT DONE :
-	- if > fd[1] in first command
-	- if < fd[0] or > fd[1] in mid command
-	- if < fd[0] in last command
 */
 void	command_process(t_proc **pcs_chain, t_exec **exec, int pos)
 {
@@ -106,67 +102,11 @@ void	command_process(t_proc **pcs_chain, t_exec **exec, int pos)
 		i++;
 	}
 	if (exec_trgt->pos == 0)
-	{
-		if (exec_trgt->fd[0] == -1 || exec_trgt->fd[1] == -1)
-		{
-			perror("Minishell : bad file descriptor ERROR TO CUSTOM");
-			exit(EXIT_FAILURE);
-		}
-		if (exec_trgt->fd[0]) // if infile redirect < 
-		{
-			redirect_input(exec_trgt->fd[0]);
-			close(exec_trgt->fd[0]);
-		}
-		if (exec_trgt->fd[1]) // if outfile redirect >
-		{
-			redirect_output(exec_trgt->fd[1]);
-			close(exec_trgt->fd[1]);
-		}
-		if (exec_trgt->next != NULL)
-			redirect_output((*exec)->pipes[1]);
-	}
-	if (exec_trgt->pos == (*exec)->total_pcs - 1) 
-	{
-		if (exec_trgt->fd[0] == -1 || exec_trgt->fd[1] == -1)
-		{
-			perror("Minishell : bad file descriptor ERROR TO CUSTOM");
-			exit(EXIT_FAILURE);
-		}
-		if (exec_trgt->fd[0]) // if infile redirect < 
-		{
-			redirect_input(exec_trgt->fd[0]);
-			close(exec_trgt->fd[0]);
-		}
-		else if (exec_trgt->prev != NULL) // if no infile redirection and prev command we pipe
-			redirect_input((*exec)->pipes[(exec_trgt->pos - 1) * 2]);
-		if (exec_trgt->fd[1]) // if outfile redirect >
-		{
-			redirect_output(exec_trgt->fd[1]);
-			close(exec_trgt->fd[1]);
-		}
-	}
+		first_process(exec_trgt, exec);
+	if (exec_trgt->pos == (*exec)->total_pcs - 1)
+		last_process(exec_trgt, exec);
 	else
-	{
-		if (exec_trgt->fd[0] == -1 || exec_trgt->fd[1] == -1)
-		{
-			perror("Minishell : bad file descriptor ERROR TO CUSTOM");
-			exit(EXIT_FAILURE);
-		}
-		if (exec_trgt->fd[0])
-		{
-			redirect_input(exec_trgt->fd[0]);
-			close(exec_trgt->fd[0]);
-		}
-		else
-			redirect_input((*exec)->pipes[(exec_trgt->pos - 1) * 2]);
-		if (exec_trgt->fd[1])
-		{
-			redirect_output(exec_trgt->fd[1]);
-			close(exec_trgt->fd[1]);
-		}
-		else
-			redirect_output((*exec)->pipes[(exec_trgt->pos) * 2 + 1]);
-	}
+		mid_process(exec_trgt, exec);
 	close_all_pipes(*exec);
 	build_execve(&exec_trgt, exec);
 	perror("execve failed"); // Print an error message
@@ -196,11 +136,10 @@ inputs for execve are path (/bin/cat), an array of command info
 void	build_execve(t_proc **exec_trgt, t_exec **exec)
 {
 	char	**env_paths;
-	//char	*valid_path;
 
 	if (!*exec_trgt)
 		return ;
-	env_paths = search_path((*exec)->env); // Minishell doesn't have any so far : how do we do ? otherwise search_path like in pipex
+	env_paths = search_path((*exec)->env);
 	if ((*exec_trgt)->arg[0][0] == '/') //absolute path handled here but no relative path
 		(*exec)->path = (*exec_trgt)->arg[0];
 	else
@@ -211,14 +150,62 @@ void	build_execve(t_proc **exec_trgt, t_exec **exec)
 
 }
 
-/* 
-now let's look for a command line function in the path and 
-return the path exec 
- 1 - we iterate over all path (if there are some) and
- use strjoin to to first go from cmd (like cat) to a
- cmd path (like /cat) and use strjoin again on a potential path
- 2 - we free free the path_cmd and we now use the access function 
- to check if path/cmd  (like /bin/cat) exist with F_OK. 
- 3 - if it does, we return (and free in another function) else
- we free and move to next potential from in all_path 
- */
+void	first_process(t_proc *exec_trgt, t_exec **exec)
+{
+	if (!exec_trgt || !*exec)
+		return ;
+	if (exec_trgt->fd[0] == -1 || exec_trgt->fd[1] == -1)
+		error_msg("bad file descriptor", EBADF, *exec, exec_trgt);
+	if (exec_trgt->fd[0]) // if infile redirect < 
+	{
+		redirect_input(exec_trgt->fd[0]);
+		close(exec_trgt->fd[0]);
+	}
+	if (exec_trgt->fd[1]) // if outfile redirect >
+	{
+		redirect_output(exec_trgt->fd[1]);
+		close(exec_trgt->fd[1]);
+	}
+	if (exec_trgt->next != NULL)
+		redirect_output((*exec)->pipes[1]);
+}
+
+void	last_process(t_proc *exec_trgt, t_exec **exec)
+{
+	if (!exec_trgt || !*exec)
+		return ;
+	if (exec_trgt->fd[0] == -1 || exec_trgt->fd[1] == -1)
+		error_msg("bad file descriptor", EBADF, *exec, exec_trgt);
+	if (exec_trgt->fd[0]) // if infile redirect < 
+	{
+		redirect_input(exec_trgt->fd[0]);
+		close(exec_trgt->fd[0]);
+	}
+	else if (exec_trgt->prev != NULL) // if no infile redirection and prev command we pipe
+		redirect_input((*exec)->pipes[(exec_trgt->pos - 1) * 2]);
+	if (exec_trgt->fd[1]) // if outfile redirect >
+	{
+		redirect_output(exec_trgt->fd[1]);
+		close(exec_trgt->fd[1]);
+	}
+}
+
+void	mid_process(t_proc *exec_trgt, t_exec **exec)
+{
+	if (exec_trgt->fd[0] == -1 || exec_trgt->fd[1] == -1)
+		error_msg("bad file descriptor", EBADF, *exec, exec_trgt);
+	if (exec_trgt->fd[0])
+	{
+		redirect_input(exec_trgt->fd[0]);
+		close(exec_trgt->fd[0]);
+	}
+	else
+		redirect_input((*exec)->pipes[(exec_trgt->pos - 1) * 2]);
+	if (exec_trgt->fd[1])
+	{
+		redirect_output(exec_trgt->fd[1]);
+		close(exec_trgt->fd[1]);
+	}
+	else
+		redirect_output((*exec)->pipes[(exec_trgt->pos) * 2 + 1]);
+	}
