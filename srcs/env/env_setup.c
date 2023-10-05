@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../includes/minishell.h"
 
 /*
 duplicate envrionment from main to run our minishell
@@ -80,3 +80,41 @@ void	free_env(char	**env)
 		free(env);
 }
 
+/*
+builtin to display current environement
+*/
+int	ft_env(t_exec *exec, char **arg)
+{
+	int	i;
+
+	if (arg && arg[1])
+	{
+		printf("env: %s: command not found\n", arg[1]);
+		return (1);
+	}
+	i = 0;
+	while(exec->env && exec->env[i] && i < count_var_env(exec->env))
+	{
+		printf("%s\n", exec->env[i]);
+		i++;
+	}
+	return (0);
+}
+
+/*
+look for a variable in env and return its key=value pair
+*/
+char    *ft_getenv(char **env, char *target)
+{
+    int i;
+    int idx;
+
+    if (!env)
+        return (NULL);
+    i = 0;
+    idx = search_env_var(env, target);
+    if (idx == -1)
+        return (NULL);
+    else
+        return (env[idx]);
+}

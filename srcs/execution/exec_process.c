@@ -10,6 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+<<<<<<< HEAD:srcs/execution/exec_process.c
+
+#include "../../includes/minishell.h"
+
+int	exec_machine(t_proc *pcs_chain, char *env[])
+=======
 #include "minishell.h"
 
 /*
@@ -17,6 +23,7 @@ wait for each process to finish, starting by the last one - to make sure
 all commands execute correctly
 */
 void	wait_processes(t_exec *exec)
+>>>>>>> 2f9d0cd5e14ec518c3a7aa6a5d05b1bd598a2bb2:exec_process/exec_process.c
 {
 	pid_t	wpid;
 	int		status;
@@ -131,6 +138,10 @@ void	command_process(t_proc **pcs_chain, t_exec **exec, int pos)
     exit(EXIT_FAILURE);
 }
 
+<<<<<<< HEAD:srcs/execution/exec_process.c
+/* 
+now let's look for a command line function in the path and 
+=======
 /*
 heart of the execution machine. 
 objective : we build the execve with error check along the way
@@ -167,6 +178,7 @@ void	build_execve(t_proc **exec_trgt, t_exec **exec)
 }
 
 /* now let's look for a command line function in the path and 
+>>>>>>> 2f9d0cd5e14ec518c3a7aa6a5d05b1bd598a2bb2:exec_process/exec_process.c
 return the path exec 
  1 - we iterate over all path (if there are some) and
  use strjoin to to first go from cmd (like cat) to a
@@ -174,7 +186,12 @@ return the path exec
  2 - we free free the path_cmd and we now use the access function 
  to check if path/cmd  (like /bin/cat) exist with F_OK. 
  3 - if it does, we return (and free in another function) else
+<<<<<<< HEAD:srcs/execution/exec_process.c
+ we free and move to next potential from in all_path 
+ */
+=======
  we free and move to next potential from in all_path */
+>>>>>>> 2f9d0cd5e14ec518c3a7aa6a5d05b1bd598a2bb2:exec_process/exec_process.c
 char	*exec_path(char **all_path, t_proc *exec_trgt)
 {
 	char	*test_path;
@@ -219,9 +236,13 @@ void	execve_bash(t_proc **exec_trgt, t_exec **exec)
 	if (access((*exec)->path, F_OK) == 0)
 	{
 		if (access((*exec)->path, X_OK) != 0)
+<<<<<<< HEAD:srcs/execution/exec_process.c
+			error_msg("Permission denied", NOPERM, *exec, *exec_trgt);
+=======
 <<<<<<< HEAD
 			exit(EXIT_FAILURE);
 			//exit_error(126, strerror(errno), (*exec_trgt)->args[0], p_cmd);
+>>>>>>> 2f9d0cd5e14ec518c3a7aa6a5d05b1bd598a2bb2:exec_process/exec_process.c
 		if (execve((*exec)->path, (*exec_trgt)->arg, (*exec)->env) == -1)
 			exit(EXIT_FAILURE);
 			//exit_error(errno, strerror(errno), (*p_cmd)->args[0], p_cmd);
@@ -232,8 +253,7 @@ void	execve_bash(t_proc **exec_trgt, t_exec **exec)
 			exit(EXIT_FAILURE);
 			//exit_error(errno, strerror(errno), (*p_cmd)->args[0], p_cmd);
 	}
-	exit(EXIT_FAILURE);
-	//exit_error(127, "command not found", (*exec_trgt)->arg[0], p_cmd);
+	error_msg("command not found", CMNOFOUND, *exec, *exec_trgt);
 }
 =======
 			//exit_error(126, strerror(errno), (*exec_trgt)->args[0], p_cmd);

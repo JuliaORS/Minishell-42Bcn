@@ -1,11 +1,12 @@
 CC = CC
 
 FLAGS = -MMD -I/.
-SRC =  main_romain.c exec_process.c manage_process.c utils_exec.c pipes.c ../builtins/env_setup.c
+SRC =  main_romain.c exec_process.c manage_process.c utils_exec.c pipes.c \
+	../env/env_setup.c ../env/env_modify.c
 OBJS = $(SRC:.c=.o)
 DEPS = $(SRC:.c=.d)
 
-LIBFT_PATH = ../includes/libft
+LIBFT_PATH = ../../includes/libft
 LIBFT = $(LIBFT_PATH)/libft.a
 NAME = exec_process
 
