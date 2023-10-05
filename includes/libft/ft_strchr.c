@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 12:58:57 by julolle-          #+#    #+#             */
-/*   Updated: 2023/03/15 17:21:09 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/03 13:14:05 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,3 @@ char	*ft_strchr(const char *s, int c)
 		return ((char *)s);
 	return (0);
 }
-
-/*int	main (void)
-{
-	char *str = "hola";
-	int c = '\0';
-	printf("%s", ft_strchr(str, c));
-	return (0);
-}	*/

@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 19:52:16 by julolle-          #+#    #+#             */
-/*   Updated: 2023/03/08 11:06:01 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/03 13:14:35 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,3 @@ int	ft_tolower(int c)
 		c = c + 32;
 	return (c);
 }
-
-/*int	main(void)
-{
-	printf("%c", ft_tolower('('));
-}*/

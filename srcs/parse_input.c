@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 19:06:32 by julolle-          #+#    #+#             */
-/*   Updated: 2023/09/28 16:50:22 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/05 12:50:57 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,16 +66,13 @@ int	parsing_input(char *line, int *err)
 		if (line[i] == '"' || line[i] == '\'')
 			check_quote(line + i + 1, &i, line[i], err);
 		else if (line[i] == '\\' && !line[i + 1])
-			*err = 258;
+			msg_error_parsing(258, err);
 		else if (line[i] == '>' || line[i] == '<' || line[i] == '|')
 			check_redir_pipes(line, &i, err);
 		i++;
 	}
-	if (*err)
-		free(line);
-	return (0);
+	return (*err);
 }
-
 
 int	manage_input(char *line, t_proc **lst_proc, int *err)
 {
@@ -86,8 +83,17 @@ int	manage_input(char *line, t_proc **lst_proc, int *err)
 	if (parsing_input(line, err))
 		return (1);
 	if (create_tokens(&lst_tok, line, err))
+	{	
+		free_lst_tok(&lst_tok);
 		return (1);
+	}
 	if (create_process(lst_proc, &lst_tok, err))
+	{
+		free_lst_tok(&lst_tok);
+		free_lst_proc(lst_proc);
 		return (1);
+	}
+	free_lst_tok(&lst_tok);
+
 	return (0);
 }

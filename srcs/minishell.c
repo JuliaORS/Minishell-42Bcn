@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 16:19:21 by julolle-          #+#    #+#             */
-/*   Updated: 2023/09/28 16:46:45 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/05 14:50:27 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	main(int argc, char **argv, char **env)
 {
-	char	*line;
+	char	*input;
 	int		err;
 	t_proc	*lst_proc;
 
@@ -23,16 +23,21 @@ int	main(int argc, char **argv, char **env)
 	(void)env;
 	while (1)
 	{
-		line = readline("minishell$");
-		if (line)
-			add_history(line);
-		if (!ft_strncmp(line, "exit", 5))
+		init_signals(READ, &err);
+		input = readline("minishell$");
+		if (input)
+			add_history(input);
+		if (!ft_strncmp(input, "exit", 5))
 			break ;
-		if (!manage_input(line, &lst_proc, &err))
+		if (!manage_input(input, &lst_proc, &err))
 		{
-			printf("go ahead with execution!\n");
-			///EXECUTION
+			if(!manage_heredoc(&lst_proc, &err))
+				ft_printf("go ahead with execution!\n"); ///EXECUTION
 		}
+		free (input);
 	}
+	free(input);
+	free_lst_proc(&lst_proc);
+	rl_clear_history();
 	return (0);
 }

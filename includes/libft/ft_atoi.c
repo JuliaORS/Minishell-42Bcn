@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 10:40:12 by julolle-          #+#    #+#             */
-/*   Updated: 2023/07/31 16:35:15 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/03 13:12:59 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,3 @@ int	ft_atoi(const char *str)
 	result = result * sign;
 	return (result);
 }
-
-/*
-int	main(void)
-{
-	char	str[] = "-1234ass";
-	int		res;
-	
-	res = ft_atoi(str);
-	print("%i", res);
-	return (0);
-}*/

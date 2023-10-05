@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:34:37 by julolle-          #+#    #+#             */
-/*   Updated: 2023/02/20 16:10:26 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/03 13:14:26 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,3 @@ char	*ft_strrchr(const char *s, int c)
 	}
 	return (0);
 }
-
-/*int	main (void)
-{
-	const char s[35] = "hiol1aqq1uetal";
-	int	c = '1';
-
-	ft_strrchr(s, c);
-	return (0);
-}*/

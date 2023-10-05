@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 16:25:15 by julolle-          #+#    #+#             */
-/*   Updated: 2023/08/02 12:30:00 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/03 13:13:42 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,3 @@ void	*ft_memmove(void *dst, const void *src, size_t len)
 	}
 	return (dst);
 }
-
-/*int   main(void)
-{
-    char dest[70] = "This is string.h library function";
-	char src[20] = "holaquetal";
-	ft_memmove(dest, src, 5);
-    return (0);
-}*/

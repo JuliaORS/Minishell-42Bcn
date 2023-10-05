@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/20 13:09:50 by julolle-          #+#    #+#             */
-/*   Updated: 2023/05/19 11:50:40 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/03 13:13:19 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,12 +69,3 @@ char	*ft_itoa(int n)
 	ft_string(num, s, len);
 	return (s);
 }
-/*
-int main(void)
-{
-	int i = -214748364;
-
-	printf("%s\n", ft_itoa(i));
-	return (0);
-}
-*/
