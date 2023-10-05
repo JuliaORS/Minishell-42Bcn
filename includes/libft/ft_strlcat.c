@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 19:33:10 by julolle-          #+#    #+#             */
-/*   Updated: 2023/03/08 11:05:37 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/03 13:14:15 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,3 @@ size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
 	dst[lend] = '\0';
 	return (result);
 }
-
-/*int	main(void)
-{
-	char dest[20] = "holaque";
-	char src[6] = "tal";
-	size_t i = 8;
-
-	ft_strlcat(dest, src, i);
-	printf("%s \n", dest);
-	return 0;
-}*/

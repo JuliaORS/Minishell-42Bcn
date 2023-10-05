@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 15:24:31 by julolle-          #+#    #+#             */
-/*   Updated: 2023/03/08 11:04:48 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/03 13:13:46 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,3 @@ void	*ft_memset(void *b, int c, size_t len)
 	}
 	return (b);
 }
-
-/*int	main(void)
-{
-	char str[70] = "This is string.h library function";
-	puts(str);
-	ft_memset(str, '$', 5);
-	puts(str);
-	return (0);
-}*/

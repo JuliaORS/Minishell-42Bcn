@@ -6,38 +6,38 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 16:19:21 by julolle-          #+#    #+#             */
-/*   Updated: 2023/09/27 16:12:36 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/05 14:50:27 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 int	main(int argc, char **argv, char **env)
 {
-	char	*line;
-	int		exit_status;
-	t_tok	*lst_tok;
+	char	*input;
+	int		err;
 	t_proc	*lst_proc;
 
 	(void)argc;
 	(void)argv;
 	(void)env;
-	exit_status = 0;
-	lst_tok = NULL;
 	while (1)
 	{
-		line = readline("minishell$");
-		if (line)
-			add_history(line);
-		if (!ft_strncmp(line, "exit", 5))
+		init_signals(READ, &err);
+		input = readline("minishell$");
+		if (input)
+			add_history(input);
+		if (!ft_strncmp(input, "exit", 5))
 			break ;
-		if (!parsing_input(line, &exit_status))
-		{	
-			create_tokens(&lst_tok, line, &exit_status);
-			//ft_print_list_tok(&lst_tok);
-			create_process(&lst_proc, &lst_tok);
-			//ft_print_process(&lst_proc);
+		if (!manage_input(input, &lst_proc, &err))
+		{
+			if(!manage_heredoc(&lst_proc, &err))
+				ft_printf("go ahead with execution!\n"); ///EXECUTION
 		}
+		free (input);
 	}
+	free(input);
+	free_lst_proc(&lst_proc);
+	rl_clear_history();
 	return (0);
 }

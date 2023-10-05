@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/16 19:36:07 by julolle-          #+#    #+#             */
-/*   Updated: 2023/08/02 12:29:32 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/03 13:14:30 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,3 @@ char	*ft_strtrim(char const *s1, char const *set)
 	ft_strlcpy (str, &s1[i], final - i + 2);
 	return (str);
 }
-
-/*int	main(void)
-{
-	char str[33] = "hhhhh";
-	char set[20] = "h";
-	ft_strtrim(str, set);
-	printf("%s \n", ft_strtrim(str, set));
-	return (0);
-}*/

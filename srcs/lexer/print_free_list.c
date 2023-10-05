@@ -6,19 +6,36 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 12:54:07 by julolle-          #+#    #+#             */
-/*   Updated: 2023/09/26 15:32:07 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/05 12:24:32 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 void	free_lst_proc(t_proc **lst_proc)
 {
 	t_proc	*tmp;
+	int		i;
 
 	while (*lst_proc)
 	{
+		i = 0;
 		tmp = (*lst_proc)->next;
+		if ((*lst_proc)->arg)
+		{
+			while ((*lst_proc)->arg[i])
+			{
+				free((*lst_proc)->arg[i]);
+				i++;
+			}
+			free((*lst_proc)->arg);
+		}
+		if ((*lst_proc)->infile)
+			free((*lst_proc)->infile);
+		if ((*lst_proc)->outfile)
+			free((*lst_proc)->outfile);
+		if ((*lst_proc)->hd_lim)
+			free((*lst_proc)->hd_lim);
 		free(*lst_proc);
 		*lst_proc = tmp;
 	}
@@ -43,20 +60,22 @@ void	ft_print_process(t_proc **lst_proc)
 		}
 		printf("arg[%i]-> '%s'\n", i, (*lst_proc)->arg[i]);
 		printf("outfile-> '%s'	fd:%i\n", (*lst_proc)->outfile, (*lst_proc)->fd[1]);
-		printf("infile->0 '%s'	fd:%i\n", (*lst_proc)->infile, (*lst_proc)->fd[0]);
+		printf("infile-> '%s'	fd:%i\n", (*lst_proc)->infile, (*lst_proc)->fd[0]);
+		printf("heredoc-> '%s'\n", (*lst_proc)->hd_lim);
 		(*lst_proc) = (*lst_proc)->next;
 	}
 	*lst_proc = tmp;
-	free_lst_proc(lst_proc);
 }
 
-void	free_lst(t_tok **lst_tok)
+void	free_lst_tok(t_tok **lst_tok)
 {
 	t_tok	*tmp;
 
 	while (*lst_tok)
 	{
 		tmp = (*lst_tok)->next;
+		if ((*lst_tok)->str)
+			free((*lst_tok)->str);
 		free(*lst_tok);
 		*lst_tok = tmp;
 	}
@@ -73,5 +92,4 @@ void	ft_print_list_tok(t_tok **lst_tok)
 		*lst_tok = (*lst_tok)->next;
 	}
 	*lst_tok = tmp;
-	free_lst(lst_tok);
 }

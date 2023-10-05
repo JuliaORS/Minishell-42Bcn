@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 19:48:08 by julolle-          #+#    #+#             */
-/*   Updated: 2023/03/08 11:06:04 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/03 13:14:40 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,3 @@ int	ft_toupper(int c)
 		c = c - 32;
 	return (c);
 }
-
-/*int   main(void)
-{
-    printf("%c", ft_toupper('G'));
-}*/

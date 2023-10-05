@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/20 16:09:22 by julolle-          #+#    #+#             */
-/*   Updated: 2023/03/08 11:05:21 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/03 13:14:02 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,14 +103,3 @@ char	**ft_split(char const *s, char c)
 	mat[wo] = NULL;
 	return (mat);
 }
-
-/*int	main(void)
-{
-	char *s;
-	char c;
-
-	c = ' ';
-	s = "hola1que1111tal11o1";
-	ft_split("hello!zzzzzzzz", ' ');
-	printf("%s", *ft_split(s, c));
-}*/

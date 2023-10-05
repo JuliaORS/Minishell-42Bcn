@@ -12,11 +12,15 @@
 
 NAME		:= minishell
 
-HEADER      := minishell.h 
+INCLUDES      := includes/
 
-SRC_PATH = ./srcs/
-OBJ_PATH = ./objects/
-INC_PATH = ./includes/
+SRC_DIR		:= srcs
+SRCS 		:= minishell.c parse_input.c token_list.c token_expand.c \
+				token_expand_str.c token_list_utils.c process_list.c \
+				process_list_utils.c print_free_list.c error_parsing.c \
+				signals.c heredoc.c \
+				
+SRCS		:= $(SRCS:%=$(SRC_DIR)/%)
 
 SRC		:= lexer/minishell.c lexer/parse_input.c lexer/token_list.c \
 lexer/token_expand.c lexer/token_list_utils.c lexer/process_list.c \
@@ -26,8 +30,17 @@ execution/manage_process.c execution/pipes.c execution/utils_exec.c \
 
 SRCS		:= $(addprefix $(SRC_PATH), $(SRC))
 
-LIBFT_DIR 	:= $(addprefix $(INC_PATH), libft)
-LIBFT		:= $(LIBFT_DIR)/libft.a
+PRINTF_DIR  := includes/ft_printf/
+PRINTF		:= $(PRINTF_DIR)/libftprintf.a
+
+RLINE_DIR 	:= includes/readline/
+RLINE		:= $(RLINE_DIR)/libreadline.a
+RLINE_H		:= $(RLINE_DIR)/libhistory.a
+
+LIB_FLAGS	:= -lreadline -ltermcap -lft -lftprintf
+
+OBJS		:= $(SRCS:.c=.o)
+DEPS		:= $(OBJS:.o=.d)
 
 OBJS		:= $(addprefix $(OBJ_PATH), $(SRC:.c=.o))
 DEPS		:= $(addprefix $(OBJ_PATH), $(OBJS:.o=.d))
@@ -38,19 +51,21 @@ CFLAGS		:= -Wall -Wextra -Werror -MMD
 RM			:= rm -f
 
 #Implicit Method
-$(OBJ_PATH)%.o: $(SRC_PATH)%.c	Makefile $(LIBFT)
-	mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(INC) -c $< -o $@
+%.o: %.c	Makefile $(LIBFT) $(RLINE) $(RLINE_H) $(PRINTF)
+	$(CC) $(CFLAGS) -I ${INCLUDES} -c $< -o $@
 
 # My methods
 all: subsystems $(NAME)
 
 -include $(DEPS)
 $(NAME): $(OBJS)
-	@$(CC) $(OBJS) -o $(NAME) -lreadline -L $(LIBFT_DIR) -lft
+	@$(CC) $(OBJS) -o $(NAME) $(RLINE_H) $(RLINE) $(LIB_FLAGS) -L $(LIBFT_DIR) -L $(PRINTF_DIR) 
+	$(info MINISHELL compiled)
 
 subsystems:
 	@make -s -C $(LIBFT_DIR)
+	@make -s -C $(RLINE_DIR) 
+	@make -s -C $(PRINTF_DIR)
 
 # $(OBJ_PATH):
 # 	mkdir -p $(OBJ_PATH)
@@ -60,10 +75,12 @@ clean:
 	@$(RM) $(OBJS) $(DEPS)
 	@$(RM) -rf $(OBJ_PATH)
 	@make -s -C $(LIBFT_DIR) clean
+	@make -s -C $(PRINTF_DIR) clean
 
 fclean: clean
 	@$(RM) $(NAME)
 	@make -s -C $(LIBFT_DIR) fclean
+	@make -s -C $(PRINTF_DIR) fclean
 
 re:	fclean all
 

@@ -6,7 +6,7 @@
 #    By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/16 11:52:04 by julolle-          #+#    #+#              #
-#    Updated: 2023/03/08 14:17:13 by julolle-         ###   ########.fr        #
+#    Updated: 2023/10/03 18:59:11 by julolle-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,7 @@ all:	$(NAME)
 -include $(DEPS)
 $(NAME): $(OBJS)
 	$(AR) $(ARFLAGS) $(NAME) $(OBJS)
-	$(info CREATED $(NAME))
+	$(info LIBFT compiled)
 
 -include $(DEPSBONUS)
 bonus : $(OBJS) $(OBJSBONUS)
