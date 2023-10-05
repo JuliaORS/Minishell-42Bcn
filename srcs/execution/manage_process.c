@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 /*
 wait for each process to finish, starting by the last one - to make sure

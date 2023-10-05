@@ -10,11 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-<<<<<<< HEAD:srcs/lexer/token_list_utils.c
-#include "../../includes/minishell.h"
-=======
 #include "minishell.h"
->>>>>>> 2f9d0cd5e14ec518c3a7aa6a5d05b1bd598a2bb2:srcs/token_list_utils.c
 
 t_tok	*ft_lstnew_tok(char *str, int type, int *err)
 {

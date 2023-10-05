@@ -10,11 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-<<<<<<< HEAD:srcs/lexer/process_list_utils.c
-#include "../../includes/minishell.h"
-=======
 #include "minishell.h"
->>>>>>> 2f9d0cd5e14ec518c3a7aa6a5d05b1bd598a2bb2:srcs/process_list_utils.c
 
 t_proc	*ft_lstnew_proc(int *err)
 {

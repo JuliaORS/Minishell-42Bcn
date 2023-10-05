@@ -94,7 +94,9 @@ int	manage_heredoc(t_proc **lst_proc, int *err)
 {
 	int		fds[2];
 	int		pid;
+	t_proc *tmp;
 
+	tmp = *lst_proc;
 	while ((*lst_proc))
 	{
 		if ((*lst_proc)->hd_lim)
@@ -116,5 +118,6 @@ int	manage_heredoc(t_proc **lst_proc, int *err)
 		}
 		(*lst_proc) = (*lst_proc)->next;
 	}
+	*lst_proc = tmp;
 	return (*err);
 }

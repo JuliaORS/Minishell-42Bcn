@@ -114,7 +114,6 @@ before the '=', if no '=' encountered return NULL
 */
 char	*extract_variable(char *key_value)
 {
-	char *var;
 	int	len;
 	int	i;
 

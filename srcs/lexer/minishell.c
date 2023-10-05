@@ -20,11 +20,10 @@ int	main(int argc, char **argv, char **env)
 
 	(void)argc;
 	(void)argv;
-	(void)env;
 	while (1)
 	{
 		init_signals(READ, &err);
-		input = readline("minishell$");
+		input = readline("minishell$🦄");
 		if (input)
 			add_history(input);
 		if (!ft_strncmp(input, "exit", 5))
@@ -32,9 +31,10 @@ int	main(int argc, char **argv, char **env)
 		if (!manage_input(input, &lst_proc, &err))
 		{
 			if(!manage_heredoc(&lst_proc, &err))
-				ft_printf("go ahead with execution!\n"); ///EXECUTION
+				exec_machine(lst_proc, env);
 		}
 		free (input);
+		free_lst_proc(&lst_proc);
 	}
 	free(input);
 	free_lst_proc(&lst_proc);

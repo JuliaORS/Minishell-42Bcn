@@ -37,7 +37,6 @@ same as for export builtin but without '=' mandatory
 int	check_syntax_unset(char *var)
 {
 	int	i;
-	int	valid;
 
 	if (!var)
 		return (0);
