@@ -20,7 +20,7 @@ void	init_exec(t_exec *exec, t_proc *pcs_chain, char **env)
 		error_msg("init empty struct", 0, exec, pcs_chain);
 		return ;
 	}
-	exec->total_pcs = measure_list(&pcs_chain);
+	exec->total_cmd = measure_list(&pcs_chain);
 	exec->env = env_dup(env);
 	if (!exec->env)
 		error_msg("Out of Memory: Environment dup fail", 0, exec, pcs_chain);
@@ -113,7 +113,7 @@ void	free_exec(t_exec **exec)
 }
 
 /*
-display error msg, custom error exit number, free memroy
+display error msg, custom error exit number, free memry
 */
 int	error_msg(char *msg, int nb, t_exec *exec, t_proc *pcs)
 {

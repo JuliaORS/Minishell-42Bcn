@@ -10,21 +10,27 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
-int	check_arg_flag(char **arg)
+/*
+because echo -n can also be echo -nnnnnnnn but no echo -nnnnnannnn
+*/
+int	check_flag(char **arg)
 {
+	int	i;
 	if (!arg)
 		return (-1);
 	if (arg && arg[1])
 	{
-		if (!ft_strncmp(arg[1], "-n", 3))
-			return (1);
-		else 
+		if (arg[1][0] != '-')
 			return (0);
+		i = 1;
+		while (arg[1] && arg[1][i] == 'n')
+			i++;
+		if (arg[1][i] == '\0')
+			return (1);
 	}
     return (0);
-	
 }
 
 /*
@@ -43,7 +49,7 @@ int	ft_echo(t_exec *exec, char **arg)
 	int	flag;
 
 	(void) exec;
-    flag = check_arg_flag(arg);
+    flag = check_flag(arg);
     i = 1;
     if (flag == 1)
         i = 2;
@@ -51,13 +57,13 @@ int	ft_echo(t_exec *exec, char **arg)
 	{
 		while (arg && arg[i])
 		{
-			printf("%s", arg[i]);
-			if (arg[i + 1])
-				printf(" ");
+			ft_putstr_fd(arg[i], STDOUT_FILENO);
+			if (arg[i + 1]) 
+				write(STDOUT_FILENO, " ", 1);
 			i++;
 		}
 	}
 	if (flag == 0)
-		printf("\n");
+		write(STDOUT_FILENO, "\n", 1);
 	return (0);
 }

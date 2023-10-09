@@ -23,7 +23,7 @@ void	wait_processes(t_exec *exec)
 	int		status;
 	int		total_cmd;
 
-   total_cmd = exec->total_pcs - 1;
+   total_cmd = exec->total_cmd - 1;
 	while (total_cmd >= 0)
 	{
 		wpid = waitpid(exec->pids[total_cmd], &status, 0);
@@ -48,24 +48,30 @@ void	launch_process(t_exec *exec, t_proc **pcs_chain)
 	int		i;
 	pid_t	pid;
 	pid_t	*pids;
+	t_proc	*pcs;
 
 	if (!exec || !*pcs_chain)
 		return ; //extra clean exit later on
-	pids = malloc(sizeof(pid_t) * (exec)->total_pcs);
+	pids = malloc(sizeof(pid_t) * (exec)->total_cmd);
 	if (!pids)
 		return ; //extra clean exit later on
 	(exec)->pids = pids;
-	//printf("there is an env and it is : %s \n", exec->env[2]);
+	pcs = *pcs_chain;
 	i = 0;
-	while (i < (exec)->total_pcs && *pcs_chain)
+	while (i < (exec)->total_cmd)
 	{
 		pid = fork();
 		if (pid == -1)
 			exit(EXIT_FAILURE); // special case : clean all that was allocated
 		if (pid == 0)
-			command_process(pcs_chain, &exec, i);
+			command_process(pcs, exec);
 		if (pid > 0)
 			exec->pids[i] = pid;
+		if (pcs->fd[0] > 0 && pcs->fd[0] != -1)
+			close(pcs->fd[0]);
+		if (pcs->fd[1] > 0 && pcs->fd[1] != -1)
+			close(pcs->fd[1]);
+		pcs = pcs->next;
 		i++;
 	}
 	return ;
@@ -87,30 +93,23 @@ of next pipe. arithmetic explained outside of this program
 - we then close all pipes to avoid hanging pipes
 - execute the command
 */
-void	command_process(t_proc **pcs_chain, t_exec **exec, int pos)
+void	command_process(t_proc *pcs, t_exec *exec)
 {
-	t_proc	*exec_trgt;
-	int i;
 
-	if (!*pcs_chain)
+	
+	if (!pcs)
 		return ;
-	exec_trgt = *pcs_chain;
-	i = 0;
-	while (i != pos)
-	{
-		exec_trgt = exec_trgt->next;
-		i++;
-	}
-	if (exec_trgt->pos == 0)
-		first_process(exec_trgt, exec);
-	if (exec_trgt->pos == (*exec)->total_pcs - 1)
-		last_process(exec_trgt, exec);
-	else
-		mid_process(exec_trgt, exec);
-	close_all_pipes(*exec);
-	build_execve(&exec_trgt, exec);
-	perror("execve failed"); // Print an error message
-    exit(EXIT_FAILURE);
+	if (pcs->fd[0] == -1 || pcs->fd[1] == -1)
+		error_msg("bad file descriptor", EBADF, exec, pcs);
+	
+	//printf("execute process %i for cmd %s\n", pos, pcs->arg[0]);
+	
+	io_redirect(pcs, exec);
+	close_all_pipes(exec);
+	if (is_builtin(pcs))
+		exec_builtin(pcs, exec);
+	build_execve(&pcs, &exec);
+	error_msg("execve failure", 1, exec, pcs);
 }
 
 /*
@@ -147,65 +146,4 @@ void	build_execve(t_proc **exec_trgt, t_exec **exec)
 	//special case of relative path not handled 
 	exec_bash(exec_trgt, exec);
 	//free_split(env_path); to do later
-
 }
-
-void	first_process(t_proc *exec_trgt, t_exec **exec)
-{
-	if (!exec_trgt || !*exec)
-		return ;
-	if (exec_trgt->fd[0] == -1 || exec_trgt->fd[1] == -1)
-		error_msg("bad file descriptor", EBADF, *exec, exec_trgt);
-	if (exec_trgt->fd[0]) // if infile redirect < 
-	{
-		redirect_input(exec_trgt->fd[0]);
-		close(exec_trgt->fd[0]);
-	}
-	if (exec_trgt->fd[1]) // if outfile redirect >
-	{
-		redirect_output(exec_trgt->fd[1]);
-		close(exec_trgt->fd[1]);
-	}
-	if (exec_trgt->next != NULL)
-		redirect_output((*exec)->pipes[1]);
-}
-
-void	last_process(t_proc *exec_trgt, t_exec **exec)
-{
-	if (!exec_trgt || !*exec)
-		return ;
-	if (exec_trgt->fd[0] == -1 || exec_trgt->fd[1] == -1)
-		error_msg("bad file descriptor", EBADF, *exec, exec_trgt);
-	if (exec_trgt->fd[0]) // if infile redirect < 
-	{
-		redirect_input(exec_trgt->fd[0]);
-		close(exec_trgt->fd[0]);
-	}
-	else if (exec_trgt->prev != NULL) // if no infile redirection and prev command we pipe
-		redirect_input((*exec)->pipes[(exec_trgt->pos - 1) * 2]);
-	if (exec_trgt->fd[1]) // if outfile redirect >
-	{
-		redirect_output(exec_trgt->fd[1]);
-		close(exec_trgt->fd[1]);
-	}
-}
-
-void	mid_process(t_proc *exec_trgt, t_exec **exec)
-{
-	if (exec_trgt->fd[0] == -1 || exec_trgt->fd[1] == -1)
-		error_msg("bad file descriptor", EBADF, *exec, exec_trgt);
-	if (exec_trgt->fd[0])
-	{
-		redirect_input(exec_trgt->fd[0]);
-		close(exec_trgt->fd[0]);
-	}
-	else
-		redirect_input((*exec)->pipes[(exec_trgt->pos - 1) * 2]);
-	if (exec_trgt->fd[1])
-	{
-		redirect_output(exec_trgt->fd[1]);
-		close(exec_trgt->fd[1]);
-	}
-	else
-		redirect_output((*exec)->pipes[(exec_trgt->pos) * 2 + 1]);
-	}

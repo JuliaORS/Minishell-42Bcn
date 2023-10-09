@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 /*
 return current directory with sys function getcwd.

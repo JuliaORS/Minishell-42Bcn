@@ -59,10 +59,11 @@ typedef struct s_tok {
 
 typedef struct s_exec {
 	char	**env;
-	int		*pipes;
+	int		**pipes;
 	pid_t	*pids;
-	int		total_pcs;
-	char	*path;  
+	int		total_cmd;
+	char	*path;
+	int		exit_status;
 }	t_exec;
 
 /*toakenisation process*/
@@ -92,22 +93,19 @@ int		manage_heredoc(t_proc **lst_proc, int *err);
 int		exec_machine(t_proc *pcs_chain, char *env[]);
 void	pipefd_calibrate(t_exec *exec);
 void	launch_process(t_exec *exec, t_proc **pcs_chain);
-void	command_process(t_proc **pcs_chain, t_exec **exec, int pos);
+void	command_process(t_proc *pcs_chain, t_exec *exec);
 void	launch_process(t_exec *exec, t_proc **pcs_chain);
 void	wait_processes(t_exec *exec);
 char	*exec_path(char **all_path, t_proc *exec_trgt);
 void	build_execve(t_proc **exec_trgt, t_exec **exec);
 void	exec_bash(t_proc **exec_trgt, t_exec **exec);
 char	**search_path(char *env[]);
-void	first_process(t_proc *exec_trgt, t_exec **exec);
-void	last_process(t_proc *exec_trgt, t_exec **exec);
-void	mid_process(t_proc *exec_trgt, t_exec **exec);
+int		exec_builtin(t_proc *pcs_chain, t_exec *exec);
 
 /*utils for process and env*/
 void	init_exec(t_exec *exec, t_proc *pcs_chain, char **env);
 int		measure_list(t_proc **lst);
-void	redirect_input(int	input_fd);
-void	redirect_output(int output_fd);
+void	io_redirect(t_proc *pcs_chain, t_exec *exec);
 void	close_all_pipes(t_exec *exec);
 void	free_chain(t_proc **pcs_chain);
 void	free_arg(char **arg);
@@ -123,6 +121,8 @@ int		ft_echo(t_exec *exec, char **arg);
 int		ft_env(t_exec *exec, char **arg);
 int		ft_export(t_exec *exec, char **arg);
 int		ft_unset(t_exec *exec, char **arg);
+int		is_builtin(t_proc*pcs_chain);
+
 
 /* environment setup and modification */
 char	**env_dup(char **env);

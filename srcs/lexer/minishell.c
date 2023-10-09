@@ -30,8 +30,8 @@ int	main(int argc, char **argv, char **env)
 			break ;
 		if (!manage_input(input, &lst_proc, &err))
 		{
-			if(!manage_heredoc(&lst_proc, &err))
-				exec_machine(lst_proc, env);
+			//if(!manage_heredoc(&lst_proc, &err))
+			err = exec_machine(lst_proc, env);
 		}
 		free (input);
 		free_lst_proc(&lst_proc);

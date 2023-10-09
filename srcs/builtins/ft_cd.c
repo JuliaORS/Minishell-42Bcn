@@ -1,5 +1,17 @@
 
-#include "../../includes/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rjobert <rjobert@student.42barcelo>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/25 12:15:32 by rjobert           #+#    #+#             */
+/*   Updated: 2023/09/25 12:15:35 by rjobert          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
 
 void    update_env_dir(t_exec *exec, char *old_path);
 char    *extract_path(char *keyvalue);

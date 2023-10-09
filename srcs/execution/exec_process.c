@@ -15,7 +15,7 @@
 int	exec_machine(t_proc *pcs_chain, char *env[])
 {
 	t_exec	exec;
-	//t_proc *chain;
+	// t_proc *chain;
 	
  	// chain = pcs_chain;
 	// while(chain)
@@ -31,15 +31,63 @@ int	exec_machine(t_proc *pcs_chain, char *env[])
 	// 	printf("env var is : %s\n", env[i]);
 	if (!pcs_chain)
 		return (0);
-	
-	init_exec(&exec, pcs_chain, env); // to replace with a getenv
-	pipefd_calibrate(&exec); //open as many pipes as needed 
-	launch_process(&exec, &pcs_chain); // fork all the process from cmds, hack input out put if any
-	close_all_pipes(&exec); //closing al the pipes open on father side
-	wait_processes(&exec);  // wait for the execution of all children
-	 
+	init_exec(&exec, pcs_chain, env);
+	if (exec.total_cmd == 1 && is_builtin(pcs_chain))
+		return (exec_builtin(pcs_chain, &exec));
+	pipefd_calibrate(&exec);
+	launch_process(&exec, &pcs_chain);
+	close_all_pipes(&exec);
+	wait_processes(&exec);
+	// ADD A CLEAN EXEC & PIDS
 	return (EXIT_SUCCESS);
 }
+
+
+int	is_builtin(t_proc*pcs_chain)
+{
+	char	*cmd;
+	
+	if (!pcs_chain || !pcs_chain->arg)
+		return (0);
+	cmd = pcs_chain->arg[0];
+	if (!ft_strncmp(cmd, "cd", 3))
+		return (1);
+	else if (!ft_strncmp(cmd, "pwd", 4))
+		return (1);
+	else if (!ft_strncmp(cmd, "echo", 5))
+		return (1);
+	else if (!ft_strncmp(cmd, "env", 5))
+		return (1);
+	else if (!ft_strncmp(cmd, "export", 7))
+		return (1);
+	else if (!ft_strncmp(cmd, "unset", 6))
+		return (1);
+	return (0);
+}
+
+int	exec_builtin(t_proc *pcs_chain, t_exec *exec)
+{
+	char	*cmd;
+	if (!pcs_chain)
+		return (1);
+	cmd = pcs_chain->arg[0];
+	io_redirect(pcs_chain, exec);
+	if (!ft_strncmp(cmd, "cd", 3))
+		return (ft_cd(exec, pcs_chain->arg));
+	else if (!ft_strncmp(cmd, "pwd", 4))
+		return(ft_pwd(exec, pcs_chain->arg));
+	else if (!ft_strncmp(cmd, "echo", 5))
+		return(ft_echo(exec, pcs_chain->arg));
+	else if (!ft_strncmp(cmd, "env", 5))
+		return(ft_env(exec, pcs_chain->arg));
+	else if (!ft_strncmp(cmd, "export", 7))
+		return (ft_export(exec, pcs_chain->arg));
+	else if (!ft_strncmp(cmd, "unset", 6))
+		return (ft_unset(exec, pcs_chain->arg));
+	printf("minishell: %s: not a valid option\n", pcs_chain->arg[0]);
+	return (1);
+}
+
 
 /*
  Extract the PATH from environment variables in env[]
