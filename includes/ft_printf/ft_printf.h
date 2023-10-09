@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 14:19:03 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/02 20:52:13 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/09 13:42:07 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ int		ft_printchar(int chr);
 int		ft_printstr(char *str);
 int		ft_putptr(unsigned long long ptr);
 int		ft_printptr(unsigned long long ptr);
-int		ft_numlen(long long int num);
-char	*ft_string(long long int n, char *s, int len);
+int		ft_numlen_pf(long long int num);
+char	*ft_string_pf(long long int n, char *s, int len);
 char	*ft_litoa(long long int n);
 int		ft_printnbr(int nbr);
 int		ft_printunbr(unsigned int nbr);

@@ -6,13 +6,13 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 16:12:09 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/02 20:52:56 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/09 13:42:57 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	ft_numlen(long long int num)
+int	ft_numlen_pf(long long int num)
 {
 	int	len;
 
@@ -30,7 +30,7 @@ int	ft_numlen(long long int num)
 	return (len);
 }
 
-char	*ft_string(long long int n, char *s, int len)
+char	*ft_string_pf(long long int n, char *s, int len)
 {
 	while (n > 0)
 	{
@@ -48,7 +48,7 @@ char	*ft_litoa(long long int n)
 	int				len;
 
 	num = n;
-	len = ft_numlen(num);
+	len = ft_numlen_pf(num);
 	s = (char *) malloc(sizeof(char) * (len + 1));
 	if (!s)
 		return (NULL);
@@ -59,7 +59,7 @@ char	*ft_litoa(long long int n)
 		s[0] = '-';
 		num = num * -1;
 	}
-	ft_string(num, s, len);
+	ft_string_pf(num, s, len);
 	return (s);
 }
 

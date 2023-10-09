@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 17:05:20 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/04 17:47:30 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/09 13:36:18 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ typedef struct s_proc {
 	int				fd[3];
 	char			*infile;
 	char			*outfile;
-	char			*hd_lim;
+	char			**hd_lim;
 	int				intype;
 	struct s_proc	*prev;
 	struct s_proc	*next;
@@ -68,19 +68,26 @@ typedef struct s_exec {
 /*toakenisation process*/
 int		manage_input(char *line, t_proc **lst_proc, int *err);
 int		create_tokens(t_tok **lst_tok, char *line, int *err);
-t_tok	*ft_lstnew_tok(char *str, int type, int *err);
+t_tok	*ft_lstnew_tok(char *str, int type);
 t_tok	*ft_lstlast_tok(t_tok *lst);
-void	ft_lstadd_back_tok(t_tok **lst, t_tok *new, int *err);
+void	ft_lstadd_back_tok(t_tok **lst, t_tok *new);
 void	expand_tokens(t_tok **lst_tok, int *err);
+char	*create_new_str(char *str, char *str_aft_exp, int *i, int j);
 void	ft_print_list_tok(t_tok **lst_tok);
-int	msg_error_parsing(int type, int *err);
+int		msg_error_parsing(int type, int *err);
 int		create_process(t_proc **lst_proc, t_tok **lst_tok, int *err);
-t_proc	*ft_lstnew_proc(int *err);
+t_proc	*ft_lstnew_proc(void);
 t_proc	*ft_lstlast_proc(t_proc *lst);
-void	ft_lstadd_back_proc(t_proc **lst, t_proc *new, int *err);
+void	ft_lstadd_back_proc(t_proc **lst, t_proc *new);
 void	ft_print_process(t_proc **lst_proc);
 void	sep_process(t_proc **lst_proc, t_tok **lst_tok);
 int		parsing_input(char *line, int *exit_status);
+char	*join_str_toks(t_tok **lst_tok);
+int		find_outfile(t_proc *lst_proc, t_tok **lst_tok, int *err);
+int		find_infile(t_proc *lst_proc, t_tok **lst_tok, int *err);
+int		find_heredoc(t_proc *lst_proc, t_tok **lst_tok, int n_hd, int *err);
+int		create_str(t_proc *lst_proc, t_tok **lst_tok, int n_str, int *err);
+
 
 /*signals*/
 void	init_signals(int mode, int *err);

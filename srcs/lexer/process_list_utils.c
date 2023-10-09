@@ -6,29 +6,27 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 15:25:38 by julolle-          #+#    #+#             */
-/*   Updated: 2023/09/28 14:48:00 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/09 15:09:43 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_proc	*ft_lstnew_proc(int *err)
+t_proc	*ft_lstnew_proc(void)
 {
 	t_proc	*newcont;
 
 	newcont = malloc(sizeof(t_proc));
 	if (!newcont)
-	{
-		msg_error_parsing(12, err);
 		return (NULL);
-	}
 	newcont->arg = NULL;
 	newcont->pos = 0;
 	newcont->fd[0] = 0;
 	newcont->fd[1] = 0;
-	newcont->intype = -1;
+	newcont->intype = 0;
 	newcont->infile = NULL;
 	newcont->outfile = NULL;
+	newcont->hd_lim = NULL;
 	newcont->prev = NULL;
 	newcont->next = NULL;
 	return (newcont);
@@ -46,12 +44,10 @@ t_proc	*ft_lstlast_proc(t_proc *lst)
 	return (temp);
 }
 
-void	ft_lstadd_back_proc(t_proc **lst, t_proc *new, int *err)
+void	ft_lstadd_back_proc(t_proc **lst, t_proc *new)
 {
 	t_proc	*tmp;
 
-	if (*err)
-		return ;
 	if (lst != NULL)
 	{
 		if (*lst != NULL)

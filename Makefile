@@ -15,7 +15,7 @@ HEADER      = ./includes/
 SRC_PATH    = srcs/
 SRC         = lexer/minishell.c lexer/parse_input.c lexer/token_list.c \
             lexer/token_expand.c lexer/token_expand_str.c lexer/token_list_utils.c \
-            lexer/process_list.c lexer/process_list_utils.c lexer/print_free_list.c \
+            lexer/process_list.c lexer/process_list_utils.c lexer/process_list_files.c lexer/print_free_list.c \
             lexer/error_parsing.c lexer/signals.c lexer/heredoc.c \
             execution/exec_process.c execution/manage_process.c \
             execution/pipes.c execution/utils_exec.c \
