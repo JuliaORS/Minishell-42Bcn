@@ -23,7 +23,7 @@ void	wait_processes(t_exec *exec)
 	int		status;
 	int		total_cmd;
 
-   total_cmd = exec->total_cmd - 1;
+   	total_cmd = exec->total_cmd - 1;
 	while (total_cmd >= 0)
 	{
 		wpid = waitpid(exec->pids[total_cmd], &status, 0);
@@ -67,9 +67,9 @@ void	launch_process(t_exec *exec, t_proc **pcs_chain)
 			command_process(pcs, exec);
 		if (pid > 0)
 			exec->pids[i] = pid;
-		if (pcs->fd[0] > 0 && pcs->fd[0] != -1)
+		if (fd_is_open(pcs->fd[0]))
 			close(pcs->fd[0]);
-		if (pcs->fd[1] > 0 && pcs->fd[1] != -1)
+		if (fd_is_open(pcs->fd[1]))
 			close(pcs->fd[1]);
 		pcs = pcs->next;
 		i++;
@@ -95,15 +95,10 @@ of next pipe. arithmetic explained outside of this program
 */
 void	command_process(t_proc *pcs, t_exec *exec)
 {
-
-	
 	if (!pcs)
 		return ;
 	if (pcs->fd[0] == -1 || pcs->fd[1] == -1)
 		error_msg("bad file descriptor", EBADF, exec, pcs);
-	
-	//printf("execute process %i for cmd %s\n", pos, pcs->arg[0]);
-	
 	io_redirect(pcs, exec);
 	close_all_pipes(exec);
 	if (is_builtin(pcs))

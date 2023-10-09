@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 19:06:32 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/05 12:50:57 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/09 12:54:13 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ int	manage_input(char *line, t_proc **lst_proc, int *err)
 	t_tok	*lst_tok;
 
 	lst_tok = NULL;
-	*err = 0;
 	if (parsing_input(line, err))
 		return (1);
 	if (create_tokens(&lst_tok, line, err))
@@ -94,6 +93,5 @@ int	manage_input(char *line, t_proc **lst_proc, int *err)
 		return (1);
 	}
 	free_lst_tok(&lst_tok);
-
 	return (0);
 }

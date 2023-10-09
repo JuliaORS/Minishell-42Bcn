@@ -15,9 +15,9 @@
 int	exec_machine(t_proc *pcs_chain, char *env[])
 {
 	t_exec	exec;
-	// t_proc *chain;
-	
- 	// chain = pcs_chain;
+
+	t_proc *chain;
+	chain = pcs_chain;
 	// while(chain)
  	// {
  	// 	printf("process position is  %i\n", chain->pos);
@@ -26,14 +26,15 @@ int	exec_machine(t_proc *pcs_chain, char *env[])
  	// 	printf("\n");
  	// 	chain = chain->next;
  	// }
-	// int i = -1;
-	// while (env && env[++i])
-	// 	printf("env var is : %s\n", env[i]);
 	if (!pcs_chain)
 		return (0);
 	init_exec(&exec, pcs_chain, env);
 	if (exec.total_cmd == 1 && is_builtin(pcs_chain))
-		return (exec_builtin(pcs_chain, &exec));
+	{
+		exec.exit_status = exec_builtin(pcs_chain, &exec);
+		back_up_stdio(&exec, 1);
+		return (exec.exit_status);
+	}
 	pipefd_calibrate(&exec);
 	launch_process(&exec, &pcs_chain);
 	close_all_pipes(&exec);

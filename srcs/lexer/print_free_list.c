@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 12:54:07 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/05 12:24:32 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/09 12:54:53 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,16 @@ void	free_lst_proc(t_proc **lst_proc)
 			free((*lst_proc)->infile);
 		if ((*lst_proc)->outfile)
 			free((*lst_proc)->outfile);
+		i = 0;
 		if ((*lst_proc)->hd_lim)
+		{
+			while ((*lst_proc)->hd_lim[i])
+			{
+				free((*lst_proc)->hd_lim[i]);
+				i++;
+			}
 			free((*lst_proc)->hd_lim);
+		}
 		free(*lst_proc);
 		*lst_proc = tmp;
 	}
@@ -53,15 +61,26 @@ void	ft_print_process(t_proc **lst_proc)
 	{
 		i = 0;
 		printf ("\nNUM PROCESS: %i\n", (*lst_proc)->pos);
-		while ((*lst_proc)->arg[i])
+		if((*lst_proc)->arg)
 		{
-			printf("arg[%i]-> '%s'\n", i, (*lst_proc)->arg[i]);
-			i++;
+			while ((*lst_proc)->arg[i])
+			{
+				printf("arg[%i]-> '%s'\n", i, (*lst_proc)->arg[i]);
+				i++;
+			}
 		}
 		printf("arg[%i]-> '%s'\n", i, (*lst_proc)->arg[i]);
+		i = 0;
 		printf("outfile-> '%s'	fd:%i\n", (*lst_proc)->outfile, (*lst_proc)->fd[1]);
 		printf("infile-> '%s'	fd:%i\n", (*lst_proc)->infile, (*lst_proc)->fd[0]);
-		printf("heredoc-> '%s'\n", (*lst_proc)->hd_lim);
+		if((*lst_proc)->hd_lim)
+		{
+			while ((*lst_proc)->hd_lim[i])
+			{
+				printf("heredoc[%i]-> '%s'\n", i, (*lst_proc)->hd_lim[i]);
+				i++;
+			}
+		}
 		(*lst_proc) = (*lst_proc)->next;
 	}
 	*lst_proc = tmp;

@@ -31,28 +31,19 @@ void	io_redirect(t_proc *pcs, t_exec *exec)
 	int	pos;
 
 	pos = pcs->pos;
+	back_up_stdio(exec , 0);
 	if (exec->pipes && pos > 0)
-	{	perror("open this inpipe\n");
 		dup2(exec->pipes[pos - 1][0], STDIN_FILENO);
-	}
 	if (exec->pipes && pos < exec->total_cmd - 1 && exec->total_cmd > 1)
-	{
-		perror("open this outpipe\n");
 		dup2(exec->pipes[pos][1], STDOUT_FILENO);
-	}
-	if (pcs->fd[0] > 0)
+	if (fd_is_open(pcs->fd[0]))
 	{
-		perror("open this infile\n");
-		if (dup2(pcs->fd[0], STDIN_FILENO) == -1)
-			printf("BAD ISSUE");
-			//error_msg("dup2 : bad infile descriptor", EBADF, exec, NULL);
+		dup2(pcs->fd[0], STDIN_FILENO);
 		close(pcs->fd[0]);
 	}
-	if (pcs->fd[1] > 0)
+	if (fd_is_open(pcs->fd[1]))
 	{
-		perror("open this outfile\n");
-		if (dup2(pcs->fd[1], STDOUT_FILENO) == -1)
-			perror("nqsty dup 2 error");			
+		dup2(pcs->fd[1], STDOUT_FILENO);
 		close(pcs->fd[1]);
 	}
 	return ;
@@ -104,10 +95,42 @@ void	close_all_pipes(t_exec *exec)
 	i = 0;
 	while (i < exec->total_cmd - 1)
 	{
+		//printf("closing all pipes in pipes[%i] for total of %i cmd\n", i, exec->total_cmd );
 		close(exec->pipes[i][0]);
 		close(exec->pipes[i][1]);
-		free(exec->pipes[i]);
+		if (exec->pipes[i])
+			free(exec->pipes[i]);
 		i++;
 	}
 	free(exec->pipes);
+}
+
+/*
+if builtins or any function implement a redirection in the parent process
+we need to backup and / or restore original STDIN and STDOUT from initial state
+*/
+void	back_up_stdio(t_exec *exec, int io)
+{
+	if (!exec)
+		return ;
+	if (io == 0)
+	{
+		exec->backup_stdio[0] = dup(STDIN_FILENO);
+		exec->backup_stdio[1] = dup(STDOUT_FILENO);
+	}
+	if (io == 1)
+	{
+		dup2(exec->backup_stdio[0], STDIN_FILENO);
+		close (exec->backup_stdio[0]);
+		dup2(exec->backup_stdio[1], STDOUT_FILENO);
+		close (exec->backup_stdio[1]);
+	}
+	return ;
+}
+
+int	fd_is_open(int fd)
+{
+	if (fd > 0)
+		return (1);
+	return (0);
 }
