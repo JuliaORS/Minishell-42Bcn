@@ -55,9 +55,9 @@ process. take exec object, use the number of comands (nbr of process),
 return noting but update the exec object with an array of initialized pipes.
 if n process -> (n - 1) pipes.
 each pipe has 2 ends pipe[0, 1] where [0] is read-end and [1] is write end
-so for 3 cmds we have pipes[0, 1] = [[0,1],[0,1]] so that : 
-cmd0 writes to [0][1] - cmd1 read from [0][1]
-cmd1 write to [1][1] - cmd 2 read from [1][0]
+so for 3 cmds and no infile/outfile fds we have pipes[0, 1] = [[3,4],[5,6]] so that : 
+cmd0 writes to [0][1] (fd 4) - cmd1 read from [0][0] (fd 3)
+cmd1 write to [1][1] (fd 6) - cmd 2 read from [1][0] (fd 5)
 */
 void	pipefd_calibrate(t_exec *exec)
 {
@@ -68,15 +68,15 @@ void	pipefd_calibrate(t_exec *exec)
 	if (!exec)
 		return;
 	nb_cmds = (exec)->total_cmd;
-	pipes = malloc(sizeof(int) * (nb_cmds - 1));
+	pipes = malloc(sizeof(int *) * (nb_cmds - 1));
 	if (!pipes)
-		error_msg("Out of memory Malloc", ENOMEM, exec, NULL);
+		error_msg("Malloc: Out of memory ", ENOMEM, exec, NULL);
 	i = 0;
 	while (i < nb_cmds - 1)
 	{
 		pipes[i] = malloc(sizeof(int) * 2);
 		if (!pipes[i])
-			error_msg("Out of memory Malloc", ENOMEM, exec, NULL);
+			error_msg("Malloc: Out of memory ", ENOMEM, exec, NULL);
 		if (pipe(pipes[i]) == -1)
 			error_msg("issue while pipe set up", EBADF, exec, NULL);
 		i++;
@@ -95,7 +95,6 @@ void	close_all_pipes(t_exec *exec)
 	i = 0;
 	while (i < exec->total_cmd - 1)
 	{
-		//printf("closing all pipes in pipes[%i] for total of %i cmd\n", i, exec->total_cmd );
 		close(exec->pipes[i][0]);
 		close(exec->pipes[i][1]);
 		if (exec->pipes[i])
@@ -103,11 +102,13 @@ void	close_all_pipes(t_exec *exec)
 		i++;
 	}
 	free(exec->pipes);
+	exec->pipes = NULL;
 }
 
 /*
 if builtins or any function implement a redirection in the parent process
 we need to backup and / or restore original STDIN and STDOUT from initial state
+otherwise minishell will keep executing in the redirected file
 */
 void	back_up_stdio(t_exec *exec, int io)
 {

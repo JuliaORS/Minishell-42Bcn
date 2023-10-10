@@ -37,9 +37,7 @@ by pipes.
 malloc an array of pids. exit if fails
 iterate over a loop for the total nber of process. fork() fails quit,
 otherwise :
-- if child process -> execute the command : we pass the entire
-chain if need information from previous command, inidate which node is 
-the command to execute.
+- if child process -> execute the command : we pass the node with data
 - if parent : add the pids to array. in the end add the whole array to
 exec object.
 */
@@ -54,7 +52,7 @@ void	launch_process(t_exec *exec, t_proc **pcs_chain)
 		return ; //extra clean exit later on
 	pids = malloc(sizeof(pid_t) * (exec)->total_cmd);
 	if (!pids)
-		return ; //extra clean exit later on
+		error_msg(MALLOC_MESS, ENOMEM, exec, NULL);
 	(exec)->pids = pids;
 	pcs = *pcs_chain;
 	i = 0;
@@ -62,7 +60,7 @@ void	launch_process(t_exec *exec, t_proc **pcs_chain)
 	{
 		pid = fork();
 		if (pid == -1)
-			exit(EXIT_FAILURE); // special case : clean all that was allocated
+			error_msg("fork failed: Cannot alocate memory ", ENOMEM, exec, NULL);
 		if (pid == 0)
 			command_process(pcs, exec);
 		if (pid > 0)
@@ -98,7 +96,7 @@ void	command_process(t_proc *pcs, t_exec *exec)
 	if (!pcs)
 		return ;
 	if (pcs->fd[0] == -1 || pcs->fd[1] == -1)
-		error_msg("bad file descriptor", EBADF, exec, pcs);
+		error_msg(BADF_MESS, EBADF, exec, pcs);
 	io_redirect(pcs, exec);
 	close_all_pipes(exec);
 	if (is_builtin(pcs))
@@ -130,15 +128,23 @@ inputs for execve are path (/bin/cat), an array of command info
 void	build_execve(t_proc **exec_trgt, t_exec **exec)
 {
 	char	**env_paths;
+	int		relative_path;
 
 	if (!*exec_trgt)
 		return ;
+	relative_path = 0;
 	env_paths = search_path((*exec)->env);
-	if ((*exec_trgt)->arg[0][0] == '/') //absolute path handled here but no relative path
-		(*exec)->path = (*exec_trgt)->arg[0];
+	if ((*exec_trgt)->arg[0][0] == '/' || ((*exec_trgt)->arg[0][0] == '.' && 
+		(*exec_trgt)->arg[0][1] == '/'))
+		{
+			(*exec)->path = (*exec_trgt)->arg[0];
+			relative_path = 1;
+		}
+
 	else
 		(*exec)->path = exec_path(env_paths, *exec_trgt);
-	//special case of relative path not handled 
+	if (relative_path == 1)
+		relative_path_clean(exec_trgt, exec);
 	exec_bash(exec_trgt, exec);
-	//free_split(env_path); to do later
+	free_split(&env_paths);
 }

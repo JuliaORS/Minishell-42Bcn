@@ -19,7 +19,7 @@ SRC         = lexer/minishell.c lexer/parse_input.c lexer/token_list.c \
 			lexer/process_list_utils.c lexer/print_free_list.c \
             lexer/error_parsing.c lexer/signals.c lexer/heredoc.c \
             execution/exec_process.c execution/manage_process.c \
-            execution/pipes.c execution/utils_exec.c \
+            execution/pipes.c execution/utils_exec.c execution/parse_path.c \
 			builtins/ft_cd.c builtins/ft_echo.c builtins/ft_export.c \
 			builtins/ft_pwd.c builtins/ft_unset.c \
             env/env_setup.c env/env_modify.c 
