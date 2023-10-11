@@ -23,18 +23,18 @@ int	main(int argc, char **argv, char **env)
 	(void)env;
 	while (1)
 	{
-		init_signals(READ, &exec.exit);
+		init_signals(READ, &exec.exit[0]);
 		input = readline("minishell$🦄");
 		if (input)
 			add_history(input);
 		if (!ft_strncmp(input, "exit", 5))
 			break ;
-		exec.exit = manage_input(input, &lst_proc, &exec.exit);
-		if(!exec.exit)
+		exec.exit[0] = manage_input(input, &lst_proc, &exec.exit[0]);
+		if(!exec.exit[0])
 		{
 			init_exec(&exec, lst_proc, env);
-			if(!manage_heredoc(&lst_proc, &exec.exit))
-				exec.exit = exec_machine(lst_proc, &exec);
+			if(!manage_heredoc(&lst_proc, &exec.exit[0]))
+				exec.exit[0] = exec_machine(lst_proc, &exec);
 			//printf("go execution\n");
 		}
 		free (input);

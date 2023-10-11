@@ -14,23 +14,13 @@
 
 int	exec_machine(t_proc *pcs_chain, t_exec *exec)
 {
-
-	// chain = pcs_chain; 
-	// while(chain)
- 	// {
- 	// 	printf("process position is  %i\n", chain->pos);
- 	// 	printf("	command is %s and flag is %s \n", chain->arg[0], chain->arg[1]);
- 	// 	printf("	fd inputs is %i and output is %i\n", chain->fd[0], chain->fd[1]);
- 	// 	printf("\n");
- 	// 	chain = chain->next;
- 	// }
 	if (!pcs_chain)
 		return (0);
 	if (exec->total_cmd == 1 && is_builtin(pcs_chain))
 	{
-		exec->exit = exec_builtin(pcs_chain, exec);
+		exec->exit[0] = exec_builtin(pcs_chain, exec);
 		back_up_stdio(exec, 1);
-		return (exec->exit);
+		return (exec->exit[0]);
 	}
 	pipefd_calibrate(exec);
 	launch_process(exec, &pcs_chain);
@@ -84,4 +74,34 @@ int	exec_builtin(t_proc *pcs_chain, t_exec *exec)
 		return (ft_unset(exec, pcs_chain->arg));
 	printf("minishell: %s: not a valid option\n", pcs_chain->arg[0]);
 	return (1);
+}
+
+/* 
+Objective : apply execve with many error handling
+1 - first if the path is findable (the path reach a file that exist - 
+we verify that (again) with access and F_OK) we then test several cases:
+1.a - if the file is not exectutable ( a script.sh where -x- right are
+not for user or group -> we return error 126 and exit message)
+1.b - else we can apply execve and return the error message if issue
+2 - if the path is not ok but arg_cmd[0] contains a "/" it is possible
+that our command is a relative path with directory like subdir/scripth.sh
+and in that case iterating or env wasn't a clear succees, so we apply execve 
+with arg_cmd[0] as path
+3 - if nothing worked, command is clearly unknown -> exit error message  
+*/
+void	exec_bash(t_proc **exec_trgt, t_exec **exec)
+{
+	if (access((*exec)->path, F_OK) == 0)
+	{
+		if (access((*exec)->path, X_OK) != 0)
+			error_msg(NOPERM_MESS, NOPERM, *exec, *exec_trgt);
+		if (execve((*exec)->path, (*exec_trgt)->arg, (*exec)->env) == -1)
+			exit(EXIT_FAILURE);
+	}
+	if (ft_strchr((*exec_trgt)->arg[0], '/') && access((*exec_trgt)->arg[0], F_OK) == 0) //SPECIAL CASE ABSOLUTE / RELATIVE PATH
+	{
+		if (execve((*exec_trgt)->arg[0], (*exec_trgt)->arg, (*exec)->env) == -1)
+			exit(EXIT_FAILURE);
+	}
+	error_msg(CMNF_MESS, CMNOFOUND, *exec, *exec_trgt);
 }

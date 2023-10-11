@@ -13,6 +13,7 @@
 
 #include "minishell.h"
 
+void	close_cmd_fd(t_proc *pcs);
 /*
 wait for each process to finish, starting by the last one - to make sure
 all commands execute correctly
@@ -27,6 +28,13 @@ void	wait_processes(t_exec *exec)
 	while (total_cmd >= 0)
 	{
 		wpid = waitpid(exec->pids[total_cmd], &status, 0);
+		if (total_cmd == exec->total_cmd - 1)
+		{
+			if (WIFEXITED(status))
+				exec->exit[0] = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
+				exec->exit[0] = WTERMSIG(status);
+		}
 		total_cmd--;
 	}
 }
@@ -45,15 +53,13 @@ void	launch_process(t_exec *exec, t_proc **pcs_chain)
 {
 	int		i;
 	pid_t	pid;
-	pid_t	*pids;
 	t_proc	*pcs;
 
 	if (!exec || !*pcs_chain)
-		return ; //extra clean exit later on
-	pids = malloc(sizeof(pid_t) * (exec)->total_cmd);
-	if (!pids)
+		return ;
+	(exec)->pids = malloc(sizeof(pid_t) * (exec)->total_cmd);
+	if (!(exec)->pids)
 		error_msg(MALLOC_MESS, ENOMEM, exec, NULL);
-	(exec)->pids = pids;
 	pcs = *pcs_chain;
 	i = 0;
 	while (i < (exec)->total_cmd)
@@ -65,14 +71,10 @@ void	launch_process(t_exec *exec, t_proc **pcs_chain)
 			command_process(pcs, exec);
 		if (pid > 0)
 			exec->pids[i] = pid;
-		if (fd_is_open(pcs->fd[0]))
-			close(pcs->fd[0]);
-		if (fd_is_open(pcs->fd[1]))
-			close(pcs->fd[1]);
+		close_cmd_fd(pcs);
 		pcs = pcs->next;
 		i++;
 	}
-	return ;
 }
 /*
 we first check no empty data structure, then traverse to the node
@@ -107,8 +109,8 @@ void	command_process(t_proc *pcs, t_exec *exec)
 
 /*
 heart of the execution machine. 
-objective : we build the execve with error check along the way
-inputs for execve are path (/bin/cat), an array of command info
+objective : we build the execve with error check along the way.
+Inputs for execve are exec path (/bin/cat), an array of command info
  (ex : "ls -l" would yield {"ls, "-l", NULL}) and the env variables. 
  1- receive the array arg_cmd from parsing ({cmd, arguments, NULL}): 
  2 - we use search_path to look for the path inside the env[] and return a
@@ -135,16 +137,27 @@ void	build_execve(t_proc **exec_trgt, t_exec **exec)
 	relative_path = 0;
 	env_paths = search_path((*exec)->env);
 	if ((*exec_trgt)->arg[0][0] == '/' || ((*exec_trgt)->arg[0][0] == '.' && 
-		(*exec_trgt)->arg[0][1] == '/'))
+		(*exec_trgt)->arg[0][1] == '/') || (*exec_trgt)->arg[0][0] == '~')
 		{
 			(*exec)->path = (*exec_trgt)->arg[0];
 			relative_path = 1;
 		}
-
 	else
 		(*exec)->path = exec_path(env_paths, *exec_trgt);
 	if (relative_path == 1)
 		relative_path_clean(exec_trgt, exec);
 	exec_bash(exec_trgt, exec);
 	free_split(&env_paths);
+}
+
+/*
+quick utils to close fds from infile outfile in parents
+to avoid duplicate  with children or fd
+*/
+void	close_cmd_fd(t_proc *pcs)
+{
+		if (fd_is_open(pcs->fd[0]))
+			close(pcs->fd[0]);
+		if (fd_is_open(pcs->fd[1]))
+			close(pcs->fd[1]);
 }

@@ -69,7 +69,7 @@ typedef struct s_exec {
 	int		total_cmd;
 	char	*path;
 	int		backup_stdio[2];
-	int		exit;
+	int		exit[2];
 }	t_exec;
 
 /*toakenisation process*/
