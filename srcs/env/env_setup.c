@@ -21,26 +21,27 @@ duplicate envrionment from main to run our minishell
 3. clean exit if malloc issue and return NULL
 4. return the duplicate environment
 */
-char	**env_dup(char **env)
+char	**env_dup(char **env, int i, int j)
 {
 	char	**env_dup;
-	int		i;
 	size_t	size;
 
 	size = count_var_env(env);
-	env_dup = ft_calloc(size + 1, sizeof(char *));
+	env_dup = ft_calloc(size, sizeof(char *));
 	if (!env_dup)
 		return (NULL);
-	i = 0;
 	while (env && env[i])
 	{
-		env_dup[i] = ft_strdup(env[i]);
-		if (!env_dup)
+		if (!ft_strncmp("OLDPWD=", env[i], 7))
+			i++;
+		env_dup[j] = ft_strdup(env[i]);
+		if (!env_dup[j])
 		{
 			free_env(env_dup);
 			return (NULL);
 		}
 		i++;
+		j++;
 	}
 	env_dup[i] = NULL;
 	return (env_dup);

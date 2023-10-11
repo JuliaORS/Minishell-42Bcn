@@ -28,19 +28,20 @@ int check_directory(const char *path)
 
     if (access(path,F_OK) == -1)
     {
-        perror("cd: no such file or directory: REPLACE_WITH_DIR\n"); // replace by ft_printf()
+        error_builtin(MALLOC_MESS, ENOMEM, NULL, "cd");
+        printf("minishell: cd: %s: No such file or directory\n", path);
         return (1);
     }
     if (access(path, X_OK) == -1)
     {
-        perror("cd: REPLACE_WITH_DIR: Permission denied\n"); // replace by ft_printf()
+        printf("minishell: cd: : %s\n", path);
         return (1);
     }
     if (stat(path, &info) == 0)
     {
         if (!S_ISDIR(info.st_mode))
         {
-            perror("cd : REPLACE_W_DIR: Not a directory\n");
+            printf("minishell: cd: %s: Permission denied\n", path);
             return (1);
         }
     }
@@ -68,7 +69,7 @@ int    ft_cd(t_exec *exec, char **arg)
     {
         if (chdir(extract_path(ft_getenv(exec->env, "HOME"))) == -1)
         {
-		    perror("cd: "); //relace with ft_printf
+		    printf("cd: HOME not set\n"); //relace with ft_printf
             return (1);
         }
     }
@@ -78,11 +79,12 @@ int    ft_cd(t_exec *exec, char **arg)
             return (1) ;
         if (chdir(arg[1]) == -1)
         {
-		    perror("cd: REPLACE_WITH_arg[1]\n"); //relace with ft_printf
+		    printf("cd: %s\n", arg[1]); //relace with ft_printf
             return (1);
         }
     }
     update_env_dir(exec, old_path);
+    exec->dir_init = 1;
     return (0);
 }
 
@@ -100,7 +102,10 @@ void update_env_dir(t_exec *exec, char *old_path)
     curr_dir = getcwd(NULL, 1056);
     curr_path = ft_strjoin("PWD=", curr_dir);
     free(curr_dir);
-    replace_env_var(exec->env, "OLDPWD", old_path);
+    if (exec->dir_init == 0)
+        exec->env = realloc_env(exec->env, old_path);
+    else
+        replace_env_var(exec->env, "OLDPWD", old_path);
     replace_env_var(exec->env, "PWD", curr_path);
     free(curr_path);
     free(old_path);

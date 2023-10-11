@@ -70,6 +70,7 @@ typedef struct s_exec {
 	char	*path;
 	int		backup_stdio[2];
 	int		exit[2];
+	int		dir_init;
 }	t_exec;
 
 /*toakenisation process*/
@@ -116,7 +117,7 @@ char	**search_path(char *env[]);
 void	relative_path_clean(t_proc **proc,  t_exec **exec);
 
 /*utils for process and env*/
-void	init_exec(t_exec *exec, t_proc *pcs_chain, char **env);
+void	init_exec(t_exec *exec, char **env);
 int		measure_list(t_proc **lst);
 void	io_redirect(t_proc *pcs, t_exec *exec);
 void	back_up_stdio(t_exec *exec, int io);
@@ -137,9 +138,10 @@ int		ft_export(t_exec *exec, char **arg);
 int		ft_unset(t_exec *exec, char **arg);
 int		is_builtin(t_proc*pcs_chain);
 int		exec_builtin(t_proc *pcs_chain, t_exec *exec);
+int		error_builtin(char *msg, int nb, t_exec *exec, char *bltn);
 
 /* environment setup and modification */
-char	**env_dup(char **env);
+char	**env_dup(char **env, int i, int j);
 int		count_var_env(char **env);
 void	free_env(char	**env);
 char	*extract_variable(char *key_value);

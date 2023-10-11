@@ -20,7 +20,7 @@ int	main(int argc, char **argv, char **env)
 
 	(void)argc;
 	(void)argv;
-	(void)env;
+	init_exec(&exec, env);
 	while (1)
 	{
 		init_signals(READ, &exec.exit[0]);
@@ -32,7 +32,7 @@ int	main(int argc, char **argv, char **env)
 		exec.exit[0] = manage_input(input, &lst_proc, &exec.exit[0]);
 		if(!exec.exit[0])
 		{
-			init_exec(&exec, lst_proc, env);
+			exec.total_cmd = measure_list(&lst_proc);
 			if(!manage_heredoc(&lst_proc, &exec.exit[0]))
 				exec.exit[0] = exec_machine(lst_proc, &exec);
 			//printf("go execution\n");

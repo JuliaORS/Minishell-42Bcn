@@ -66,7 +66,7 @@ void	launch_process(t_exec *exec, t_proc **pcs_chain)
 	{
 		pid = fork();
 		if (pid == -1)
-			error_msg("fork failed: Cannot alocate memory ", ENOMEM, exec, NULL);
+			error_msg("fork failed", ENOMEM, exec, NULL);
 		if (pid == 0)
 			command_process(pcs, exec);
 		if (pid > 0)
@@ -152,7 +152,7 @@ void	build_execve(t_proc **exec_trgt, t_exec **exec)
 
 /*
 quick utils to close fds from infile outfile in parents
-to avoid duplicate  with children or fd
+to avoid duplicate  with children or fd leaks later on
 */
 void	close_cmd_fd(t_proc *pcs)
 {

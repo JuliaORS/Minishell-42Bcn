@@ -13,17 +13,20 @@
 
 #include "minishell.h"
 
-void	init_exec(t_exec *exec, t_proc *pcs_chain, char **env)
+void	init_exec(t_exec *exec, char **env)
 {
-	if (!exec | !pcs_chain)
+	if (!exec)
 	{	
-		error_msg("init empty struct", 0, exec, pcs_chain);
+		error_msg("init empty struct", 0, exec, NULL);
 		return ;
 	}
-	exec->total_cmd = measure_list(&pcs_chain);
-	exec->env = env_dup(env);
+	exec->env = env_dup(env, 0, 0); 
 	if (!exec->env)
-		error_msg(MALLOC_MESS, 0, exec, pcs_chain);
+		error_msg(MALLOC_MESS, 0, exec, NULL);
+	exec->dir_init = 0;
+	exec->pids = NULL;
+	exec->pipes = NULL;
+	exec->path = NULL;
 }
 
 int	measure_list(t_proc **list)
@@ -52,14 +55,23 @@ void	free_exec(t_exec **exec)
 {
 	if (!*exec)
 		return ;
-	if((*exec)->env)
-		free_env((*exec)->env);
+	// if((*exec)->env)    
+	// 	free_env((*exec)->env);
 	if ((*exec)->pids)
+	{
 		free((*exec)->pids);
+		(*exec)->pids = NULL;
+	}
 	if ((*exec)->pipes)
+	{
 		close_all_pipes(*exec);
+		(*exec)->pipes = NULL;
+	}
 	if ((*exec)->path)
+	{
 		free((*exec)->path);
+		(*exec)->path = NULL;
+	}
 	return ;
 }
 
@@ -74,6 +86,8 @@ int	error_msg(char *msg, int nb, t_exec *exec, t_proc *pcs)
 		printf("minishell: %s\n", msg);
 	if (exec)
 		free_exec(&exec);
+	if (exec->total_cmd == 1 && is_builtin(pcs))
+		return (nb);
 	if (nb)
 		exit(nb);
 	else

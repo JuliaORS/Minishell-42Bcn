@@ -20,6 +20,7 @@ int	exec_machine(t_proc *pcs_chain, t_exec *exec)
 	{
 		exec->exit[0] = exec_builtin(pcs_chain, exec);
 		back_up_stdio(exec, 1);
+		free_exec(&exec);
 		return (exec->exit[0]);
 	}
 	pipefd_calibrate(exec);
@@ -76,6 +77,20 @@ int	exec_builtin(t_proc *pcs_chain, t_exec *exec)
 	return (1);
 }
 
+/*
+special error function for builtin execution in parent process
+to not exit
+*/
+int	error_builtin(char *msg, int nb, t_exec *exec, char *bltn)
+{
+	if (bltn)
+		printf("minishell: %s: %s\n", msg, bltn);
+	else
+		printf("minishell: %s\n", msg);
+	if (exec)
+		free_exec(&exec);
+	return (nb);
+}
 /* 
 Objective : apply execve with many error handling
 1 - first if the path is findable (the path reach a file that exist - 

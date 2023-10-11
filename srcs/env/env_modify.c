@@ -18,7 +18,7 @@ increas the memory size of env array by one char * and copy it
 char	**realloc_env(char **env, char *var)
 {
 	char	**new_env;
-	char	*temp;
+	//char	*temp;
 	int		i;
 	size_t	size;
 
@@ -29,13 +29,12 @@ char	**realloc_env(char **env, char *var)
 	i = 0;
 	while (env && env[i])
 	{
-		temp = ft_strdup(env[i]);
+		new_env[i] = ft_strdup(env[i]);
 		free(env[i]);
-		new_env[i] = temp;
 		i++;
 	}
 	new_env[size] = NULL;
-	new_env[size - 1] = var;
+	new_env[size - 1] = ft_strdup(var);
 	free(env);
 	return(new_env);
 }
@@ -56,20 +55,19 @@ char	**downsize_env(char **env, int idx, int i, int j)
 	new_env = ft_calloc(count_var_env(env), sizeof(char *));
 	if (!new_env)
 		return (NULL);
-	i = 0;
-	j = 0;
 	while (env && env[i])
 	{
-		if (i == idx)
-		{
-			free(env[i]);
-			i++;
-		}
 		temp = ft_strdup(env[i]);
-		new_env[j] = temp;
 		free(env[i]);
-		j++;
+		if (i != idx)
+		{
+			new_env[j] = temp;
+			j++;
+		}
+		else
+			free(temp);
 		i++;
+		printf("we are at idx %i and look for %i among %i\n", i, idx, count_var_env(env));
 	}
 	new_env[j] = NULL;
 	free(env);
@@ -98,6 +96,7 @@ int	search_env_var(char **env, char *target)
 	while (env && env[i])
 	{
 		var_extract = extract_variable(env[i]);
+		//printf("extract we look for is %s in %s\n", target, var_extract);
 		if (!ft_strncmp(var_extract, target, ft_strlen(target) + 1) && var_extract)
 		{
 			free(var_extract);
@@ -108,6 +107,7 @@ int	search_env_var(char **env, char *target)
 	}
 	return (-1);
 }
+
 /*
 traverse key_value char * and return the substring of all characters
 before the '=', if no '=' encountered return NULL
@@ -122,7 +122,12 @@ char	*extract_variable(char *key_value)
 	while (key_value[i])
 	{
 		if (key_value[i] == '=')
-			len = i;
+		{
+			if (key_value[i - 1] && key_value[i - 1] == '+')
+				len = i - 1;
+			else
+				len = i;
+		}
 		i++;
 	}
 	if (len == 0)
