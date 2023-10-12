@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 17:05:20 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/09 13:36:18 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/12 17:57:31 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,15 +74,17 @@ typedef struct s_exec {
 }	t_exec;
 
 /*toakenisation process*/
-int		manage_input(char *line, t_proc **lst_proc, int *err);
-int		create_tokens(t_tok **lst_tok, char *line, int *err);
+int		manage_input(char *line, t_proc **lst_proc, t_exec *exec);
+void	init_error(t_exec *exec);
+int	new_tok(t_tok **lst_tok, char *str, int type, int *exit);
+int		create_tokens(t_tok **lst_tok, char *line, t_exec *exec);
 t_tok	*ft_lstnew_tok(char *str, int type);
 t_tok	*ft_lstlast_tok(t_tok *lst);
 void	ft_lstadd_back_tok(t_tok **lst, t_tok *new);
-void	expand_tokens(t_tok **lst_tok, int *err);
+int		expand_tokens(t_tok **lst_tok, t_exec *exec);
 char	*create_new_str(char *str, char *str_aft_exp, int *i, int j);
 void	ft_print_list_tok(t_tok **lst_tok);
-int		msg_error_parsing(int type, int *err);
+int		msg_error_parsing(int type, int ch, int *exit);
 int		create_process(t_proc **lst_proc, t_tok **lst_tok, int *err);
 t_proc	*ft_lstnew_proc(void);
 t_proc	*ft_lstlast_proc(t_proc *lst);
@@ -95,13 +97,15 @@ int		find_outfile(t_proc *lst_proc, t_tok **lst_tok, int *err);
 int		find_infile(t_proc *lst_proc, t_tok **lst_tok, int *err);
 int		find_heredoc(t_proc *lst_proc, t_tok **lst_tok, int n_hd, int *err);
 int		create_str(t_proc *lst_proc, t_tok **lst_tok, int n_str, int *err);
-
+char	*check_expand(char *str, int *i, t_exec *exec);
+void	free_lst_tok(t_tok **lst_tok);
+void	free_lst_proc(t_proc **lst_proc);
 
 /*signals*/
-void	init_signals(int mode, int *err);
+void    init_signals(int mode, t_exec *exec);
 
 /*heredoc*/
-int		manage_heredoc(t_proc **lst_proc, int *err);
+int	manage_heredoc(t_proc **lst_proc, t_exec *exec);
 
 /*exec and process functions*/
 int		exec_machine(t_proc *pcs_chain, t_exec *exec);
@@ -150,10 +154,6 @@ char	**realloc_env(char **env, char *var);
 char	**downsize_env(char **env, int idx, int i, int j);
 char    *ft_getenv(char **env, char *target);
 void	replace_env_var(char **env, char *target, char *replace);
-char	*join_str_toks(t_tok **lst_tok);
-char	*check_expand(char *str, int *i, int *err);
-void	free_lst_tok(t_tok **lst_tok);
-void	free_lst_proc(t_proc **lst_proc);
 
 /* exec total malloc : pids, pipes, valid_path,   */
 #endif

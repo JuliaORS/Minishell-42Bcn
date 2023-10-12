@@ -6,29 +6,11 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 20:17:43 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/04 20:19:55 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/10 17:49:41 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*check_env(char *str, int *i, int j, int *err)
-{
-	char	*str_bef_exp;
-	char	*str_aft_exp;
-
-	str_bef_exp = ft_substr(str, *i + 1, j);
-	if (!str_bef_exp)
-	{
-		*err = 12;
-		return (NULL);
-	}
-	str_aft_exp = getenv(str_bef_exp); //use our ft_getenv: separate malloc error or no path
-	free(str_bef_exp);
-	if (*err) //error with ft_getenv
-		return (NULL);
-	return (str_aft_exp);
-}
 
 char *create_final_str(char *str_aft_exp, char *beg_str, char *end_str, int *i)
 {
@@ -73,27 +55,28 @@ char	*create_new_str(char *str, char *str_aft_exp, int *i, int j)
 	return (final_str);
 }
 
-char	*get_str_exp(char *str, int *i, int j, int *err)
+char	*get_str_exp(char *str, int *i, int j, t_exec *exec)
 {
+	char	*str_bef_exp;
 	char	*str_aft_exp;
 	char	*str_final;
 	
-	str_aft_exp = check_env(str, i, j, err);
-	if (*err)
+	(void)exec; //borrar despres;
+	str_bef_exp = ft_substr(str, *i + 1, j);
+	if (!str_bef_exp)
 		return (NULL);
+	//str_aft_exp = ft_getenv(exec->env, str_bef_exp); //use our ft_getenv: separate malloc error or no path
+	str_aft_exp = getenv(str_bef_exp);
+	free(str_bef_exp);
 	str_final = create_new_str(str, str_aft_exp, i, j);
-	if (!str_final)
-	{
-		if ((str_aft_exp))
-			free(str_aft_exp);
-		return (NULL);
-	}
+	//if (str_aft_exp)
+		//free(str_aft_exp); //use our ft_getenv: separate malloc error or no path
 	return (str_final);
 }
 
-char	*check_expand(char *str, int *i, int *err)
+char	*check_expand(char *str, int *i, t_exec *exec)
 {
-	char	*str_final;
+	char	*new_str;
 	int		j;
 
 	j = 0;
@@ -102,13 +85,10 @@ char	*check_expand(char *str, int *i, int *err)
 		j++;
 	if (j != 0)
 	{
-		str_final = get_str_exp(str, i, j, err);
-		if (!str_final)
-			msg_error_parsing(12, err);
+		new_str = get_str_exp(str, i, j, exec);
 		free (str);
-		return (str_final);
+		return (new_str);
 	}
 	else
 		return(str);
 }
-
