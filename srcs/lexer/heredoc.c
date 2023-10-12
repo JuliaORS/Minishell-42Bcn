@@ -6,13 +6,13 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 18:08:01 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/09 15:11:28 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/12 15:31:21 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*expand_hd(char *str, int *err)
+char	*expand_hd(char *str, t_exec *exec)
 {
 	int		i;
 
@@ -21,22 +21,13 @@ char	*expand_hd(char *str, int *err)
 	{
 		if (str[i] == '$')
 		{
-			str = check_expand(str, &i, err);
+			str = check_expand(str, &i, exec);
 			if (!str)
 				return (NULL);
 		}
 		i++;
 	}
 	return (str);
-}
-
-void	save_hd(t_proc *lst_proc, char *str, int *fds)
-{
-	write(fds[1], str, ft_strlen(str));
-	close(fds[1]);
-	close(fds[0]);
-	if (lst_proc->intype == 1)
-		lst_proc->fd[0] = fds[0];
 }
 
 char	*join_input(char *input_hd, char *hd_text)
@@ -55,12 +46,10 @@ char	*join_input(char *input_hd, char *hd_text)
 		return (NULL);
 	str_final = ft_strjoin(str_join, "\n");
 	free(str_join);
-	if (!str_final)
-		return (NULL);
 	return (str_final);
 }
 
-int	create_input_hd(t_proc *lst_proc, int *fds, int n_hd, int *err)
+int	create_input_hd(t_proc *lst_proc, int *fds, int n_hd, t_exec *exec)
 {
 	char	*input_hd;
 	char	*hd_text;
@@ -70,9 +59,8 @@ int	create_input_hd(t_proc *lst_proc, int *fds, int n_hd, int *err)
 	while (1)
 	{
 		input_hd = readline("> ");
-		if (input_hd)
-			add_history(input_hd);
-		if (!ft_strncmp(input_hd, lst_proc->hd_lim[n_hd], ft_strlen(lst_proc->hd_lim[n_hd]) + 1))
+		if (!ft_strncmp(input_hd, lst_proc->hd_lim[n_hd], \
+			ft_strlen(lst_proc->hd_lim[n_hd]) + 1))
 			break ;
 		hd_text = join_input(input_hd, hd_text);
 		if (!hd_text)
@@ -80,30 +68,26 @@ int	create_input_hd(t_proc *lst_proc, int *fds, int n_hd, int *err)
 		free (input_hd);
 	}
 	free (input_hd);
-	str_exp = expand_hd(hd_text, err);
-	save_hd(lst_proc, str_exp, fds);
+	str_exp = expand_hd(hd_text, exec);
+	if (!str_exp)
+		return (12);
+	write(fds[1], str_exp, ft_strlen(str_exp));
 	return (0);
 }
 
-int	check_hd_exit(void)
+int	check_hd_exit(int pid)
 {
 	int		exit_process;
 
-	waitpid (-1, &exit_process, 0);
+	waitpid (pid, &exit_process, 0);
 	if (WEXITSTATUS(exit_process) == 12)
-	{
-		ft_printf("error in save heredoc\n"); //manage error
 		return (12);
-	}
 	else if (WEXITSTATUS(exit_process) == 1)
-	{
-		ft_printf("receive signal ctrl+c\n"); //manage error
 		return (1);
-	}
 	return (0);
 }
 
-void	exec_hd(t_proc *proc, int n_hd, int *err)
+int	exec_hd(t_proc *proc, int n_hd, t_exec *exec)
 {
 	int		fds[2];
 	int		pid;
@@ -113,15 +97,28 @@ void	exec_hd(t_proc *proc, int n_hd, int *err)
 	pid = fork ();
 	if (pid == 0)
 	{
-		init_signals(HEREDOC, err);
-		exit_hd = create_input_hd(proc, fds, n_hd, err);
+		init_signals(HEREDOC, exec);
+		exit_hd = create_input_hd(proc, fds, n_hd, exec);
+		close(fds[1]);
+		close(fds[0]);
 		exit (exit_hd);
 	}
+	exec->exit[0] = check_hd_exit(pid);
 	close(fds[1]);
-	*err = check_hd_exit();
+	if (exec->exit[0] == 12)
+		msg_error_parsing(12, 0, &exec->exit[0]);
+	//dup2(fds[0], STDIN_FILENO); //Romain check backup
+	if (proc->intype == 1)
+	{
+		close(proc->fd[0]);
+		proc->fd[0] = fds[0];
+	}
+	else
+		close(fds[0]);
+	return (exec->exit[0]);
 }
 
-int	manage_heredoc(t_proc **lst_proc, int *err)
+int	manage_heredoc(t_proc **lst_proc, t_exec *exec)
 {
 	t_proc	*tmp;
 	int		n_hd;
@@ -134,17 +131,13 @@ int	manage_heredoc(t_proc **lst_proc, int *err)
 		{
 			while ((*lst_proc)->hd_lim[n_hd])
 			{
-				exec_hd(*lst_proc, n_hd, err);
-				if (*err)
-				{
-					msg_error_parsing(*err, err);
-					break ;
-				}
+				if (exec_hd(*lst_proc, n_hd, exec))
+					return (1);
 				n_hd++;
 			}
 		}
 		(*lst_proc) = (*lst_proc)->next;
 	}
 	*lst_proc = tmp;
-	return (*err);
+	return (0);
 }

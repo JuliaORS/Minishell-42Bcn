@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 12:54:07 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/09 12:54:53 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/12 15:32:58 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ void	free_lst_proc(t_proc **lst_proc)
 	t_proc	*tmp;
 	int		i;
 
+	if (!lst_proc)
+		return  ;
 	while (*lst_proc)
 	{
 		i = 0;
@@ -44,6 +46,10 @@ void	free_lst_proc(t_proc **lst_proc)
 			}
 			free((*lst_proc)->hd_lim);
 		}
+		if ((*lst_proc)->fd[0] > 0)
+			close((*lst_proc)->fd[0]);
+		if ((*lst_proc)->fd[1] > 0)
+			close((*lst_proc)->fd[1]);
 		free(*lst_proc);
 		*lst_proc = tmp;
 	}

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/09 10:26:06 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/09 10:26:06 by julolle-         ###   ########.fr       */
+/*   Created: 2023/10/12 16:22:05 by julolle-          #+#    #+#             */
+/*   Updated: 2023/10/12 16:22:05 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,86 +37,63 @@ char	*join_str_toks(t_tok **lst_tok)
 	return (str_join);
 }
 
-
-int	find_outfile(t_proc *lst_proc, t_tok **lst_tok, int *err)
+int	find_outfile(t_proc *lst_proc, t_tok **lst_tok, int *exit)
 {
 	int		type;
 
 	if (lst_proc->outfile)
-		free(lst_proc->outfile);
-	type = (*lst_tok)->type;
-	if ((*lst_tok)->next && ((*lst_tok)->next->type <= 2 || \
-		((*lst_tok)->next->type == 3 && (*lst_tok)->next->next && \
-		(*lst_tok)->next->next->type <= 2)))
 	{
-		*lst_tok = (*lst_tok)->next;
-		if ((*lst_tok)->type == 3 && (*lst_tok)->next)
-			(*lst_tok) = (*lst_tok)->next;
-		lst_proc->outfile = join_str_toks(lst_tok);
-		if (!lst_proc->outfile)
-			return(msg_error_parsing(12, err));
-		if (type == 4)
-			lst_proc->fd[1] = open(lst_proc->outfile, O_CREAT | O_RDWR | \
-				O_TRUNC, 0666);
-		else
-			lst_proc->fd[1] = open(lst_proc->outfile, O_WRONLY | O_CREAT | \
-				O_APPEND, 0666); // manage fd = -1 ???
+		close (lst_proc->fd[1]);
+		free(lst_proc->outfile);
 	}
+	type = (*lst_tok)->type;
+	*lst_tok = (*lst_tok)->next;
+	if ((*lst_tok)->type == 3)
+		(*lst_tok) = (*lst_tok)->next;
+	lst_proc->outfile = join_str_toks(lst_tok);
+	if (!lst_proc->outfile)
+		return(msg_error_parsing(12, 0, exit));
+	if (type == 4)
+		lst_proc->fd[1] = open(lst_proc->outfile, O_CREAT | O_RDWR | O_TRUNC, 0666);
 	else
-		return(msg_error_parsing(258, err)); //chao program??
+		lst_proc->fd[1] = open(lst_proc->outfile, O_WRONLY | O_CREAT | O_APPEND, 0666);
 	return (0);
 }
 
-int	find_infile(t_proc *lst_proc, t_tok **lst_tok, int *err)
+int	find_infile(t_proc *lst_proc, t_tok **lst_tok, int *exit)
 {
 	lst_proc->intype = 0;
 	if (lst_proc->infile)
-		free(lst_proc->infile);
-	if ((*lst_tok)->next && ((*lst_tok)->next->type <= 2 || \
-		((*lst_tok)->next->type == 3 && (*lst_tok)->next->next && \
-		(*lst_tok)->next->next->type <= 2)))
 	{
-		*lst_tok = (*lst_tok)->next;
-		if ((*lst_tok)->type == 3 && (*lst_tok)->next)
-			(*lst_tok) = (*lst_tok)->next;
-		lst_proc->infile = join_str_toks(lst_tok);
-		if (!lst_proc->infile)
-			return (msg_error_parsing(12, err));
-		lst_proc->fd[0] = open(lst_proc->infile, O_RDONLY);
-		if (lst_proc->fd[0] < 0)
-		{
-			//manage error chao program????
-		}
+		close (lst_proc->fd[0]);
+		free(lst_proc->infile);
 	}
-	else
-		return(msg_error_parsing(258, err)); //chao program??
+	*lst_tok = (*lst_tok)->next;
+	if ((*lst_tok)->type == 3 && (*lst_tok)->next)
+		(*lst_tok) = (*lst_tok)->next;
+	lst_proc->infile = join_str_toks(lst_tok);
+	if (!lst_proc->infile)
+		return (msg_error_parsing(12, 0, exit));
+	lst_proc->fd[0] = open(lst_proc->infile, O_RDONLY);
 	return (0);
 }
 
-int	find_heredoc(t_proc *lst_proc, t_tok **lst_tok, int n_hd, int *err)
+int	find_heredoc(t_proc *lst_proc, t_tok **lst_tok, int n_hd, int *exit)
 {
 	lst_proc->intype = 1;
-	if ((*lst_tok)->next && ((*lst_tok)->next->type <= 2 || \
-		((*lst_tok)->next->type == 3 && (*lst_tok)->next->next && \
-		(*lst_tok)->next->next->type <= 2)))
-	{
-		*lst_tok = (*lst_tok)->next;
-		if ((*lst_tok)->type == 3 && (*lst_tok)->next)
-			(*lst_tok) = (*lst_tok)->next;
-		lst_proc->hd_lim[n_hd] = join_str_toks(lst_tok);
-		if (!lst_proc->hd_lim)
-			return (msg_error_parsing(12, err));
-	}
-	else
-		return(msg_error_parsing(258, err)); //chao program??
-	//printf("NUm hdoc %i - HD LIM: %s\n", n_hd, lst_proc->hd_lim[n_hd]);
+	*lst_tok = (*lst_tok)->next;
+	if ((*lst_tok)->type == 3 && (*lst_tok)->next)
+		(*lst_tok) = (*lst_tok)->next;
+	lst_proc->hd_lim[n_hd] = join_str_toks(lst_tok);
+	if (!lst_proc->hd_lim)
+		return (msg_error_parsing(12, 0, exit));
 	return (0);
 }
 
-int	create_str(t_proc *lst_proc, t_tok **lst_tok, int n_str, int *err)
+int	create_str(t_proc *lst_proc, t_tok **lst_tok, int n_str, int *exit)
 {
 	lst_proc->arg[n_str] = join_str_toks(lst_tok);
 	if (!lst_proc->arg[n_str])
-		return (msg_error_parsing(12, err));
+		return (msg_error_parsing(12, 0, exit));
 	return (0);
 }

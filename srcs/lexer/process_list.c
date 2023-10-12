@@ -6,13 +6,13 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 19:04:54 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/09 15:18:16 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/10 20:22:47 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	create_array_hdoc(t_proc *proc, t_tok **lst_tok)
+int	create_array_hdoc(t_proc *proc, t_tok **lst_tok)
 {
 	int		n_hdoc;
 	t_tok	*tmp;
@@ -27,12 +27,13 @@ void	create_array_hdoc(t_proc *proc, t_tok **lst_tok)
 	}
 	proc->hd_lim = (char **)malloc(sizeof(char *) * (n_hdoc + 1));
 	if (!proc->hd_lim)
-		return ;
+		return (1);
 	proc->hd_lim[n_hdoc] = NULL;
 	*lst_tok = tmp;
+	return (0);
 }
 
-void	create_array_arg(t_proc *proc, t_tok **lst_tok)
+int	create_array_arg(t_proc *proc, t_tok **lst_tok)
 {
 	int		n_arg;
 	t_tok	*tmp;
@@ -52,9 +53,10 @@ void	create_array_arg(t_proc *proc, t_tok **lst_tok)
 	}
 	proc->arg = (char **)malloc(sizeof(char *) * (n_arg + 1));
 	if (!proc->arg)
-		return ;
+		return (1);
 	proc->arg[n_arg] = NULL;
 	*lst_tok = tmp;
+	return (0);
 }
 
 t_proc	*create_node_proc(t_proc **lst_proc, t_tok **lst_tok, int pos)
@@ -67,16 +69,14 @@ t_proc	*create_node_proc(t_proc **lst_proc, t_tok **lst_tok, int pos)
 	ft_lstadd_back_proc(lst_proc, proc);
 	proc->pos = pos;
 	create_array_arg(proc, lst_tok);
-	if (!proc->arg)
+	if (create_array_arg(proc, lst_tok))
 		return (NULL);
-	create_array_hdoc(proc, lst_tok);
-	if (!proc->hd_lim)
+	if (create_array_hdoc(proc, lst_tok))
 		return (NULL);
-	
 	return (proc);
 }
 
-int	new_process(t_proc **lst_proc, t_tok **lst_tok, int pos, int *err)
+int	new_process(t_proc **lst_proc, t_tok **lst_tok, int pos, int *exit)
 {
 	t_proc	*proc;
 	int		n_str;
@@ -86,41 +86,39 @@ int	new_process(t_proc **lst_proc, t_tok **lst_tok, int pos, int *err)
 	n_hd = 0;
 	proc = create_node_proc(lst_proc, lst_tok, pos);
 	if (!proc)
-		return(msg_error_parsing(12, err));
-	while (*lst_tok && (*lst_tok)->type != 8 && !*err)
+		return(msg_error_parsing(12, 0, exit));
+	while (*lst_tok && (*lst_tok)->type != 8 && !*exit)
 	{
 		if ((*lst_tok)->type == 4 || (*lst_tok)->type == 5)
-			find_outfile(proc, lst_tok, err);
+			find_outfile(proc, lst_tok, exit);
 		else if ((*lst_tok)->type == 6)
-			find_infile(proc, lst_tok, err);
+			find_infile(proc, lst_tok, exit);
 		else if ((*lst_tok)->type == 7)
-			find_heredoc(proc, lst_tok, n_hd++, err);
-			//printf("heredoc\n");
+			find_heredoc(proc, lst_tok, n_hd++, exit);
 		else if ((*lst_tok)->type <= 2)
-			create_str(proc, lst_tok, n_str++, err);
+			create_str(proc, lst_tok, n_str++, exit);
 		if (*lst_tok)
 			*lst_tok = (*lst_tok)->next;
 	}
-	return(*err);
+	return(*exit);
 }
 
-int	create_process(t_proc **lst_proc, t_tok **lst_tok, int *err)
+int	create_process(t_proc **lst_proc, t_tok **lst_tok, int *exit)
 {
 	int		pos_proc;
 	t_tok	*tmp;
 
 	tmp = *lst_tok;
 	pos_proc = 0;
-	while (*lst_tok && !*err)
+	while (*lst_tok && !*exit)
 	{
-		if (new_process(lst_proc, lst_tok, pos_proc, err))
+		if (new_process(lst_proc, lst_tok, pos_proc, exit))
 			break ;
 		if ((*lst_tok))
 			*lst_tok = (*lst_tok)->next;
-			
 		pos_proc++;
 	}
 	*lst_tok = tmp;
 	//ft_print_process(lst_proc);
-	return (*err);
+	return (*exit);
 }
