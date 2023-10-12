@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 /*
 increas the memory size of env array by one char * and copy it
@@ -18,24 +18,23 @@ increas the memory size of env array by one char * and copy it
 char	**realloc_env(char **env, char *var)
 {
 	char	**new_env;
-	char	*temp;
+	//char	*temp;
 	int		i;
 	size_t	size;
 
-	size = count_var_env(env) + 1;
+	size = count_var_env(env) + 1; 
 	new_env = ft_calloc(size + 1, sizeof(char *));
 	if (!new_env)
 		return (NULL);
 	i = 0;
 	while (env && env[i])
 	{
-		temp = ft_strdup(env[i]);
+		new_env[i] = ft_strdup(env[i]);
 		free(env[i]);
-		new_env[i] = temp;
 		i++;
 	}
 	new_env[size] = NULL;
-	new_env[size - 1] = var;
+	new_env[size - 1] = ft_strdup(var);
 	free(env);
 	return(new_env);
 }
@@ -56,19 +55,17 @@ char	**downsize_env(char **env, int idx, int i, int j)
 	new_env = ft_calloc(count_var_env(env), sizeof(char *));
 	if (!new_env)
 		return (NULL);
-	i = 0;
-	j = 0;
 	while (env && env[i])
 	{
-		if (i == idx)
-		{
-			free(env[i]);
-			i++;
-		}
 		temp = ft_strdup(env[i]);
-		new_env[j] = temp;
 		free(env[i]);
-		j++;
+		if (i != idx)
+		{
+			new_env[j] = temp;
+			j++;
+		}
+		else
+			free(temp);
 		i++;
 	}
 	new_env[j] = NULL;
@@ -76,60 +73,11 @@ char	**downsize_env(char **env, int idx, int i, int j)
 	return(new_env);
 }
 
+
 /*
-search for the variable in the environment
-and return the index if found, -1 otherwise
-1. we extract the key part of key_value pair in our key=value
-2. if this value isn't null we extratt the key of all env value
-	and if one match -> we return it's index and free all extracted
-	value (as come from ft_substring)
-EXAMPLE : we look for USER, we iterate over each key_value pair 
-and extrat characters before '=' (PWD, OLD_PWD, LANG,..) until we find 
-USER and return it's index position
+search for a target in the env, found it's index and repalce (cpy and
+delete previous value) -> do nothing if no index found
 */
-int	search_env_var(char **env, char *target)
-{
-	int	i;
-	char *var_extract;
-
-	if (!env)
-		return (-1);
-	i = 0;
-	while (env && env[i])
-	{
-		var_extract = extract_variable(env[i]);
-		if (!ft_strncmp(var_extract, target, ft_strlen(target) + 1) && var_extract)
-		{
-			free(var_extract);
-			return(i);
-		}
-		free(var_extract);
-		i++;
-	}
-	return (-1);
-}
-/*
-traverse key_value char * and return the substring of all characters
-before the '=', if no '=' encountered return NULL
-*/
-char	*extract_variable(char *key_value)
-{
-	int	len;
-	int	i;
-
-	len = 0;
-	i = 0;
-	while (key_value[i])
-	{
-		if (key_value[i] == '=')
-			len = i;
-		i++;
-	}
-	if (len == 0)
-		return (NULL);
-	return (ft_substr(key_value, 0, len));
-}
-
 void	replace_env_var(char **env, char *target, char *replace)
 {
 	int	idx;

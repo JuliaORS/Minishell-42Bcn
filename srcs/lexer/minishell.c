@@ -15,27 +15,27 @@
 int	main(int argc, char **argv, char **env)
 {
 	char	*input;
-	int		err;
+	t_exec	exec;
 	t_proc	*lst_proc;
 
 	(void)argc;
 	(void)argv;
-	(void)env;
+	init_exec(&exec, env);
 	while (1)
 	{
-		init_signals(READ, &err);
+		init_signals(READ, &exec.exit[0]);
 		input = readline("minishell$🦄");
 		if (input)
 			add_history(input);
 		if (!ft_strncmp(input, "exit", 5))
 			break ;
-		err = manage_input(input, &lst_proc, &err);
-		
-		if(!err)
+		exec.exit[0] = manage_input(input, &lst_proc, &exec.exit[0]);
+		if(!exec.exit[0])
 		{
-			if(!manage_heredoc(&lst_proc, &err))
-				err = exec_machine(lst_proc, env);
-				printf("go execution\n");
+			exec.total_cmd = measure_list(&lst_proc);
+			if(!manage_heredoc(&lst_proc, &exec.exit[0]))
+				exec.exit[0] = exec_machine(lst_proc, &exec);
+			//printf("go execution\n");
 		}
 		free (input);
 		free_lst_proc(&lst_proc);

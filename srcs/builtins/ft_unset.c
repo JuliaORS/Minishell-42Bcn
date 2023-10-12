@@ -1,5 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rjobert <rjobert@student.42barcelo>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/25 12:15:32 by rjobert           #+#    #+#             */
+/*   Updated: 2023/09/25 12:15:35 by rjobert          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 int	check_syntax_unset(char *var);
 /*
@@ -24,7 +35,11 @@ int ft_unset(t_exec *exec, char **arg)
 		{
 			idx = search_env_var(exec->env, arg[i]);
 			if (idx != -1)
+			{
 				exec->env = downsize_env(exec->env, idx, 0, 0);
+					if (!exec->env)
+					printf("minishell: unset: calloc failed\n");
+			}
 		}
 		i++;
 	}
@@ -42,7 +57,7 @@ int	check_syntax_unset(char *var)
 		return (0);
 	if (!ft_isalpha(var[0]) && var[0] != '_')
 	{
-		printf("minishell: export: `%s': not a valid identifier\n", var); //replace by official minishell name
+		printf("minishell: export: `%s': not a valid identifier\n", var);
 		return (0);
 	}
 	i = -1;
@@ -50,7 +65,7 @@ int	check_syntax_unset(char *var)
 	{
 		if (!ft_isalnum(var[i]) && var[i] != '_')
 		{
-			printf("minishell: export: `%s': not a valid identifier\n", var); //replace by official minishell name
+			printf("minishell: export: `%s': not a valid identifier\n", var);
 			return (0);
 		}
 	}
