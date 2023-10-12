@@ -21,7 +21,7 @@ char	*extract_value(char *key_value);
 check that the string respect the variabel environment syntax
 1. doesn't start by anything else than alpahbets or '_'
 2. followed by alphanumericals or '_'
-3. contains at least one '='
+3. contains at least one '=' or '+='
 4. return an error 'invalid identifier' only if case 1 and 2 wrong
 */
 int	check_syntax_export(char *var)
@@ -132,46 +132,27 @@ int	export_exec(t_exec *exec, char *arg, int type)
 	int		idx;
 	char	*temp;
 
-	if (type)
+	idx = search_env_var(exec->env, extract_variable(arg));
+	if (idx == -1 && type == 1)
+		exec->env = realloc_env(exec->env, arg);
+	else if (idx == -1 && type == 2)
 	{
-		idx = search_env_var(exec->env, extract_variable(arg));
-		printf("index is %i\n", idx);
-		if (idx == -1 )
-			exec->env = realloc_env(exec->env, arg);
-		else
-		{
-			if (type == 2)
-			{
-				temp = ft_strjoin(exec->env[idx], arg);
-				free(exec->env[idx]);
-				exec->env[idx] = ft_strjoin(exec->env[idx], extract_value(arg));
-			}
-			else
-			{
-				free(exec->env[idx]);
-				exec->env[idx] = ft_strdup(arg);
-			}
-			if (!exec->env[idx])
-				return (-1);
-		}
+		temp = ft_strjoin("=", extract_value(arg));
+		exec->env = realloc_env(exec->env, ft_strjoin(extract_variable(arg), temp));
+		free(temp);
 	}
+	else if (idx >= 0 && type == 2)
+	{
+		temp = ft_strjoin(exec->env[idx], extract_value(arg));
+		free(exec->env[idx]);
+		exec->env[idx] = temp;
+	}
+	else
+	{
+		free(exec->env[idx]);
+		exec->env[idx] = ft_strdup(arg);
+	}
+	if (!exec->env[idx])
+		return (-1);
 	return (0);
-}
-
-char	*extract_value(char *key_value)
-{
-	int	len;
-	int	i;
-
-	len = 0;
-	i = 0;
-	while (key_value[i])
-	{
-		if (key_value[i] == '=')
-			len = i + 1;
-		i++;
-	}
-	if (len == 0)
-		return (NULL);
-	return (ft_substr(key_value, len, ft_strlen(key_value)));
 }

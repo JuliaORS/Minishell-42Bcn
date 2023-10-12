@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 /*
 increas the memory size of env array by one char * and copy it
@@ -22,7 +22,7 @@ char	**realloc_env(char **env, char *var)
 	int		i;
 	size_t	size;
 
-	size = count_var_env(env) + 1;
+	size = count_var_env(env) + 1; 
 	new_env = ft_calloc(size + 1, sizeof(char *));
 	if (!new_env)
 		return (NULL);
@@ -67,74 +67,17 @@ char	**downsize_env(char **env, int idx, int i, int j)
 		else
 			free(temp);
 		i++;
-		printf("we are at idx %i and look for %i among %i\n", i, idx, count_var_env(env));
 	}
 	new_env[j] = NULL;
 	free(env);
 	return(new_env);
 }
 
-/*
-search for the variable in the environment
-and return the index if found, -1 otherwise
-1. we extract the key part of key_value pair in our key=value
-2. if this value isn't null we extratt the key of all env value
-	and if one match -> we return it's index and free all extracted
-	value (as come from ft_substring)
-EXAMPLE : we look for USER, we iterate over each key_value pair 
-and extrat characters before '=' (PWD, OLD_PWD, LANG,..) until we find 
-USER and return it's index position
-*/
-int	search_env_var(char **env, char *target)
-{
-	int	i;
-	char *var_extract;
-
-	if (!env)
-		return (-1);
-	i = 0;
-	while (env && env[i])
-	{
-		var_extract = extract_variable(env[i]);
-		//printf("extract we look for is %s in %s\n", target, var_extract);
-		if (!ft_strncmp(var_extract, target, ft_strlen(target) + 1) && var_extract)
-		{
-			free(var_extract);
-			return(i);
-		}
-		free(var_extract);
-		i++;
-	}
-	return (-1);
-}
 
 /*
-traverse key_value char * and return the substring of all characters
-before the '=', if no '=' encountered return NULL
+search for a target in the env, found it's index and repalce (cpy and
+delete previous value) -> do nothing if no index found
 */
-char	*extract_variable(char *key_value)
-{
-	int	len;
-	int	i;
-
-	len = 0;
-	i = 0;
-	while (key_value[i])
-	{
-		if (key_value[i] == '=')
-		{
-			if (key_value[i - 1] && key_value[i - 1] == '+')
-				len = i - 1;
-			else
-				len = i;
-		}
-		i++;
-	}
-	if (len == 0)
-		return (NULL);
-	return (ft_substr(key_value, 0, len));
-}
-
 void	replace_env_var(char **env, char *target, char *replace)
 {
 	int	idx;
