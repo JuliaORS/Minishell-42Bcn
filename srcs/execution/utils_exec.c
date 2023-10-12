@@ -13,18 +13,20 @@
 
 #include "minishell.h"
 
-void	init_exec(t_exec *exec, t_proc *pcs_chain, char **env)
+void	init_exec(t_exec *exec, char **env)
 {
-	if (!exec | !pcs_chain)
+	if (!exec)
 	{	
-		error_msg("init empty struct", 0, exec, pcs_chain);
+		error_msg("init empty struct", 0, exec, NULL);
 		return ;
 	}
-	exec->total_pcs = measure_list(&pcs_chain);
-	exec->env = env_dup(env);
+	exec->env = env_dup(env, 0, 0); 
 	if (!exec->env)
-		error_msg("Out of Memory: Environment dup fail", 0, exec, pcs_chain);
-
+		error_msg(MALLOC_MESS, 0, exec, NULL);
+	exec->dir_init = 0;
+	exec->pids = NULL;
+	exec->pipes = NULL;
+	exec->path = NULL;
 }
 
 int	measure_list(t_proc **list)
@@ -45,51 +47,6 @@ int	measure_list(t_proc **list)
 }
 
 /*
-receive dble pointer to t_proc object. traverse it backward
-to first command, then traverse and clean mallocated memory
-close all opened fds if any
-*/
-void	free_chain(t_proc **pcs_chain)
-{
-	t_proc *chain;
-
-	if (!*pcs_chain)
-		return ;
-	chain = *pcs_chain;
-	while (chain->pos != 0)
-		chain = chain->prev;
-	while (chain)
-	{
-		if (chain->arg)
-			free_arg(chain->arg);
-		if (chain->fd[0] && chain->fd[0] != -1)
-			close(chain->fd[0]);
-		if (chain->fd[1] && chain->fd[1] != -1)
-			close(chain->fd[1]);
-		chain = chain->next;
-	}
-	return ;
-}
-
-/*
-free NULL-terminated double array of commands arguments
-very similar to free_env
-*/
-void	free_arg(char **arg)
-{
-	int	i;
-
-	if (!*arg)
-		return ;
-	i = -1;
-	while (arg && arg[++i])
-		free(arg[i]);
-	if (arg)
-		free(arg);
-	return ;
-}
-
-/*
 free all the mallocated element of the t_exec object
 close all fds opened by pipes in parents and still
 open in the process (dbled in Vnode)
@@ -98,37 +55,57 @@ void	free_exec(t_exec **exec)
 {
 	if (!*exec)
 		return ;
-	if((*exec)->env)
-		free_env((*exec)->env);
+	// if((*exec)->env)    
+	// 	free_env((*exec)->env);
 	if ((*exec)->pids)
+	{
 		free((*exec)->pids);
+		(*exec)->pids = NULL;
+	}
 	if ((*exec)->pipes)
 	{
 		close_all_pipes(*exec);
-		free((*exec)->pipes);
+		(*exec)->pipes = NULL;
 	}
 	if ((*exec)->path)
+	{
 		free((*exec)->path);
+		(*exec)->path = NULL;
+	}
 	return ;
 }
 
 /*
-display error msg, custom error exit number, free memroy
+display error msg, custom error exit number, free memry
 */
 int	error_msg(char *msg, int nb, t_exec *exec, t_proc *pcs)
 {
 	if (pcs)
-	{
 		printf("minishell: %s: %s\n", pcs->arg[0], msg);
-		free_chain(&pcs);
-		
-	}
 	else
 		printf("minishell: %s\n", msg);
 	if (exec)
 		free_exec(&exec);
+	if (exec->total_cmd == 1 && is_builtin(pcs))
+		return (nb);
 	if (nb)
 		exit(nb);
 	else
 		exit(EXIT_FAILURE);
+}
+
+void	free_split(char ***split_result)
+{
+	int	i;
+
+	if (!*split_result || !split_result)
+		return ;
+	i = 0;
+	while ((*split_result)[i])
+	{
+		free((*split_result)[i]);
+		i++;
+	}
+	free(*split_result);
+	*split_result = NULL;
 }

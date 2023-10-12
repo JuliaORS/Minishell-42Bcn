@@ -20,15 +20,20 @@
 # include <readline/history.h>
 # include <sys/stat.h>
 # include "./libft/libft.h"
+# include <signal.h>
+# include "libft/libft.h"
+# include "ft_printf/ft_printf.h"
 
+/*========================== system error management ==========================*/
 # define EBADF 9
 # define ENOMEM 12
 # define NOPERM 126
 # define CMNOFOUND 127
-# define STDIN	0
-# include <signal.h>
-# include "libft/libft.h"
-# include "ft_printf/ft_printf.h"
+
+# define MALLOC_MESS "malloc failed: Cannot allocate memory"
+# define BADF_MESS  "Bad file descriptor"
+# define CMNF_MESS "Command not found"
+# define NOPERM_MESS "Permission denied"
 
 /*SIGNALS MODE*/
 # define READ		1
@@ -59,11 +64,13 @@ typedef struct s_tok {
 
 typedef struct s_exec {
 	char	**env;
-	int		*pipes;
+	int		**pipes;
 	pid_t	*pids;
-	int		total_pcs;
+	int		total_cmd;
 	char	*path;
+	int		backup_stdio[2];
 	int		exit[2];
+	int		dir_init;
 }	t_exec;
 
 /*toakenisation process*/
@@ -101,30 +108,28 @@ void    init_signals(int mode, t_exec *exec);
 int	manage_heredoc(t_proc **lst_proc, t_exec *exec);
 
 /*exec and process functions*/
-int		exec_machine(t_proc *pcs_chain, char *env[]);
+int		exec_machine(t_proc *pcs_chain, t_exec *exec);
 void	pipefd_calibrate(t_exec *exec);
 void	launch_process(t_exec *exec, t_proc **pcs_chain);
-void	command_process(t_proc **pcs_chain, t_exec **exec, int pos);
+void	command_process(t_proc *pcs_chain, t_exec *exec);
 void	launch_process(t_exec *exec, t_proc **pcs_chain);
 void	wait_processes(t_exec *exec);
 char	*exec_path(char **all_path, t_proc *exec_trgt);
 void	build_execve(t_proc **exec_trgt, t_exec **exec);
 void	exec_bash(t_proc **exec_trgt, t_exec **exec);
 char	**search_path(char *env[]);
-void	first_process(t_proc *exec_trgt, t_exec **exec);
-void	last_process(t_proc *exec_trgt, t_exec **exec);
-void	mid_process(t_proc *exec_trgt, t_exec **exec);
+void	relative_path_clean(t_proc **proc,  t_exec **exec);
 
 /*utils for process and env*/
-void	init_exec(t_exec *exec, t_proc *pcs_chain, char **env);
+void	init_exec(t_exec *exec, char **env);
 int		measure_list(t_proc **lst);
-void	redirect_input(int	input_fd);
-void	redirect_output(int output_fd);
+void	io_redirect(t_proc *pcs, t_exec *exec);
+void	back_up_stdio(t_exec *exec, int io);
 void	close_all_pipes(t_exec *exec);
-void	free_chain(t_proc **pcs_chain);
-void	free_arg(char **arg);
 void	free_exec(t_exec **exec);
 int		error_msg(char *msg, int nb, t_exec *exec, t_proc *pcs);
+int		fd_is_open(int fd);
+void	free_split(char ***split_result);
 
 
 /*buil-tins and environtment prototypes*/
@@ -135,9 +140,12 @@ int		ft_echo(t_exec *exec, char **arg);
 int		ft_env(t_exec *exec, char **arg);
 int		ft_export(t_exec *exec, char **arg);
 int		ft_unset(t_exec *exec, char **arg);
+int		is_builtin(t_proc*pcs_chain);
+int		exec_builtin(t_proc *pcs_chain, t_exec *exec);
+int		error_builtin(char *msg, int nb, t_exec *exec, char *bltn);
 
 /* environment setup and modification */
-char	**env_dup(char **env);
+char	**env_dup(char **env, int i, int j);
 int		count_var_env(char **env);
 void	free_env(char	**env);
 char	*extract_variable(char *key_value);

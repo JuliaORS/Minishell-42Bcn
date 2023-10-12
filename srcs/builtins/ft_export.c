@@ -1,11 +1,27 @@
 
-#include "../../includes/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rjobert <rjobert@student.42barcelo>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/25 12:15:32 by rjobert           #+#    #+#             */
+/*   Updated: 2023/09/25 12:15:35 by rjobert          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+int	check_concat_valid(const char *var);
+int	export_exec(t_exec *exec, char *arg, int type);
+char	*extract_value(char *key_value);
 
 /*
 check that the string respect the variabel environment syntax
 1. doesn't start by anything else than alpahbets or '_'
 2. followed by alphanumericals or '_'
-3. contains at least one '='
+3. contains at least one '=' or '+='
 4. return an error 'invalid identifier' only if case 1 and 2 wrong
 */
 int	check_syntax_export(char *var)
@@ -20,15 +36,11 @@ int	check_syntax_export(char *var)
 		printf("minishell: export: `%s': not a valid identifier\n", var); //replace by official minishell name
 		return (0);
 	}
-	i = -1;
-	valid = 0;
-	while(var[++i])
-		if (var[i] == '=')
-			valid = 1;
+	valid = check_concat_valid(var);
 	if (valid == 0)
 		return (0);
 	i = -1;
-	while (var[++i] && var[i] != '=')
+	while (var[++i] && !(var[i] == '=' || ((var[i]) == '+' && var[i + 1] == '=')))
 	{
 		if (!ft_isalnum(var[i]) && var[i] != '_')
 		{
@@ -36,7 +48,7 @@ int	check_syntax_export(char *var)
 			return (0);
 		}
 	}
-	return (1);
+	return (valid);
 }
 
 /*
@@ -56,7 +68,7 @@ int	check_syntax_export(char *var)
 int	ft_export(t_exec *exec, char **arg)
 {
 		int		i;
-		int		idx;
+		int		type;
 
 		if (!exec->env)
 			return (0);
@@ -70,19 +82,77 @@ int	ft_export(t_exec *exec, char **arg)
 		i = 0;
 		while (arg && arg[++i])
 		{
-			if (check_syntax_export(arg[i]))
+			type = check_syntax_export(arg[i]);
+			if (type)
 			{
-				idx = search_env_var(exec->env, extract_variable(arg[i]));
-				if (idx == -1 )
-					exec->env = realloc_env(exec->env, arg[i]);
-				else
+				if (export_exec(exec, arg[i], type) == -1)
 				{
-					free(exec->env[idx]);
-					exec->env[idx] = ft_strdup(arg[i]);
-					if (!exec->env[idx]) //HANDLE MALLOC DEEEPER HERE
-						return (-1);
+					printf("minishell: export: malloc failed\n");
+					return (1);
 				}
 			}
+			
 		}
-		return (0);
+	return (0);
+}
+
+
+/*
+Traverse the string, if see += return 2, if see only = return 1
+otherwise return 0
+*/
+int	check_concat_valid(const char *var)
+{
+	int	i;
+	int	valid;
+
+	i = -1;
+	valid = 0;
+	while(var[++i])
+	{
+		if (var[i] == '+')
+		{
+			if (var[i + 1] && var[i + 1] == '=')
+				return (2);
+		}
+		if (var[i] == '=')
+			valid = 1;
+	}
+	return (valid);
+}
+
+/*
+based on the type of export or concat, we search for the occurence of the 
+variable in env. if not found (index returned -1) we add it
+if it is found -> if export mode classic we remplace, if concat mode we
+add it to the current value
+*/
+int	export_exec(t_exec *exec, char *arg, int type)
+{
+	int		idx;
+	char	*temp;
+
+	idx = search_env_var(exec->env, extract_variable(arg));
+	if (idx == -1 && type == 1)
+		exec->env = realloc_env(exec->env, arg);
+	else if (idx == -1 && type == 2)
+	{
+		temp = ft_strjoin("=", extract_value(arg));
+		exec->env = realloc_env(exec->env, ft_strjoin(extract_variable(arg), temp));
+		free(temp);
+	}
+	else if (idx >= 0 && type == 2)
+	{
+		temp = ft_strjoin(exec->env[idx], extract_value(arg));
+		free(exec->env[idx]);
+		exec->env[idx] = temp;
+	}
+	else
+	{
+		free(exec->env[idx]);
+		exec->env[idx] = ft_strdup(arg);
+	}
+	if (!exec->env[idx])
+		return (-1);
+	return (0);
 }
