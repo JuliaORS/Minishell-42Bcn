@@ -4,3 +4,4 @@
 *.d
 *.gch
 *.dSYM
+.nfs.*

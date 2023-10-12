@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 18:08:01 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/12 15:31:21 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/12 19:58:22 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ int	manage_heredoc(t_proc **lst_proc, t_exec *exec)
 			while ((*lst_proc)->hd_lim[n_hd])
 			{
 				if (exec_hd(*lst_proc, n_hd, exec))
-					return (1);
+					return (exec->exit[0]);
 				n_hd++;
 			}
 		}
