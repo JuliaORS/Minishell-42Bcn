@@ -86,7 +86,7 @@ int	error_msg(char *msg, int nb, t_exec *exec, t_proc *pcs)
 		printf("minishell: %s\n", msg);
 	if (exec)
 		free_exec(&exec);
-	if (exec->total_cmd == 1 && is_builtin(pcs))
+	if (exec->in_parent)
 		return (nb);
 	if (nb)
 		exit(nb);

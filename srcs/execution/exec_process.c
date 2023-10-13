@@ -18,11 +18,13 @@ int	exec_machine(t_proc *pcs_chain, t_exec *exec)
 		return (0);
 	if (exec->total_cmd == 1 && is_builtin(pcs_chain))
 	{
+		exec->in_parent = 1;
 		exec->exit[0] = exec_builtin(pcs_chain, exec);
 		back_up_stdio(exec, 1);
 		free_exec(&exec);
 		return (exec->exit[0]);
 	}
+	exec->in_parent = 0;
 	pipefd_calibrate(exec);
 	launch_process(exec, &pcs_chain);
 	close_all_pipes(exec);
@@ -51,6 +53,8 @@ int	is_builtin(t_proc*pcs_chain)
 		return (1);
 	else if (!ft_strncmp(cmd, "unset", 6))
 		return (1);
+	else if (!ft_strncmp(cmd, "exit", 5))
+		return (1);
 	return (0);
 }
 
@@ -73,6 +77,8 @@ int	exec_builtin(t_proc *pcs_chain, t_exec *exec)
 		return (ft_export(exec, pcs_chain->arg));
 	else if (!ft_strncmp(cmd, "unset", 6))
 		return (ft_unset(exec, pcs_chain->arg));
+	else if (!ft_strncmp(cmd, "exit", 5))
+		return (ft_exit(exec, pcs_chain->arg));
 	printf("minishell: %s: not a valid option\n", pcs_chain->arg[0]);
 	return (1);
 }
@@ -109,7 +115,9 @@ void	exec_bash(t_proc **exec_trgt, t_exec **exec)
 	if (access((*exec)->path, F_OK) == 0)
 	{
 		if (access((*exec)->path, X_OK) != 0)
+		{
 			error_msg(NOPERM_MESS, NOPERM, *exec, *exec_trgt);
+		}
 		if (execve((*exec)->path, (*exec_trgt)->arg, (*exec)->env) == -1)
 			exit(EXIT_FAILURE);
 	}
