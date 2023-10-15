@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
+/*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/14 16:13:18 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/14 16:16:25 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/15 20:27:32 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,12 @@ int	check_quote(char *line, int *i, char qu, int *exit)
 
 int	check_redir_pipes(char *line, int *i, int *exit)
 {
+	int	tipo;
+
+	if (line[*i] == '|')
+		tipo = 1;
+	if (line[*i] == '|' && *i == 0)
+		return (msg_error_parsing(258, '|', exit));	
 	if (line[*i] == '>' && line[*i + 1] && line[*i + 1] == '>')
 		*i += 1;
 	else if (line[*i] == '<' && line[*i + 1] && line[*i + 1] == '<')
@@ -38,8 +44,10 @@ int	check_redir_pipes(char *line, int *i, int *exit)
 		*i += 1;
 	if (!line[*i + 1])
 		return (msg_error_parsing(258, 1, exit));
-	else if ((line[*i + 1] == '>' || line[*i + 1] == '<') || \
-		line[*i + 1] == '|')
+	if (tipo == 1 && line[*i + 1] == '|')
+		return (msg_error_parsing(258, 1, exit));
+	else if (tipo != 1 && (line[*i + 1] == '>' || line[*i + 1] == '<' || \
+		line[*i + 1] == '|'))
 		return (msg_error_parsing(258, line[*i + 1], exit));
 	return (0);
 }

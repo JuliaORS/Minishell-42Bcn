@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 21:20:02 by rjobert           #+#    #+#             */
-/*   Updated: 2023/10/13 18:24:24 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/15 18:42:24 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,6 @@ void	exec_bash(t_proc **exec_trgt, t_exec **exec)
 	if (access((*exec)->path, F_OK) == 0)
 	{
 		if (access((*exec)->path, X_OK) != 0)
-		{
 			error_msg(NOPERM_MESS, NOPERM, *exec, *exec_trgt);
 
 		if (execve((*exec)->path, (*exec_trgt)->arg, (*exec)->env) == -1)

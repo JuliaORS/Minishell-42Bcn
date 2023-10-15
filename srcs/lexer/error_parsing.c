@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 16:45:27 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/14 17:04:48 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/15 14:59:06 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	msg_error_parsing(int type, int ch, int *exit)
 {
 	*exit = type;
 	if (type == 12)
-		ft_printf(STDERR_FILENO, "minishell🦄: Cannot allocate memory\n");
+		ft_printf(STDERR_FILENO, "minishell🦄: Cannot allocate memory hola\n");
 	else if (type == 258 && ch == 1)
 		ft_printf(STDERR_FILENO, "minishell🦄: syntax error near unexpected token `newline'\n");
 	else if (type == 258 && ch != 1)
