@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 20:17:43 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/15 13:03:40 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/15 15:45:09 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,10 @@ char	*get_str_exp(char *str, int *i, int j, t_exec *exec)
 		str_aft_exp = rem_space(str_aft_exp);
 	}
 	else
-		str_aft_exp = NULL;
+	{
+		str_aft_exp = malloc (sizeof(char) * 1);
+		str_aft_exp[0] = '\0';
+	}
 	if (!str_aft_exp)
 		return (NULL);
 	free(str_bef_exp);

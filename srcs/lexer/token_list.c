@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 12:52:12 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/15 12:00:33 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/15 18:27:15 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,20 +16,23 @@ int	create_tok_quote(t_tok **lst_tok, char *line, int *i, int *exit)
 {
 	char	*pos;
 	char	*sub_str;
+	int		tipo;
 
 	if (line[0] == '"')
 	{
 		pos = ft_strchr(line + 1, '"');
 		sub_str = ft_substr(line, 1, ft_strlen(line) - ft_strlen(pos) - 1);
+		tipo = 0;
 	}
 	else
 	{
 		pos = ft_strchr(line + 1, '\'');
 		sub_str = ft_substr(line, 1, ft_strlen(line) - ft_strlen(pos) - 1);
+		tipo = 1;
 	}
 	if (!sub_str)
 		return (msg_error_parsing(12, 0, exit));
-	if (new_tok(lst_tok, sub_str, 0, exit))
+	if (new_tok(lst_tok, sub_str, tipo, exit))
 		return (1);
 	*i = *i + (ft_strlen(line) - ft_strlen(pos));
 	return (0);
@@ -92,11 +95,12 @@ void	create_tok_space(t_tok **lst_tok, char *line, int *i, int *exit)
 	*i = *i + len - 1;
 }
 
-int	create_tokens(t_tok **lst_tok, char *line, t_exec *exec)
+int	create_tokens(t_tok **lst_tok, char *input, t_exec *exec)
 {
-	int	i;
-
+	int		i;
+	char	*line;
 	i = 0;
+	line = ft_strtrim(input, " ");
 	while (line[i] && !exec->exit[0])
 	{
 		if (line[i] == '"' || line[i] == '\'')
@@ -111,7 +115,11 @@ int	create_tokens(t_tok **lst_tok, char *line, t_exec *exec)
 			create_tok_str(lst_tok, line + i, &i, &exec->exit[0]);
 		i++;
 	}
+	free(line);
 	if (!exec->exit[0])
-		exec->exit[0] = expand_tokens(lst_tok, exec);
+	{
+		if (expand_tokens(lst_tok, exec))
+			return (1);
+	}
 	return (exec->exit[0]);
 }

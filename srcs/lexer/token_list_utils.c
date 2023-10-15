@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 20:24:48 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/12 16:18:45 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/15 18:01:34 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,21 @@ void	ft_lstadd_back_tok(t_tok **lst, t_tok *new)
 		else
 			*lst = new;
 	}
+}
+
+int	ft_lstsize_tok(t_tok *lst)
+{
+	int		i;
+	t_tok	*temp;
+
+	i = 0;
+	temp = lst;
+	while (temp != NULL)
+	{
+		i++;
+		temp = temp->next;
+	}
+	return (i);
 }
 
 int	new_tok(t_tok **lst_tok, char *str, int type, int *exit)

@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 17:05:20 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/15 12:46:01 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/15 18:02:04 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ typedef struct s_exec {
 /*toakenisation process*/
 int		manage_input(char *line, t_proc **lst_proc, t_exec *exec);
 int		parsing_input(char *line, int *exit);
-char	*find_dollar_sign(char *str, t_exec *exec, int mode);
+char	*find_dollar_sign(char *str, t_exec *exec, int *end_pos, int *flag_exp);
 char	*expand_error(char *str, int *i, t_exec *exec);
 char	*rem_space(char *str);
 void	init_error(t_exec *exec);
@@ -87,6 +87,7 @@ int		create_tokens(t_tok **lst_tok, char *line, t_exec *exec);
 t_tok	*ft_lstnew_tok(char *str, int type);
 t_tok	*ft_lstlast_tok(t_tok *lst);
 void	ft_lstadd_back_tok(t_tok **lst, t_tok *new);
+int		ft_lstsize_tok(t_tok *lst);
 int		expand_tokens(t_tok **lst_tok, t_exec *exec);
 char	*create_new_str(char *str, char *str_aft_exp, int *i, int j);
 void	ft_print_list_tok(t_tok **lst_tok);
