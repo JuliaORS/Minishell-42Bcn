@@ -1,34 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token_expand_str.c                                 :+:      :+:    :+:   */
+/*   expander_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 20:17:43 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/10 17:49:41 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/15 13:03:40 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char *create_final_str(char *str_aft_exp, char *beg_str, char *end_str, int *i)
+char	*create_final_str(char *str_exp, char *beg_str, char *end_str, int *i)
 {
 	char	*mid_str;
 	char	*final_str;
-	
-	if (!str_aft_exp)
+
+	if (!str_exp)
 	{
 		final_str = ft_strjoin(beg_str, end_str);
 		*i = *i - 1;
 	}
 	else
 	{
-		mid_str = ft_strjoin(str_aft_exp, end_str);
+		mid_str = ft_strjoin(str_exp, end_str);
 		if (!mid_str)
 			return (NULL);
 		final_str = ft_strjoin(beg_str, mid_str);
-		*i = *i + ft_strlen(str_aft_exp) - 1;
+		*i = *i + ft_strlen(str_exp) - 1;
 		free(mid_str);
 	}
 	return (final_str);
@@ -39,13 +39,13 @@ char	*create_new_str(char *str, char *str_aft_exp, int *i, int j)
 	char	*beg_str;
 	char	*end_str;
 	char	*final_str;
-	
+
 	beg_str = ft_substr(str, 0, *i);
 	if (!beg_str)
 		return (NULL);
 	end_str = ft_substr(str, *i + 1 + j, ft_strlen(str) - *i - j);
 	if (!end_str)
-	{	
+	{
 		free(beg_str);
 		return (NULL);
 	}
@@ -58,19 +58,27 @@ char	*create_new_str(char *str, char *str_aft_exp, int *i, int j)
 char	*get_str_exp(char *str, int *i, int j, t_exec *exec)
 {
 	char	*str_bef_exp;
+	char	*str_exp_var;
 	char	*str_aft_exp;
 	char	*str_final;
-	
-	(void)exec; //borrar despres;
+
 	str_bef_exp = ft_substr(str, *i + 1, j);
 	if (!str_bef_exp)
 		return (NULL);
-	//str_aft_exp = ft_getenv(exec->env, str_bef_exp); //use our ft_getenv: separate malloc error or no path
-	str_aft_exp = getenv(str_bef_exp);
+	str_exp_var = ft_getenv(exec->env, str_bef_exp);
+	if (str_exp_var)
+	{
+		str_aft_exp = extract_value(str_exp_var);
+		str_aft_exp = rem_space(str_aft_exp);
+	}
+	else
+		str_aft_exp = NULL;
+	if (!str_aft_exp)
+		return (NULL);
 	free(str_bef_exp);
 	str_final = create_new_str(str, str_aft_exp, i, j);
-	//if (str_aft_exp)
-		//free(str_aft_exp); //use our ft_getenv: separate malloc error or no path
+	if (str_aft_exp)
+		free(str_aft_exp);
 	return (str_final);
 }
 
@@ -86,9 +94,23 @@ char	*check_expand(char *str, int *i, t_exec *exec)
 	if (j != 0)
 	{
 		new_str = get_str_exp(str, i, j, exec);
-		free (str);
+		free(str);
 		return (new_str);
 	}
 	else
-		return(str);
+		return (str);
+}
+
+char	*expand_error(char *str, int *i, t_exec *exec)
+{
+	char	*str_final;
+	char	*str_exp;
+
+	str_exp = ft_itoa(exec->exit[1]);
+	if (!str_exp)
+		return (NULL);
+	str_final = create_new_str(str, str_exp, i, 1);
+	free(str_exp);
+	free(str);
+	return (str_final);
 }

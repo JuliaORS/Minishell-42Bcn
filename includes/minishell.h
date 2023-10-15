@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 17:05:20 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/12 17:57:31 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/15 12:46:01 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,12 @@ typedef struct s_exec {
 
 /*toakenisation process*/
 int		manage_input(char *line, t_proc **lst_proc, t_exec *exec);
+int		parsing_input(char *line, int *exit);
+char	*find_dollar_sign(char *str, t_exec *exec, int mode);
+char	*expand_error(char *str, int *i, t_exec *exec);
+char	*rem_space(char *str);
 void	init_error(t_exec *exec);
-int	new_tok(t_tok **lst_tok, char *str, int type, int *exit);
+int		new_tok(t_tok **lst_tok, char *str, int type, int *exit);
 int		create_tokens(t_tok **lst_tok, char *line, t_exec *exec);
 t_tok	*ft_lstnew_tok(char *str, int type);
 t_tok	*ft_lstlast_tok(t_tok *lst);
@@ -102,7 +106,7 @@ void	free_lst_tok(t_tok **lst_tok);
 void	free_lst_proc(t_proc **lst_proc);
 
 /*signals*/
-void    init_signals(int mode, t_exec *exec);
+void    init_signals(int mode);
 
 /*heredoc*/
 int	manage_heredoc(t_proc **lst_proc, t_exec *exec);
@@ -154,6 +158,7 @@ char	**realloc_env(char **env, char *var);
 char	**downsize_env(char **env, int idx, int i, int j);
 char    *ft_getenv(char **env, char *target);
 void	replace_env_var(char **env, char *target, char *replace);
+char	*extract_value(char *key_value);
 
 /* exec total malloc : pids, pipes, valid_path,   */
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   manage_process.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rjobert <rjobert@student.42barcelo>        +#+  +:+       +#+        */
+/*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 19:17:44 by rjobert           #+#    #+#             */
-/*   Updated: 2023/09/21 19:17:47 by rjobert          ###   ########.fr       */
+/*   Updated: 2023/10/14 13:19:13 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,24 @@ void	wait_processes(t_exec *exec)
 	pid_t	wpid;
 	int		status;
 	int		total_cmd;
+	int		signal;
 
    	total_cmd = exec->total_cmd - 1;
 	while (total_cmd >= 0)
 	{
-		wpid = waitpid(exec->pids[total_cmd], &status, 0);
+		wpid = waitpid(0, &status, 0);
 		if (total_cmd == exec->total_cmd - 1)
 		{
 			if (WIFEXITED(status))
 				exec->exit[0] = WEXITSTATUS(status);
 			else if (WIFSIGNALED(status))
-				exec->exit[0] = WTERMSIG(status);
+			{
+				signal = WTERMSIG(status);
+				if (signal == SIGINT)
+					exec->exit[0] = 130;
+				else if (signal == SIGQUIT)
+					exec->exit[0] = 131;
+			}
 		}
 		total_cmd--;
 	}
@@ -62,6 +69,7 @@ void	launch_process(t_exec *exec, t_proc **pcs_chain)
 		error_msg(MALLOC_MESS, ENOMEM, exec, NULL);
 	pcs = *pcs_chain;
 	i = 0;
+	init_signals(EXEC);
 	while (i < (exec)->total_cmd)
 	{
 		pid = fork();
@@ -93,6 +101,9 @@ of next pipe. arithmetic explained outside of this program
 - we then close all pipes to avoid hanging pipes
 - execute the command
 */
+
+
+
 void	command_process(t_proc *pcs, t_exec *exec)
 {
 	if (!pcs)

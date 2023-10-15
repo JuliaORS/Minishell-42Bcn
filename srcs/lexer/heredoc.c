@@ -6,29 +6,11 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 18:08:01 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/12 19:58:22 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/14 18:24:48 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*expand_hd(char *str, t_exec *exec)
-{
-	int		i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '$')
-		{
-			str = check_expand(str, &i, exec);
-			if (!str)
-				return (NULL);
-		}
-		i++;
-	}
-	return (str);
-}
 
 char	*join_input(char *input_hd, char *hd_text)
 {
@@ -59,7 +41,7 @@ int	create_input_hd(t_proc *lst_proc, int *fds, int n_hd, t_exec *exec)
 	while (1)
 	{
 		input_hd = readline("> ");
-		if (!ft_strncmp(input_hd, lst_proc->hd_lim[n_hd], \
+		if (!input_hd || !ft_strncmp(input_hd, lst_proc->hd_lim[n_hd], \
 			ft_strlen(lst_proc->hd_lim[n_hd]) + 1))
 			break ;
 		hd_text = join_input(input_hd, hd_text);
@@ -68,7 +50,7 @@ int	create_input_hd(t_proc *lst_proc, int *fds, int n_hd, t_exec *exec)
 		free (input_hd);
 	}
 	free (input_hd);
-	str_exp = expand_hd(hd_text, exec);
+	str_exp = find_dollar_sign(hd_text, exec, 1);
 	if (!str_exp)
 		return (12);
 	write(fds[1], str_exp, ft_strlen(str_exp));
@@ -95,9 +77,11 @@ int	exec_hd(t_proc *proc, int n_hd, t_exec *exec)
 
 	pipe(fds);
 	pid = fork ();
+	if (pid == -1)
+		error_msg("fork failed", ENOMEM, exec, NULL);
 	if (pid == 0)
 	{
-		init_signals(HEREDOC, exec);
+		init_signals(HEREDOC);
 		exit_hd = create_input_hd(proc, fds, n_hd, exec);
 		close(fds[1]);
 		close(fds[0]);
@@ -107,12 +91,8 @@ int	exec_hd(t_proc *proc, int n_hd, t_exec *exec)
 	close(fds[1]);
 	if (exec->exit[0] == 12)
 		msg_error_parsing(12, 0, &exec->exit[0]);
-	//dup2(fds[0], STDIN_FILENO); //Romain check backup
 	if (proc->intype == 1)
-	{
-		close(proc->fd[0]);
 		proc->fd[0] = fds[0];
-	}
 	else
 		close(fds[0]);
 	return (exec->exit[0]);
@@ -139,5 +119,5 @@ int	manage_heredoc(t_proc **lst_proc, t_exec *exec)
 		(*lst_proc) = (*lst_proc)->next;
 	}
 	*lst_proc = tmp;
-	return (0);
+	return (exec->exit[0]);
 }
