@@ -115,9 +115,7 @@ void	exec_bash(t_proc **exec_trgt, t_exec **exec)
 	if (access((*exec)->path, F_OK) == 0)
 	{
 		if (access((*exec)->path, X_OK) != 0)
-		{
 			error_msg(NOPERM_MESS, NOPERM, *exec, *exec_trgt);
-
 		if (execve((*exec)->path, (*exec_trgt)->arg, (*exec)->env) == -1)
 			exit(EXIT_FAILURE);
 	}
