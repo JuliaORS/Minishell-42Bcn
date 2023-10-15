@@ -38,7 +38,7 @@ int ft_unset(t_exec *exec, char **arg)
 			{
 				exec->env = downsize_env(exec->env, idx, 0, 0);
 					if (!exec->env)
-					printf("minishell: unset: calloc failed\n");
+					ft_printf(STDERR_FILENO, "minishell: unset: calloc failed\n");
 			}
 		}
 		i++;
@@ -57,7 +57,7 @@ int	check_syntax_unset(char *var)
 		return (0);
 	if (!ft_isalpha(var[0]) && var[0] != '_')
 	{
-		printf("minishell: export: `%s': not a valid identifier\n", var);
+		ft_printf(STDERR_FILENO, "minishell: export: `%s': not a valid identifier\n", var);
 		return (0);
 	}
 	i = -1;
@@ -65,7 +65,7 @@ int	check_syntax_unset(char *var)
 	{
 		if (!ft_isalnum(var[i]) && var[i] != '_')
 		{
-			printf("minishell: export: `%s': not a valid identifier\n", var);
+			ft_printf(STDERR_FILENO, "minishell: export: `%s': not a valid identifier\n", var);
 			return (0);
 		}
 	}

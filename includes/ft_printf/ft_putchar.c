@@ -1,31 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printunbr.c                                     :+:      :+:    :+:   */
+/*   ft_putchar.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rjobert <rjobert@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/05 16:09:36 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/02 20:53:13 by julolle-         ###   ########.fr       */
+/*   Created: 2023/05/18 14:37:08 by rjobert           #+#    #+#             */
+/*   Updated: 2023/05/23 13:47:26 by rjobert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	ft_printunbr(unsigned int nbr)
+int	ft_putchar(int x, int fd)
 {
-	char	*str;
-	int		i;
-
-	if (nbr == 0)
-		return (ft_printchar('0'));
-	else
-	{
-		str = ft_litoa(nbr);
-		if (!str)
-			return (-1);
-		i = ft_printstr(str);
-		free (str);
-		return (i);
-	}
+	if (write(fd, &x, 1) == -1)
+		return (-1);
+	return (1);
 }

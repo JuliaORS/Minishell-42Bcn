@@ -33,7 +33,7 @@ int	check_syntax_export(char *var)
 		return (0);
 	if (!ft_isalpha(var[0]) && var[0] != '_')
 	{
-		printf("minishell: export: `%s': not a valid identifier\n", var); //replace by official minishell name
+		ft_printf(STDERR_FILENO, "minishell: export: `%s': not a valid identifier\n", var); //replace by official minishell name
 		return (0);
 	}
 	valid = check_concat_valid(var);
@@ -44,7 +44,7 @@ int	check_syntax_export(char *var)
 	{
 		if (!ft_isalnum(var[i]) && var[i] != '_')
 		{
-			printf("minishell: export: `%s': not a valid identifier\n", var); //replace by official minishell name
+			ft_printf(STDERR_FILENO, "minishell: export: `%s': not a valid identifier\n", var); //replace by official minishell name
 			return (0);
 		}
 	}

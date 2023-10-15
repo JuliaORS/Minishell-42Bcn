@@ -25,11 +25,8 @@ void	main_loop(t_exec *exec)
 		input = readline("minishell$🦄");
 		if (input)
 			add_history(input);
-		if (!input || !ft_strncmp(input, "exit", 5))
-		{
-			write(1, "exit\n", 5);
+		if (!input)
 			break ;
-		}
 		init_error(exec);
 		signal(SIGINT, SIG_IGN);
 		exec->exit[0] = manage_input(input, &lst_proc, exec);
