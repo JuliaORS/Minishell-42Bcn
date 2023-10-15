@@ -57,6 +57,8 @@ int	ft_echo(t_exec *exec, char **arg)
 	{
 		while (arg && arg[i])
 		{
+			if (!ft_strncmp(arg[i], "-n", 3) && flag == 1)
+				i++;
 			ft_putstr_fd(arg[i], STDOUT_FILENO);
 			if (arg[i + 1]) 
 				write(STDOUT_FILENO, " ", 1);

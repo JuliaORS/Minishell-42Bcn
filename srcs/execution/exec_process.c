@@ -21,7 +21,7 @@ int	exec_machine(t_proc *pcs_chain, t_exec *exec)
 		exec->in_parent = 1;
 		exec->exit[0] = exec_builtin(pcs_chain, exec);
 		back_up_stdio(exec, 1);
-		free_exec(&exec);
+		//free_exec(&exec);
 		return (exec->exit[0]);
 	}
 	exec->in_parent = 0;
@@ -87,14 +87,14 @@ int	exec_builtin(t_proc *pcs_chain, t_exec *exec)
 special error function for builtin execution in parent process
 to not exit
 */
-int	error_builtin(char *msg, int nb, t_exec *exec, char *bltn)
+int	error_builtin(char *msg, int nb, char *bltn)
 {
 	if (bltn)
 		ft_printf(STDERR_FILENO, "minishell: %s: %s\n", msg, bltn);
 	else
 		ft_printf(STDERR_FILENO, "minishell: %s\n", msg);
-	if (exec)
-		free_exec(&exec);
+	// if (exec)
+	// 	free_exec(&exec);
 	return (nb);
 }
 /* 
@@ -115,9 +115,7 @@ void	exec_bash(t_proc **exec_trgt, t_exec **exec)
 	if (access((*exec)->path, F_OK) == 0)
 	{
 		if (access((*exec)->path, X_OK) != 0)
-		{
 			error_msg(NOPERM_MESS, NOPERM, *exec, *exec_trgt);
-
 		if (execve((*exec)->path, (*exec_trgt)->arg, (*exec)->env) == -1)
 			exit(EXIT_FAILURE);
 	}

@@ -36,10 +36,10 @@ int	search_env_var(char **env, char *target)
 		var_extract = extract_variable(env[i]);
 		if (!ft_strncmp(var_extract, target, ft_strlen(target) + 1) && var_extract)
 		{
-			free(var_extract);
+			free_pntr(var_extract);
 			return(i);
 		}
-		free(var_extract);
+		free_pntr(var_extract);
 		i++;
 	}
 	return (-1);
@@ -92,4 +92,50 @@ char	*extract_value(char *key_value)
 	if (len == 0)
 		return (NULL);
 	return (ft_substr(key_value, len, ft_strlen(key_value)));
+}
+
+char	**key_val_pair(char *str)
+{
+	char **matrix;
+
+	matrix = malloc(sizeof(char *) * 3);
+	matrix[0] = extract_variable(str);
+	matrix[1] = extract_value(str);
+	matrix[2] = NULL;
+	return (matrix);
+}
+
+void	free_key_val(char **kvp)
+{
+	int	i;
+
+	if (!kvp || !*kvp)
+		return ;
+	i = 0;
+	if (kvp)
+	{
+		while (kvp && kvp[i])
+		{
+			if (kvp[i])
+			{
+				free_pntr(kvp[i]);
+				kvp[i] = NULL;
+			}
+			i++;
+		}
+	}
+	free_pntr(kvp);
+	kvp = NULL;
+}
+
+/*
+avoid dangling poitner and double free
+*/
+void	free_pntr(void *pntr)
+{
+	if (pntr !=NULL)
+	{
+		free(pntr);
+		pntr = NULL;
+	}
 }
