@@ -23,6 +23,7 @@
 # include <signal.h>
 # include "libft/libft.h"
 # include "ft_printf/ft_printf.h"
+# include <limits.h>
 
 /*========================== system error management ==========================*/
 # define EBADF 9
@@ -71,6 +72,7 @@ typedef struct s_exec {
 	int		backup_stdio[2];
 	int		exit[2];
 	int		dir_init;
+	int		in_parent;
 }	t_exec;
 
 /*toakenisation process*/
@@ -141,6 +143,7 @@ int		ft_env(t_exec *exec, char **arg);
 int		ft_export(t_exec *exec, char **arg);
 int		ft_unset(t_exec *exec, char **arg);
 int		is_builtin(t_proc*pcs_chain);
+int		ft_exit(t_exec *exec, char **arg);
 int		exec_builtin(t_proc *pcs_chain, t_exec *exec);
 int		error_builtin(char *msg, int nb, t_exec *exec, char *bltn);
 

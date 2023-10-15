@@ -1,26 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.h                                        :+:      :+:    :+:   */
+/*   ft_putnbr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rjobert <rjobert@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/18 15:12:41 by rjobert           #+#    #+#             */
-/*   Updated: 2023/05/23 16:46:42 by rjobert          ###   ########.fr       */
+/*   Created: 2023/05/18 18:03:47 by rjobert           #+#    #+#             */
+/*   Updated: 2023/05/23 14:44:14 by rjobert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PRINTF_H
-# define FT_PRINTF_H
-# include <stdarg.h>
-# include "../libft/libft.h"
+#include "ft_printf.h"
 
-int	ft_putchar(int c, int fd);
-int	ft_putstr(char *s, int fd);
-int	ft_print_nbr(int x, int fd);
-int	ft_hexprint(unsigned int nb, int maj, int fd);
-int	ft_print_ui(unsigned int n, int fd);
-int	ft_print_ptr(void *ptr, int fd);
-int	ft_printf(int fd, const char *s, ...);
+int	ft_print_nbr(int n, int fd)
+{
+	int		size;
+	char	*nbr;
 
-#endif
+	if (n < 0 || n == 0)
+		size = 1;
+	else
+		size = 0;
+	nbr = ft_itoa(n);
+	if (!nbr)
+		return (-1);
+	if (ft_putstr(nbr, fd) == -1)
+	{
+		free (nbr);
+		return (-1);
+	}
+	while (n)
+	{
+		size++;
+		n /= 10;
+	}
+	free (nbr);
+	return (size);
+}

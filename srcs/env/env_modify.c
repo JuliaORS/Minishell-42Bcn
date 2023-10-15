@@ -18,7 +18,6 @@ increas the memory size of env array by one char * and copy it
 char	**realloc_env(char **env, char *var)
 {
 	char	**new_env;
-	//char	*temp;
 	int		i;
 	size_t	size;
 

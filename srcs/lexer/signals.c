@@ -20,7 +20,7 @@ void read_handler (int signal, siginfo_t *data, void *n_data)
 	if (signal == SIGINT)
 	{
 		g_exit_sig = 1;
-		ft_printf("\n");
+		ft_putstr_fd("\n", STDERR_FILENO);
 		rl_replace_line("", 1);
 		rl_on_new_line();
 		rl_redisplay();
@@ -34,7 +34,7 @@ void heredoc_handler(int signal, siginfo_t *data, void *n_data)
 	if (signal == SIGINT)
 	{
 		g_exit_sig = 1;
-		ft_printf("\n");
+		ft_putstr_fd("\n", STDERR_FILENO);
 		rl_replace_line("", 1);
 		exit(1);
 	}
@@ -47,7 +47,7 @@ void exec_handler(int signal, siginfo_t *data, void *n_data)
  	if (signal == SIGINT)
 	{
 		g_exit_sig = 130;
-		ft_printf("\n");
+		ft_putstr_fd("\n", STDERR_FILENO);
 		rl_replace_line("", 1);
 		rl_on_new_line();
 		rl_redisplay();
@@ -56,7 +56,7 @@ void exec_handler(int signal, siginfo_t *data, void *n_data)
 	else if (signal == SIGQUIT)
 	{
 		g_exit_sig = 131;
-		ft_printf("Quit: 3\n");
+		ft_putstr_fd("Quit: 3\n", STDERR_FILENO);
 		rl_replace_line("", 1);
 		rl_on_new_line();
 		rl_redisplay();

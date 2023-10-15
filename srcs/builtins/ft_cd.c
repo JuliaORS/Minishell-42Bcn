@@ -28,20 +28,19 @@ int check_directory(const char *path)
 
     if (access(path,F_OK) == -1)
     {
-        error_builtin(MALLOC_MESS, ENOMEM, NULL, "cd");
-        printf("minishell: cd: %s: No such file or directory\n", path);
+        ft_printf(STDERR_FILENO, "minishell: cd: %s: No such file or directory\n", path);
         return (1);
     }
     if (access(path, X_OK) == -1)
     {
-        printf("minishell: cd: : %s\n", path);
+        ft_printf(STDERR_FILENO, "minishell: cd: : %s\n", path);
         return (1);
     }
     if (stat(path, &info) == 0)
     {
         if (!S_ISDIR(info.st_mode))
         {
-            printf("minishell: cd: %s: Permission denied\n", path);
+            ft_printf(STDERR_FILENO, "minishell: cd: %s: Permission denied\n", path);
             return (1);
         }
     }
@@ -69,7 +68,7 @@ int    ft_cd(t_exec *exec, char **arg)
     {
         if (chdir(extract_path(ft_getenv(exec->env, "HOME"))) == -1)
         {
-		    printf("cd: HOME not set\n"); //relace with ft_printf
+		    ft_printf(STDERR_FILENO, "cd: HOME not set\n"); //relace with ft_printf
             return (1);
         }
     }
@@ -79,7 +78,7 @@ int    ft_cd(t_exec *exec, char **arg)
             return (1) ;
         if (chdir(arg[1]) == -1)
         {
-		    printf("cd: %s\n", arg[1]); //relace with ft_printf
+		    ft_printf(STDERR_FILENO, "cd: %s\n", arg[1]); //relace with ft_printf
             return (1);
         }
     }
