@@ -3,51 +3,44 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+         #
+#    By: rjobert <rjobert@student.42barcelo>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/02/23 14:22:30 by julolle-          #+#    #+#              #
-#    Updated: 2023/10/03 18:58:58 by julolle-         ###   ########.fr        #
+#    Created: 2023/05/17 14:23:19 by rjobert           #+#    #+#              #
+#    Updated: 2023/05/23 16:47:42 by rjobert          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME		:= libftprintf.a
-HEADER      := ft_printf.h
-SRC_DIR		:= src
-SRCS		:= ft_printf.c ft_printhex.c ft_printnbr.c ft_printptr.c ft_printstr.c ft_printunbr.c
+CC = cc
+CFLAGS = -Wall -Werror -Wextra
+HEADER = ft_printf.h
+SRC = ft_printf.c ft_print_nbr.c ft_putchar.c ft_uitoa.c ft_hexprint.c \
+	  ft_print_ptr.c ft_putstr.c
+OBJS = $(SRC:.c=.o)
+NAME = libftprintf.a
+LIB_PATH = ../libft
+LIBFT = $(LIB_PATH)/libft.a
 
-SRCS		:= $(SRCS:%=$(SRC_DIR)/%)
+all: $(NAME)
 
-BUILD_DIR	:= .build
-OBJS		:= $(SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
-DEPS		:= $(SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.d)
+$(NAME): $(LIBFT) $(OBJS)
+	cp $(LIBFT) $(NAME)
+	ar -rcs $(NAME) $(OBJS)
 
-CC			:= gcc
-CFLAGS		:= -Wall -Wextra -Werror -MMD
-AR			:= ar -rcs
-RM			:= rm -f
-DIR_DUP 	= mkdir -p $(@D)
+$(LIBFT):
+	make -C $(LIB_PATH) all 
 
-# Implicit Method
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c	Makefile
-	$(DIR_DUP)
-	$(CC) $(CFLAGS) -I. -c -o $@ $<
+%.o: %.c  $(HEADER)
+	$(CC) -c $(CFLAGS) -I ./ $< -o $@  
 
-# My methods
-all:	$(NAME)
-
-$(NAME): $(OBJS)
-	$(AR) $(NAME) $(OBJS)
-	$(info PRINTF compiled)
-
-clean:
-	$(RM) $(OBJS) $(DEPS)
 
 fclean: clean
-	$(RM) $(NAME)
+	make -C $(LIB_PATH) fclean
+	rm -rf $(NAME)	
 
-re:	fclean all
+clean:
+	rm -f $(OBJS)
+	make -C $(LIB_PATH) clean
 
--include $(DEPS)
+re: fclean all
 
-# My Ponny =)
 .PHONY: all clean fclean re

@@ -1,38 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printstr.c                                      :+:      :+:    :+:   */
+/*   ft_putstr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rjobert <rjobert@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/05 16:11:01 by julolle-          #+#    #+#             */
-/*   Updated: 2023/03/06 14:06:01 by julolle-         ###   ########.fr       */
+/*   Created: 2023/05/18 17:54:13 by rjobert           #+#    #+#             */
+/*   Updated: 2023/05/23 14:06:31 by rjobert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	ft_printchar(int chr)
+int	ft_putstr(char *s, int fd)
 {
-	if (write(1, &chr, 1) == -1)
-		return (-1);
-	else
-		return (1);
-}
-
-int	ft_printstr(char *str)
-{
+	int	size;
 	int	i;
 
-	i = 0;
-	if (!str)
-		return (write(1, "(null)", 6));
-	while (str[i] != '\0')
+	if (!s)
 	{
-		if (ft_printchar(str[i]) == -1)
+		s = "(null)";
+	}
+	i = 0;
+	while (s[i])
+	{
+		if (ft_putchar(s[i], fd) == -1)
 			return (-1);
 		else
 			i++;
 	}
-	return (i);
+	size = ft_strlen(s);
+	return (size);
 }

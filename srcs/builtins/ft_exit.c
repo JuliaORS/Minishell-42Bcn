@@ -53,7 +53,7 @@ int	ft_atoi_checker(const char *str, int *flag)
 	i = 0;
 	result = 0;
 	if(check_arg(str))
-		return (*flag = 1);
+		return (*flag = -1);
 	sign = traverse_blank(str, &i);
 	while (str[i] != '\0' && ('0' <= str[i] && str[i] <= '9'))
 	{
@@ -70,20 +70,27 @@ int	ft_atoi_checker(const char *str, int *flag)
 int	exit_err_msg(char *msg, int n, t_exec *exec, char **arg)
 {
 	if (exec->in_parent == 1)
-	{
 		printf("exit\n");
-		if (!arg[2])
-			printf("minishell: exit: %s: %s\n", arg[1], msg);
-		else
-			printf("minishell: exit: %s\n", msg);
-		if (!arg[2])
-			exit(n);
+	if (arg[1] && !arg[2])
+		ft_printf(STDERR_FILENO, "minishell: exit: %s: %s\n", arg[1], msg);
+	else
+		ft_printf(STDERR_FILENO, "minishell: exit: %s\n", msg);
+	if (n == 255)
+		exit(n);
+	else if (exec->in_parent == 1)
 		return (n);
-	}
 	free_exec(&exec);
 	exit (n);
 }
-
+/*
+-if no argument: exit program with zero 
+-if one argument : check that only contain number and no overflow:
+	if so -> exit with error 255 with numeric argument msg
+-if first argument number and following by other : in parent 
+don't exit, return 1 with message too many params. if in children 
+exit
+- display "exit" before exiting only in parent
+*/
 int ft_exit(t_exec *exec, char **arg)
 {
 	int	flag;
@@ -101,8 +108,8 @@ int ft_exit(t_exec *exec, char **arg)
 	n = ft_atoi_checker(arg[1], &flag);
 	if (flag == -1)
 		exit_err_msg("numeric argument required", 255, exec, arg);
-	if (arg[2] && exec->in_parent == 1)
-		return (exit_err_msg("too many arguments", 255, exec, arg));
+	if (arg[2])
+		return (exit_err_msg("too many arguments", 1, exec, arg));
 	printf("exit\n");
 	exit(n);
 }

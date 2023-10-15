@@ -25,10 +25,10 @@ int	msg_error_parsing(int type, int ch, int *exit)
 {
 	*exit = type;
 	if (type == 12)
-		ft_printf("minishell🦄: Cannot allocate memory\n");
+		ft_printf(STDERR_FILENO, "minishell🦄: Cannot allocate memory\n");
 	else if (type == 258 && ch == 1)
-		ft_printf("minishell🦄: syntax error near unexpected token `newline'\n");
+		ft_printf(STDERR_FILENO, "minishell🦄: syntax error near unexpected token `newline'\n");
 	else if (type == 258 && ch != 1)
-		ft_printf("minishell🦄: syntax error near unexpected token `%c'\n", ch);
+		ft_printf(STDERR_FILENO, "minishell🦄: syntax error near unexpected token `%c'\n", ch);
 	return (type);
 }

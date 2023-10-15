@@ -90,7 +90,7 @@ int	ft_env(t_exec *exec, char **arg)
 
 	if (arg && arg[1])
 	{
-		printf("env: %s: command not found\n", arg[1]);
+		ft_printf(STDERR_FILENO, "env: %s: command not found\n", arg[1]);
 		return (1);
 	}
 	i = 0;

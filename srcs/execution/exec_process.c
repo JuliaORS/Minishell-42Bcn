@@ -79,7 +79,7 @@ int	exec_builtin(t_proc *pcs_chain, t_exec *exec)
 		return (ft_unset(exec, pcs_chain->arg));
 	else if (!ft_strncmp(cmd, "exit", 5))
 		return (ft_exit(exec, pcs_chain->arg));
-	printf("minishell: %s: not a valid option\n", pcs_chain->arg[0]);
+	ft_printf(STDERR_FILENO, "minishell: %s: not a valid option\n", pcs_chain->arg[0]);
 	return (1);
 }
 
@@ -90,9 +90,9 @@ to not exit
 int	error_builtin(char *msg, int nb, t_exec *exec, char *bltn)
 {
 	if (bltn)
-		printf("minishell: %s: %s\n", msg, bltn);
+		ft_printf(STDERR_FILENO, "minishell: %s: %s\n", msg, bltn);
 	else
-		printf("minishell: %s\n", msg);
+		ft_printf(STDERR_FILENO, "minishell: %s\n", msg);
 	if (exec)
 		free_exec(&exec);
 	return (nb);

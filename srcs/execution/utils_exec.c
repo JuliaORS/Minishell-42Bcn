@@ -81,9 +81,9 @@ display error msg, custom error exit number, free memry
 int	error_msg(char *msg, int nb, t_exec *exec, t_proc *pcs)
 {
 	if (pcs)
-		printf("minishell: %s: %s\n", pcs->arg[0], msg);
+		ft_printf(STDERR_FILENO, "minishell: %s: %s\n", pcs->arg[0], msg);
 	else
-		printf("minishell: %s\n", msg);
+		ft_printf(STDERR_FILENO, "minishell: %s\n", msg);
 	if (exec)
 		free_exec(&exec);
 	if (exec->in_parent)
