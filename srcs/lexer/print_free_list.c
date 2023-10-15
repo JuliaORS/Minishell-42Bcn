@@ -6,11 +6,37 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 12:54:07 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/12 15:32:58 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/15 12:01:27 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	free_str(t_proc **lst_proc)
+{
+	int	i;
+
+	i = 0;
+	if ((*lst_proc)->arg)
+	{
+		while ((*lst_proc)->arg[i])
+		{
+			free((*lst_proc)->arg[i]);
+			i++;
+		}
+		free((*lst_proc)->arg);
+	}
+	i = 0;
+	if ((*lst_proc)->hd_lim)
+	{
+		while ((*lst_proc)->hd_lim[i])
+		{
+			free((*lst_proc)->hd_lim[i]);
+			i++;
+		}
+		free((*lst_proc)->hd_lim);
+	}
+}
 
 void	free_lst_proc(t_proc **lst_proc)
 {
@@ -18,34 +44,16 @@ void	free_lst_proc(t_proc **lst_proc)
 	int		i;
 
 	if (!lst_proc)
-		return  ;
+		return ;
 	while (*lst_proc)
 	{
 		i = 0;
 		tmp = (*lst_proc)->next;
-		if ((*lst_proc)->arg)
-		{
-			while ((*lst_proc)->arg[i])
-			{
-				free((*lst_proc)->arg[i]);
-				i++;
-			}
-			free((*lst_proc)->arg);
-		}
+		free_str(lst_proc);
 		if ((*lst_proc)->infile)
 			free((*lst_proc)->infile);
 		if ((*lst_proc)->outfile)
 			free((*lst_proc)->outfile);
-		i = 0;
-		if ((*lst_proc)->hd_lim)
-		{
-			while ((*lst_proc)->hd_lim[i])
-			{
-				free((*lst_proc)->hd_lim[i]);
-				i++;
-			}
-			free((*lst_proc)->hd_lim);
-		}
 		if ((*lst_proc)->fd[0] > 0)
 			close((*lst_proc)->fd[0]);
 		if ((*lst_proc)->fd[1] > 0)
@@ -54,42 +62,6 @@ void	free_lst_proc(t_proc **lst_proc)
 		*lst_proc = tmp;
 	}
 	lst_proc = NULL;
-}
-
-void	ft_print_process(t_proc **lst_proc)
-{
-	int		i;
-	t_proc	*tmp;
-
-	tmp = *lst_proc;
-	i = 0;
-	while (*lst_proc)
-	{
-		i = 0;
-		printf ("\nNUM PROCESS: %i\n", (*lst_proc)->pos);
-		if((*lst_proc)->arg)
-		{
-			while ((*lst_proc)->arg[i])
-			{
-				printf("arg[%i]-> '%s'\n", i, (*lst_proc)->arg[i]);
-				i++;
-			}
-		}
-		printf("arg[%i]-> '%s'\n", i, (*lst_proc)->arg[i]);
-		i = 0;
-		printf("outfile-> '%s'	fd:%i\n", (*lst_proc)->outfile, (*lst_proc)->fd[1]);
-		printf("infile-> '%s'	fd:%i\n", (*lst_proc)->infile, (*lst_proc)->fd[0]);
-		if((*lst_proc)->hd_lim)
-		{
-			while ((*lst_proc)->hd_lim[i])
-			{
-				printf("heredoc[%i]-> '%s'\n", i, (*lst_proc)->hd_lim[i]);
-				i++;
-			}
-		}
-		(*lst_proc) = (*lst_proc)->next;
-	}
-	*lst_proc = tmp;
 }
 
 void	free_lst_tok(t_tok **lst_tok)
@@ -104,6 +76,42 @@ void	free_lst_tok(t_tok **lst_tok)
 		free(*lst_tok);
 		*lst_tok = tmp;
 	}
+}
+
+void	ft_print_process(t_proc **lst_proc)
+{
+	int		i;
+	t_proc	*tmp;
+
+	tmp = *lst_proc;
+	i = 0;
+	while (*lst_proc)
+	{
+		i = 0;
+		printf ("\nNUM PROCESS: %i\n", (*lst_proc)->pos);
+		if ((*lst_proc)->arg)
+		{
+			while ((*lst_proc)->arg[i])
+			{
+				printf("arg[%i]-> '%s'\n", i, (*lst_proc)->arg[i]);
+				i++;
+			}
+		}
+		printf("arg[%i]-> '%s'\n", i, (*lst_proc)->arg[i]);
+		i = 0;
+		printf("outfile-> '%s'\n", (*lst_proc)->outfile);
+		printf("infile-> '%s'\n", (*lst_proc)->infile);
+		if ((*lst_proc)->hd_lim)
+		{
+			while ((*lst_proc)->hd_lim[i])
+			{
+				printf("heredoc[%i]-> '%s'\n", i, (*lst_proc)->hd_lim[i]);
+				i++;
+			}
+		}
+		(*lst_proc) = (*lst_proc)->next;
+	}
+	*lst_proc = tmp;
 }
 
 void	ft_print_list_tok(t_tok **lst_tok)

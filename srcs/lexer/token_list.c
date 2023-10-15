@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 12:52:12 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/12 16:18:34 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/15 12:00:33 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	create_tok_str(t_tok **lst_tok, char *line, int *i, int *exit)
 	len = 0;
 	while (line[len] != '"' && line[len] != '\'' && line[len] != '>' && \
 		line[len] != '<' && line[len] != '|' && line[len] != ' ' && \
-		line[len] != '\\' && line[len] != '\0')
+		line[len] != '\0')
 		len++;
 	str = ft_substr(line, 0, len);
 	if (!str)
@@ -77,21 +77,6 @@ int	create_tok_str(t_tok **lst_tok, char *line, int *i, int *exit)
 	if (new_tok(lst_tok, str, 2, exit))
 		return (1);
 	*i = *i + len - 1;
-	return (0);
-}
-
-int	create_tok_slash(t_tok **lst_tok, char c, int *i, int *exit)
-{
-	char	*str;
-
-	str = malloc (sizeof(char) * 2);
-	if (!str)
-		return (msg_error_parsing(12, 0, exit));
-	str[0] = c;
-	str[1] = '\0';
-	if (new_tok(lst_tok, str, 2, exit))
-		return (1);
-	*i = *i + 1;
 	return (0);
 }
 
@@ -116,8 +101,6 @@ int	create_tokens(t_tok **lst_tok, char *line, t_exec *exec)
 	{
 		if (line[i] == '"' || line[i] == '\'')
 			create_tok_quote(lst_tok, line + i, &i, &exec->exit[0]);
-		else if (line[i] == '\\')
-			create_tok_slash(lst_tok, line[i + 1], &i, &exec->exit[0]);
 		else if (line[i] == '>' || line[i] == '<')
 			create_tok_redir(lst_tok, line, &i, &exec->exit[0]);
 		else if (line[i] == '|')
@@ -129,7 +112,6 @@ int	create_tokens(t_tok **lst_tok, char *line, t_exec *exec)
 		i++;
 	}
 	if (!exec->exit[0])
-		expand_tokens(lst_tok, exec);
-	//ft_print_list_tok(lst_tok);
+		exec->exit[0] = expand_tokens(lst_tok, exec);
 	return (exec->exit[0]);
 }

@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token_expand.c                                     :+:      :+:    :+:   */
+/*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 10:32:06 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/10 17:31:08 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/15 12:01:46 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void rem_prev_next(t_tok **lst_tok)
+void	rem_prev_next(t_tok **lst_tok)
 {
 	t_tok	*tmp_space;
 
@@ -34,7 +34,7 @@ void rem_prev_next(t_tok **lst_tok)
 		free(tmp_space);
 	}
 	else
-	{	
+	{
 		(*lst_tok)->prev->next = (*lst_tok)->next;
 		(*lst_tok)->next->prev = (*lst_tok)->prev;
 		(*lst_tok) = (*lst_tok)->prev;
@@ -44,7 +44,7 @@ void rem_prev_next(t_tok **lst_tok)
 void	remove_empty_token(t_tok **lst_tok, t_tok **start)
 {
 	t_tok	*tmp;
-	
+
 	tmp = *lst_tok;
 	if ((*lst_tok)->prev && (*lst_tok)->next)
 		rem_prev_next(lst_tok);
@@ -69,37 +69,25 @@ void	remove_empty_token(t_tok **lst_tok, t_tok **start)
 	free(tmp);
 }
 
-char	*expand_error(char *str, int *i, t_exec *exec)
+char	*find_dollar_sign(char *str, t_exec *exec, int mode)
 {
-	char	*str_final;
-	char	*str_exp;
-	
-	str_exp = ft_itoa(exec->exit[1]);
-	if (!str_exp)
-		return (NULL);
-	str_final = create_new_str(str, str_exp, i, 1);
-	free(str_exp);
-	return (str_final);
-}
-
-void	find_dollar_sign(t_tok **lst_tok, t_exec *exec)
-{
-	int	i;
+	int		i;
 
 	i = 0;
-	while ((*lst_tok)->str[i])
+	while (str[i])
 	{
-		if ((*lst_tok)->str[i] == '$')
+		if (str[i] == '$')
 		{
-			if ((*lst_tok)->str[i + 1] == '?')
-				(*lst_tok)->str = expand_error((*lst_tok)->str, &i, exec);
+			if (str[i + 1] == '?' && mode == 0)
+				str = expand_error(str, &i, exec);
 			else
-				(*lst_tok)->str = check_expand((*lst_tok)->str, &i, exec);
-			if (!(*lst_tok)->str)
-				return ;
+				str = check_expand(str, &i, exec);
+			if (!str)
+				break ;
 		}
 		i++;
 	}
+	return (str);
 }
 
 void	skip_hdoc_str(t_tok **lst_tok)
@@ -129,9 +117,12 @@ int	expand_tokens(t_tok **lst_tok, t_exec *exec)
 			skip_hdoc_str(lst_tok);
 		else if ((*lst_tok)->type == 0 || (*lst_tok)->type == 2)
 		{
-			find_dollar_sign(lst_tok, exec);
+			(*lst_tok)->str = find_dollar_sign((*lst_tok)->str, exec, 0);
 			if (!(*lst_tok)->str)
-				return (msg_error_parsing(12, 0, &exec->exit[0]));
+			{
+				msg_error_parsing(12, 0, &exec->exit[0]);
+				return (exec->exit[0]);
+			}
 			if (ft_strlen((*lst_tok)->str) == 0)
 				remove_empty_token(lst_tok, &tmp);
 		}
@@ -139,5 +130,5 @@ int	expand_tokens(t_tok **lst_tok, t_exec *exec)
 			(*lst_tok) = (*lst_tok)->next;
 	}
 	*lst_tok = tmp;
-	return (0);
+	return (exec->exit[0]);
 }

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/12 16:22:05 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/12 16:22:05 by julolle-         ###   ########.fr       */
+/*   Created: 2023/10/14 17:03:53 by julolle-          #+#    #+#             */
+/*   Updated: 2023/10/14 17:06:10 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,13 @@ int	find_outfile(t_proc *lst_proc, t_tok **lst_tok, int *exit)
 		(*lst_tok) = (*lst_tok)->next;
 	lst_proc->outfile = join_str_toks(lst_tok);
 	if (!lst_proc->outfile)
-		return(msg_error_parsing(12, 0, exit));
+		return (msg_error_parsing(12, 0, exit));
 	if (type == 4)
-		lst_proc->fd[1] = open(lst_proc->outfile, O_CREAT | O_RDWR | O_TRUNC, 0666);
+		lst_proc->fd[1] = open(lst_proc->outfile, O_CREAT | O_RDWR | \
+		O_TRUNC, 0666);
 	else
-		lst_proc->fd[1] = open(lst_proc->outfile, O_WRONLY | O_CREAT | O_APPEND, 0666);
+		lst_proc->fd[1] = open(lst_proc->outfile, O_WRONLY | O_CREAT | \
+			O_APPEND, 0666);
 	return (0);
 }
 

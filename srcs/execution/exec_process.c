@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 21:20:02 by rjobert           #+#    #+#             */
-/*   Updated: 2023/09/28 11:31:56 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/13 18:24:24 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	exec_machine(t_proc *pcs_chain, t_exec *exec)
 	close_all_pipes(exec);
 	wait_processes(exec);
 	free_exec(&exec);
-	return (EXIT_SUCCESS);
+	return (exec->exit[0]);
 }
 
 
@@ -117,7 +117,7 @@ void	exec_bash(t_proc **exec_trgt, t_exec **exec)
 		if (access((*exec)->path, X_OK) != 0)
 		{
 			error_msg(NOPERM_MESS, NOPERM, *exec, *exec_trgt);
-		}
+
 		if (execve((*exec)->path, (*exec_trgt)->arg, (*exec)->env) == -1)
 			exit(EXIT_FAILURE);
 	}

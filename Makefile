@@ -13,11 +13,12 @@
 NAME        = minishell
 HEADER      = ./includes/
 SRC_PATH    = srcs/
-SRC         = lexer/minishell.c lexer/parse_input.c lexer/token_list.c \
-            lexer/token_expand.c lexer/token_expand_str.c lexer/token_list_utils.c \
-            lexer/process_list.c lexer/process_list_files.c \
-			      lexer/process_list_utils.c lexer/print_free_list.c \
-            lexer/error_parsing.c lexer/signals.c lexer/heredoc.c \
+SRC         = lexer/minishell.c lexer/manage_input.c lexer/parser.c \
+				lexer/token_list.c lexer/token_list_utils.c lexer/expander.c \
+				lexer/expander_utils.c lexer/expander_utils2.c \
+				lexer/process_list.c lexer/process_list_files.c \
+			    lexer/process_list_utils.c lexer/print_free_list.c \
+            	lexer/error_parsing.c lexer/signals.c lexer/heredoc.c \
             execution/exec_process.c execution/manage_process.c \
             execution/pipes.c execution/utils_exec.c execution/parse_path.c \
             builtins/ft_cd.c builtins/ft_echo.c builtins/ft_export.c \

@@ -6,17 +6,16 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 11:31:22 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/12 14:10:53 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/14 17:00:38 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void read_handler (int signal, siginfo_t *data, void *n_data)
+void	read_handler(int signal, siginfo_t *data, void *n_data)
 {
 	(void) data;
 	(void) n_data;
-	
 	if (signal == SIGINT)
 	{
 		g_exit_sig = 1;
@@ -27,7 +26,7 @@ void read_handler (int signal, siginfo_t *data, void *n_data)
 	}
 }
 
-void heredoc_handler(int signal, siginfo_t *data, void *n_data)
+void	heredoc_handler(int signal, siginfo_t *data, void *n_data)
 {
 	(void) data;
 	(void) n_data;
@@ -40,44 +39,47 @@ void heredoc_handler(int signal, siginfo_t *data, void *n_data)
 	}
 }
 
-void exec_handler(int signal, siginfo_t *data, void *n_data)
+void	exec_handler(int signal, siginfo_t *data, void *n_data)
 {
 	(void) data;
 	(void) n_data;
- 	if (signal == SIGINT)
+	if (signal == SIGINT)
 	{
 		g_exit_sig = 130;
 		ft_putstr_fd("\n", STDERR_FILENO);
 		rl_replace_line("", 1);
-		rl_on_new_line();
-		rl_redisplay();
-		exit(130);
 	}
 	else if (signal == SIGQUIT)
 	{
 		g_exit_sig = 131;
 		ft_putstr_fd("Quit: 3\n", STDERR_FILENO);
 		rl_replace_line("", 1);
-		rl_on_new_line();
-		rl_redisplay();
-		exit(131);
 	}
+	return ;
 }
 
-void    init_signals(int mode, t_exec *exec)
+void	init_signals(int mode)
 {
-	struct sigaction    signal;
-	
-	(void)exec; //borrar
-	g_exit_sig = 0;
-	signal.sa_flags = SA_RESTART;
-	sigemptyset(&signal.sa_mask);
+	struct sigaction	sign;
+
+	sign.sa_flags = SA_RESTART;
+	sigemptyset(&sign.sa_mask);
 	if (mode == READ)
-		signal.sa_sigaction = read_handler;
+	{
+		sign.sa_sigaction = read_handler;
+		signal(SIGQUIT, SIG_IGN);
+		sigaction(SIGINT, &sign, NULL);
+	}
 	else if (mode == HEREDOC)
-		signal.sa_sigaction = heredoc_handler;
+	{
+		sign.sa_sigaction = heredoc_handler;
+		signal(SIGQUIT, SIG_IGN);
+		sigaction(SIGINT, &sign, NULL);
+	}
 	else if (mode == EXEC)
-		signal.sa_sigaction = exec_handler;
-	sigaction(SIGINT, &signal, NULL);
-	sigaction(SIGQUIT, &signal, NULL);
+	{
+		sign.sa_sigaction = exec_handler;
+		sigaction(SIGINT, &sign, NULL);
+		sigaction(SIGQUIT, &sign, NULL);
+	}
 }
