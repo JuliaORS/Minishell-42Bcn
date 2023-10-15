@@ -5,3 +5,5 @@
 *.gch
 *.dSYM
 .nfs.*
+minishell_tester/
+mpanic/

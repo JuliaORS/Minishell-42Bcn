@@ -31,7 +31,7 @@ char	**search_path(char *env[])
 	path = NULL;
 	i = 0;
 	if (!env || !*env)
-		return (NULL) ; //Careful this is pipex modified for no environment
+		return (NULL) ;
 	else
 	{
 		while (env[i] && ft_strncmp(env[i], "PATH", 4))

@@ -33,7 +33,7 @@
 
 # define MALLOC_MESS "malloc failed: Cannot allocate memory"
 # define BADF_MESS  "Bad file descriptor"
-# define CMNF_MESS "Command not found"
+# define CMNF_MESS "command not found"
 # define NOPERM_MESS "Permission denied"
 
 /*SIGNALS MODE*/
@@ -136,6 +136,9 @@ void	free_exec(t_exec **exec);
 int		error_msg(char *msg, int nb, t_exec *exec, t_proc *pcs);
 int		fd_is_open(int fd);
 void	free_split(char ***split_result);
+char	**key_val_pair(char *str);
+void	free_key_val(char **kvp);
+void	free_pntr(void *pntr);
 
 
 /*buil-tins and environtment prototypes*/
@@ -149,7 +152,7 @@ int		ft_unset(t_exec *exec, char **arg);
 int		is_builtin(t_proc*pcs_chain);
 int		ft_exit(t_exec *exec, char **arg);
 int		exec_builtin(t_proc *pcs_chain, t_exec *exec);
-int		error_builtin(char *msg, int nb, t_exec *exec, char *bltn);
+int		error_builtin(char *msg, int nb, char *bltn);
 
 /* environment setup and modification */
 char	**env_dup(char **env, int i, int j);

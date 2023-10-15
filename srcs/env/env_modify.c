@@ -19,22 +19,23 @@ char	**realloc_env(char **env, char *var)
 {
 	char	**new_env;
 	int		i;
-	size_t	size;
+	int		size;
 
 	size = count_var_env(env) + 1; 
 	new_env = ft_calloc(size + 1, sizeof(char *));
 	if (!new_env)
 		return (NULL);
 	i = 0;
-	while (env && env[i])
+	while (env && i < size - 1)
 	{
 		new_env[i] = ft_strdup(env[i]);
-		free(env[i]);
+		//printf("new_env is :%s \n\nold env is :%s\n\n", new_env[i], env[i]);
+		free_pntr(env[i]);
 		i++;
 	}
 	new_env[size] = NULL;
 	new_env[size - 1] = ft_strdup(var);
-	free(env);
+	free_pntr(env);
 	return(new_env);
 }
 /*

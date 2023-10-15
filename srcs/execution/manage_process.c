@@ -114,8 +114,8 @@ void	command_process(t_proc *pcs, t_exec *exec)
 	close_all_pipes(exec);
 	if (is_builtin(pcs))
 		exec_builtin(pcs, exec);
-	build_execve(&pcs, &exec);
-	error_msg("execve failure", 1, exec, pcs);
+	else
+		build_execve(&pcs, &exec);
 }
 
 /*

@@ -86,7 +86,7 @@ int	error_msg(char *msg, int nb, t_exec *exec, t_proc *pcs)
 		ft_printf(STDERR_FILENO, "minishell: %s\n", msg);
 	if (exec)
 		free_exec(&exec);
-	if (exec->in_parent)
+	if (exec->in_parent && is_builtin(pcs))
 		return (nb);
 	if (nb)
 		exit(nb);
