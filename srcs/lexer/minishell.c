@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 16:19:21 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/15 21:46:11 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/18 15:18:14 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,7 @@ void	main_loop(t_exec *exec)
 		{
 			exec->total_cmd = measure_list(&lst_proc);
 			if (!manage_heredoc(&lst_proc, exec))
-			{
-				printf("go execution\n");
 				exec->exit[0] = exec_machine(lst_proc, exec);
-			}
 		}
 		free (input);
 		free_lst_proc(&lst_proc);

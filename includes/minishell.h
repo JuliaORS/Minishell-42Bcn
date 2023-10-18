@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 17:05:20 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/15 18:02:04 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/18 14:54:11 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,10 +104,12 @@ int		find_outfile(t_proc *lst_proc, t_tok **lst_tok, int *err);
 int		find_infile(t_proc *lst_proc, t_tok **lst_tok, int *err);
 int		find_heredoc(t_proc *lst_proc, t_tok **lst_tok, int n_hd, int *err);
 int		create_str(t_proc *lst_proc, t_tok **lst_tok, int n_str, int *err);
-char	*check_expand(char *str, int *i, t_exec *exec);
+char	*check_expand(char *str, int *i, t_exec *exec, int *flag_ex);
 void	free_lst_tok(t_tok **lst_tok);
 void	free_lst_proc(t_proc **lst_proc);
+int		sep_tok(t_tok **lst_tok, char *str, int *exit);
 
+char	*expander(t_tok **lst_tok, char *str, t_exec *exec, int *flag_exp);
 /*signals*/
 void    init_signals(int mode);
 
