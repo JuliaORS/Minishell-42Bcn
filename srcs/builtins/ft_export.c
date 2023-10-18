@@ -13,8 +13,8 @@
 
 #include "minishell.h"
 
-int	check_concat_valid(const char *var);
-int	export_exec(t_exec *exec, char *arg, int type);
+int		check_concat_valid(const char *var);
+int		export_exec(t_exec *exec, char *arg, int type);
 char	*extract_value(char *key_value);
 char	*build_env_var(char *arg, t_exec *exec, int type, int idx);
 
@@ -33,15 +33,21 @@ int	check_syntax_export(char *var)
 	if (!var)
 		return (0);
 	if (!ft_isalpha(var[0]) && var[0] != '_')
+	{
+		ft_printf(STDERR_FILENO, "minishell: export: `%s': not a valid identifier\n", var); 
 		return (-1);
+	}
 	valid = check_concat_valid(var);
 	if (valid == 0)
-		return (-1);
+		return (0);
 	i = -1;
 	while (var[++i] && !(var[i] == '=' || ((var[i]) == '+' && var[i + 1] == '=')))
 	{
 		if (!ft_isalnum(var[i]) && var[i] != '_')
+		{
+			ft_printf(STDERR_FILENO, "minishell: export: `%s': not a valid identifier\n", var); 
 			return (-1);
+		}
 	}
 	return (valid);
 }
@@ -100,11 +106,8 @@ int	ft_export(t_exec *exec, char **arg)
 		while (arg && arg[++i])
 		{
 			type = check_syntax_export(arg[i]);
-			if (type == -1)
-			{
+			if (type < 1)
 				exec->exit[0] = EXIT_FAILURE;
-				ft_printf(STDERR_FILENO, "minishell: export: `%s': not a valid identifier\n", arg[i]); 
-			}
 			else
 				export_exec(exec, arg[i], type);
 		}
@@ -148,8 +151,11 @@ char	*build_env_var(char *arg, t_exec *exec, int type, int idx)
 		tmp[1] = "";
 	if (type == 2 && idx >= 0)
 		env_var = ft_strjoin(exec->env[idx], tmp[1]);
-	else
+	if (idx < 0)
+		env_var = ft_strdup(arg);
+	else if (type == 1 && idx >= 0)
 	{
+		env_var = ft_strjoin(extract_variable(arg), "=");
 		if (!env_var)
 		{
 			free_key_val(tmp);
