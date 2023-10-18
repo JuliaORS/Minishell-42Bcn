@@ -12,6 +12,12 @@
 
 #include "minishell.h"
 
+/*
+receive a string and a nb pointer as input traverse the string while space and
+return the sign if + or - encountered after spaces
+update pointer value to where stopped in the string (after first sign for 
+instance)
+*/
 int	traverse_blank(const char *str, int *n)
 {
 	int sign;
@@ -19,47 +25,94 @@ int	traverse_blank(const char *str, int *n)
 
 	sign = 1;
 	i = *n;
-	while (str[i] == 32 || (9 <= str[i] && str[i] <= 13))
+	while (str[i] && (str[i] == 32 || (9 <= str[i] && str[i] <= 13)))
 		i++;
-	if (str[i] == '-' || str[i] == '+')
+	if (str[i] && (str[i] == '-' || str[i] == '+'))
 	{
 		if (str[i] == '-')
 			sign = -1;
 		i++;
 	}
+	if (n)
+		*n = i;
 	return (sign);
 }
-int	check_arg(const char *arg)
-{
-	int	i;
 
-	i = 0;
-	while (arg[i])
+/*
+this to check if a number is valid 
+traverse the string as long as digit and flag that a digit was encountered
+if first non-zero encountered, start measuring. then traverse all the space
+if the string is not terminated (i.e  contained a non-digit or non-space), if
+it never encountered a number (never started looop) or if the number is 
+bigger than upper base 10 limit of LONG_MAX -> invalid
+ */
+int valid_number(const char *str)
+{
+	int contain_int;
+	int	frst_nb;
+	int	nb_len;
+	
+	contain_int = 0;
+	frst_nb = 0;
+	nb_len = 0;
+	while (ft_isdigit(*str))
 	{
-		if(!ft_isdigit(arg[i]))
-			return (1);
-		i++;
+		contain_int = 1;
+		if (*str != '0')
+			frst_nb = 1;
+		if (frst_nb == 1)
+			nb_len++;
+		str++;
 	}
-	if (i > 13)
+	while (*str == 32)
+		str++;
+	if ( contain_int == 0 || nb_len > 19 || *str != '\0')
+		return (1);
+	return (0);
+}
+/*
+traverse the string and return if valid :
+need to contain number no bigger than LONG MAX
+special case for first character that can be + or -0
+we start by traversing space, then see if + or - we traverse it as well.
+then send to number validation check
+*/
+
+int	check_arg(const char *arg, int i)
+{
+	int	contain_int;
+	int	nb_len;
+
+	contain_int = 0;
+	nb_len = 0;
+	if (arg[0] == '\0')
+		return (1);
+	while (arg[i] == 32 || (9 <= arg[i] && arg[i] <= 13))
+		i++;
+	if (arg[i] == '+' || arg[i] == '-')
+		i++;
+	if (valid_number(&arg[i]) == 1)
 		return (1);
 	return (0);
 }
 int	ft_atoi_checker(const char *str, int *flag)
 {
-	int	i;
-	int	sign;
-	int	result;
+	int		i;
+	int		sign;
+	unsigned long long	result;
 
 	i = 0;
 	result = 0;
-	if(check_arg(str))
+	if(check_arg(str, 0))
 		return (*flag = -1);
 	sign = traverse_blank(str, &i);
 	while (str[i] != '\0' && ('0' <= str[i] && str[i] <= '9'))
 	{
 		result = result * 10;
 		result = result + (str[i] - '0');
-		if (result > INT_MAX || result < INT_MIN)
+		if (sign == 1 && result > LONG_MAX)
+			return (*flag = -1);
+		else if (sign == -1 && result > -(unsigned long)LONG_MIN)
 			return (*flag = -1);
 		i++;
 	}
@@ -67,11 +120,12 @@ int	ft_atoi_checker(const char *str, int *flag)
 	return (result);
 }
 
+/*to put in a general utils for errors*/
 int	exit_err_msg(char *msg, int n, t_exec *exec, char **arg)
 {
-	if (exec->in_parent == 1)
-		printf("exit\n");
 	if (arg[1] && !arg[2])
+		ft_printf(STDERR_FILENO, "minishell: exit: %s: %s\n", arg[1], msg);
+	else if (arg[1] && arg[2] && n == 255)
 		ft_printf(STDERR_FILENO, "minishell: exit: %s: %s\n", arg[1], msg);
 	else
 		ft_printf(STDERR_FILENO, "minishell: exit: %s\n", msg);
@@ -99,10 +153,11 @@ int ft_exit(t_exec *exec, char **arg)
 	flag = 0;
 	if (!arg[1])
 	{
-		exec->exit[0] = 0;
+		if (exec->exit[1] > 0)
+			exec->exit[0] = exec->exit[1];
+		else
+			exec->exit[0] = 0;
 		free_exec(&exec);
-		if (exec->in_parent == 1)
-			printf("exit\n");
 		exit(exec->exit[0]);
 	}
 	n = ft_atoi_checker(arg[1], &flag);
@@ -110,6 +165,5 @@ int ft_exit(t_exec *exec, char **arg)
 		exit_err_msg("numeric argument required", 255, exec, arg);
 	if (arg[2])
 		return (exit_err_msg("too many arguments", 1, exec, arg));
-	printf("exit\n");
 	exit(n);
 }
