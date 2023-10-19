@@ -151,6 +151,11 @@ int ft_exit(t_exec *exec, char **arg)
 	int	n;
 
 	flag = 0;
+	if (isatty(STDIN_FILENO))
+	{
+		ft_printf(STDERR_FILENO, "exit\n");
+		clear_history();
+	}
 	if (!arg[1])
 	{
 		if (exec->exit[1] > 0)
