@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 16:19:21 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/15 21:08:09 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/15 11:58:42 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ void	main_loop(t_exec *exec)
 		free (input);
 		free_lst_proc(&lst_proc);
 	}
-	free (input);
 	free_lst_proc(&lst_proc);
 }
 
@@ -53,5 +52,5 @@ int	main(int argc, char **argv, char **env)
 	init_exec(&exec, env);
 	main_loop(&exec);
 	rl_clear_history();
-	return (0);
+	return (exec.exit[0]);
 }
