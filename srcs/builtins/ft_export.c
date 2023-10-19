@@ -37,9 +37,6 @@ int	check_syntax_export(char *var)
 		ft_printf(STDERR_FILENO, "minishell: export: `%s': not a valid identifier\n", var); 
 		return (-1);
 	}
-	valid = check_concat_valid(var);
-	if (valid == 0)
-		return (0);
 	i = -1;
 	while (var[++i] && !(var[i] == '=' || ((var[i]) == '+' && var[i + 1] == '=')))
 	{
@@ -49,6 +46,7 @@ int	check_syntax_export(char *var)
 			return (-1);
 		}
 	}
+	valid = check_concat_valid(var);
 	return (valid);
 }
 /*
@@ -106,9 +104,9 @@ int	ft_export(t_exec *exec, char **arg)
 		while (arg && arg[++i])
 		{
 			type = check_syntax_export(arg[i]);
-			if (type < 1)
+			if (type < 0)
 				exec->exit[0] = EXIT_FAILURE;
-			else
+			if (type > 0)
 				export_exec(exec, arg[i], type);
 		}
 	return (exec->exit[0]);

@@ -26,6 +26,14 @@ int check_directory(const char *path)
 {
     struct stat info;
 
+    if (stat(path, &info) == 0)
+    {
+        if (!S_ISDIR(info.st_mode))
+        {
+            ft_printf(STDERR_FILENO, "minishell: cd: %s: Not a directory\n", path);
+            return (1);
+        }
+    }
     if (access(path,F_OK) == -1)
     {
         ft_printf(STDERR_FILENO, "minishell: cd: %s: No such file or directory\n", path);
@@ -33,16 +41,8 @@ int check_directory(const char *path)
     }
     if (access(path, X_OK) == -1)
     {
-        ft_printf(STDERR_FILENO, "minishell: cd: : %s\n", path);
+        ft_printf(STDERR_FILENO, "minishell: cd: : %s: Permission denied\n", path);
         return (1);
-    }
-    if (stat(path, &info) == 0)
-    {
-        if (!S_ISDIR(info.st_mode))
-        {
-            ft_printf(STDERR_FILENO, "minishell: cd: %s: Permission denied\n", path);
-            return (1);
-        }
     }
     return (0);
 }
@@ -64,23 +64,22 @@ int    ft_cd(t_exec *exec, char **arg)
     char *old_path;
 
 	old_path = ft_getenv(exec->env, "PWD");
+    if (arg[1] && arg[1][0] == '\0')
+        return (0);
     if (!arg[1])
     {
         if (chdir(extract_path(ft_getenv(exec->env, "HOME"))) == -1)
         {
-		    ft_printf(STDERR_FILENO, "cd: HOME not set\n"); //relace with ft_printf
+		    ft_printf(STDERR_FILENO, "cd: HOME not set\n");
             return (1);
         }
     }
-    else
+    else if (check_directory(arg[1]))
+        return (1) ;
+    else if (chdir(arg[1]) == -1)
     {
-        if (check_directory(arg[1]))
-            return (1) ;
-        if (chdir(arg[1]) == -1)
-        {
-		    ft_printf(STDERR_FILENO, "cd: %s\n", arg[1]); //relace with ft_printf
-            return (1);
-        }
+		ft_printf(STDERR_FILENO, "cd: %s\n", arg[1]); 
+        return (1);
     }
     update_env_dir(exec, old_path);
     exec->dir_init = 1;
