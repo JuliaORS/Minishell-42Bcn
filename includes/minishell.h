@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 17:05:20 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/18 14:54:11 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/19 13:16:21 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,41 +75,39 @@ typedef struct s_exec {
 	int		in_parent;
 }	t_exec;
 
-/*toakenisation process*/
+//LEXER
+void	init_error(t_exec *exec);
+void	update_error(t_exec *exec);
+int		msg_error_parsing(int type, int ch, int *exit);
+/*tokenization process*/
 int		manage_input(char *line, t_proc **lst_proc, t_exec *exec);
 int		parsing_input(char *line, int *exit);
-char	*find_dollar_sign(char *str, t_exec *exec, int *end_pos, int *flag_exp);
-char	*expand_error(char *str, int *i, t_exec *exec);
-char	*rem_space(char *str);
-void	init_error(t_exec *exec);
+int		create_tokens(t_tok **lst_tok, char *input, t_exec *exec);
 int		new_tok(t_tok **lst_tok, char *str, int type, int *exit);
-int		create_tokens(t_tok **lst_tok, char *line, t_exec *exec);
-t_tok	*ft_lstnew_tok(char *str, int type);
-t_tok	*ft_lstlast_tok(t_tok *lst);
-void	ft_lstadd_back_tok(t_tok **lst, t_tok *new);
 int		ft_lstsize_tok(t_tok *lst);
-int		expand_tokens(t_tok **lst_tok, t_exec *exec);
-char	*create_new_str(char *str, char *str_aft_exp, int *i, int j);
+t_tok	*ft_lstlast_tok(t_tok *lst);
 void	ft_print_list_tok(t_tok **lst_tok);
-int		msg_error_parsing(int type, int ch, int *exit);
+void	free_lst_tok(t_tok **lst_tok);
+/*expansion*/
+int		remove_dol_end(t_tok **lst_tok, int *exit);
+char 	*expander(t_tok **lst_tok, char *str, t_exec *exec, int type);
+char	*find_dollar_sign(char *str, t_exec *exec, int *flag_exp);
+char	*expand_error(char *str, int *i, t_exec *exec);
+char	*check_expand(char *str, int *i, t_exec *exec, int *flag_exp);
+int		split_tok(t_tok **lst_tok, char *str, int *exit);
+/*process list*/
 int		create_process(t_proc **lst_proc, t_tok **lst_tok, int *err);
 t_proc	*ft_lstnew_proc(void);
 t_proc	*ft_lstlast_proc(t_proc *lst);
 void	ft_lstadd_back_proc(t_proc **lst, t_proc *new);
-void	ft_print_process(t_proc **lst_proc);
 void	sep_process(t_proc **lst_proc, t_tok **lst_tok);
-int		parsing_input(char *line, int *exit_status);
 char	*join_str_toks(t_tok **lst_tok);
 int		find_outfile(t_proc *lst_proc, t_tok **lst_tok, int *err);
 int		find_infile(t_proc *lst_proc, t_tok **lst_tok, int *err);
 int		find_heredoc(t_proc *lst_proc, t_tok **lst_tok, int n_hd, int *err);
-int		create_str(t_proc *lst_proc, t_tok **lst_tok, int n_str, int *err);
-char	*check_expand(char *str, int *i, t_exec *exec, int *flag_ex);
-void	free_lst_tok(t_tok **lst_tok);
+void	ft_print_process(t_proc **lst_proc);
 void	free_lst_proc(t_proc **lst_proc);
-int		sep_tok(t_tok **lst_tok, char *str, int *exit);
 
-char	*expander(t_tok **lst_tok, char *str, t_exec *exec, int *flag_exp);
 /*signals*/
 void    init_signals(int mode);
 

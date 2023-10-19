@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 12:10:04 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/18 15:44:28 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/19 10:31:12 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,7 @@ char	*get_str_exp(char *str, int *i, int j, t_exec *exec)
 		return (NULL);
 	str_exp_var = ft_getenv(exec->env, str_bef_exp);
 	if (str_exp_var)
-	{
-		//*flag_exp = 1;
 		str_aft_exp = extract_value(str_exp_var);
-	}
 	else
 	{
 		str_aft_exp = malloc (sizeof(char) * 1);
@@ -92,9 +89,7 @@ char	*check_expand(char *str, int *i, t_exec *exec, int *flag_exp)
 	char	*new_str;
 	int		j;
 
-	(void)flag_exp; //borrar 
 	j = 0;
-	
 	while (str[*i + 1 + j] && (ft_isalnum(str[*i + j + 1]) || \
 		(str[*i + j + 1]) == '_'))
 		j++;
