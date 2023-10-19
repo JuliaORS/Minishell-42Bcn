@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 18:08:01 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/19 10:29:51 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/19 18:17:49 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,16 +57,22 @@ int	create_input_hd(t_proc *lst_proc, int *fds, int n_hd, t_exec *exec)
 	return (0);
 }
 
-int	check_hd_exit(int pid)
+int	check_hd_exit(int pid, t_exec *exec)
 {
 	int		exit_process;
 
 	waitpid (pid, &exit_process, 0);
 	if (WEXITSTATUS(exit_process) == 12)
+	{
+		exec->exit[0] = 12;
 		return (12);
+	}
 	else if (WEXITSTATUS(exit_process) == 1)
+	{
+		exec->exit[0] = 1;
 		return (1);
-	return (0);
+	}
+	return (exec->exit[0]);
 }
 
 int	exec_hd(t_proc *proc, int n_hd, t_exec *exec)
@@ -87,7 +93,7 @@ int	exec_hd(t_proc *proc, int n_hd, t_exec *exec)
 		close(fds[0]);
 		exit (exit_hd);
 	}
-	exec->exit[0] = check_hd_exit(pid);
+	exec->exit[0] = check_hd_exit(pid, exec);
 	close(fds[1]);
 	if (exec->exit[0] == 12)
 		msg_error_parsing(12, 0, &exec->exit[0]);

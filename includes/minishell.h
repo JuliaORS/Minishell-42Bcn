@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 17:05:20 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/19 13:16:21 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/19 16:12:33 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ char	*check_expand(char *str, int *i, t_exec *exec, int *flag_exp);
 int		split_tok(t_tok **lst_tok, char *str, int *exit);
 /*process list*/
 int		create_process(t_proc **lst_proc, t_tok **lst_tok, int *err);
+int		create_str(t_proc *lst_proc, t_tok **lst_tok, int n_str, int *exit);
 t_proc	*ft_lstnew_proc(void);
 t_proc	*ft_lstlast_proc(t_proc *lst);
 void	ft_lstadd_back_proc(t_proc **lst, t_proc *new);
