@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 16:45:27 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/15 14:59:06 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/19 13:15:36 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,12 @@ void	init_error(t_exec *exec)
 		exec->exit[1] = exec->exit[0];
 	exec->exit[0] = 0;
 	g_exit_sig = 0;
+}
+
+void	update_error(t_exec *exec)
+{
+	if (g_exit_sig)
+		exec->exit[0] = g_exit_sig;
 }
 
 int	msg_error_parsing(int type, int ch, int *exit)

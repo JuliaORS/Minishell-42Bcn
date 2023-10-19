@@ -5,10 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/04 20:17:43 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/15 15:45:09 by julolle-         ###   ########.fr       */
+/*   Created: 2023/10/18 12:10:04 by julolle-          #+#    #+#             */
+/*   Updated: 2023/10/19 10:31:12 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "minishell.h"
 
 #include "minishell.h"
 
@@ -67,10 +69,7 @@ char	*get_str_exp(char *str, int *i, int j, t_exec *exec)
 		return (NULL);
 	str_exp_var = ft_getenv(exec->env, str_bef_exp);
 	if (str_exp_var)
-	{
 		str_aft_exp = extract_value(str_exp_var);
-		str_aft_exp = rem_space(str_aft_exp);
-	}
 	else
 	{
 		str_aft_exp = malloc (sizeof(char) * 1);
@@ -85,7 +84,7 @@ char	*get_str_exp(char *str, int *i, int j, t_exec *exec)
 	return (str_final);
 }
 
-char	*check_expand(char *str, int *i, t_exec *exec)
+char	*check_expand(char *str, int *i, t_exec *exec, int *flag_exp)
 {
 	char	*new_str;
 	int		j;
@@ -97,6 +96,7 @@ char	*check_expand(char *str, int *i, t_exec *exec)
 	if (j != 0)
 	{
 		new_str = get_str_exp(str, i, j, exec);
+		*flag_exp = 1;
 		free(str);
 		return (new_str);
 	}

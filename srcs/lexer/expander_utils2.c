@@ -5,63 +5,61 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/15 12:45:30 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/15 13:08:55 by julolle-         ###   ########.fr       */
+/*   Created: 2023/10/18 12:30:00 by julolle-          #+#    #+#             */
+/*   Updated: 2023/10/19 11:51:50 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*str_no_space(char *str, int i, int j)
+void free_mat(char **mat)
 {
-	char	*first_str;
-	char	*sec_str;
-	char	*final_str;
+	int i;
 
-	first_str = ft_substr(str, 0, i + 1);
-	if (!first_str)
-		return (NULL);
-	sec_str = ft_substr(str, i + j, ft_strlen(str) - i - j);
-	if (!sec_str)
+	i = 1;
+	while (mat[i])
 	{
-		free(first_str);
-		return (NULL);
-	}
-	final_str = ft_strjoin(first_str, sec_str);
-	if (!final_str)
-	{
-		free(first_str);
-		free(sec_str);
-		return (NULL);
-	}
-	free(str);
-	return (final_str);
-}
-
-char	*rem_space(char *str)
-{
-	int		i;
-	int		j;
-	char	*new_str;
-
-	new_str = ft_strtrim(str, " ");
-	free(str);
-	i = 0;
-	j = 0;
-	while (new_str[i])
-	{
-		if (new_str[i] == ' ')
-		{
-			j = 0;
-			while (new_str[i + j] && new_str[i + j] == ' ')
-				j++;
-			if (j != 1)
-			{
-				new_str = str_no_space(new_str, i, j);
-				i = i + j - 1;
-			}
-		}
+		free(mat[i]);
 		i++;
 	}
-	return (new_str);
+	free(mat);
+}
+
+int	add_new_tok_exp(t_tok **lst_tok, char *str, int *exit)
+{
+	int		wo;
+	int		num_words;
+	char	**mat_str;
+
+	num_words = 0;
+	wo = 0;
+	mat_str = ft_split(str, ' ');
+	if (!mat_str)
+		return (msg_error_parsing(12, 0, exit));
+	while (mat_str[num_words])
+		num_words++;
+	while (mat_str[wo] != NULL && *exit == 0)
+	{	
+		new_tok(lst_tok, ft_strdup(mat_str[wo]), 2, exit);
+		if (wo < num_words - 1)
+			new_tok(lst_tok, NULL, 3, exit);
+		wo++;
+	}
+	free_mat(mat_str);
+	return (0);
+}
+
+
+int	split_tok(t_tok **lst_tok, char *str, int *exit)
+{
+	t_tok	*tmp;
+
+	tmp = ft_lstlast_tok(*lst_tok);
+	if (str[0] == ' ' && tmp && tmp->type <= 1)
+	{	
+		if (new_tok(lst_tok, NULL, 3, exit))
+			return (1);
+	}
+	add_new_tok_exp(lst_tok, str, exit);
+	return (0);
 }

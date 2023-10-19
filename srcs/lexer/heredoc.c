@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 18:08:01 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/15 16:09:56 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/19 10:29:51 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	create_input_hd(t_proc *lst_proc, int *fds, int n_hd, t_exec *exec)
 		free (input_hd);
 	}
 	free (input_hd);
-	str_exp = find_dollar_sign(hd_text, exec, 0, 0);
+	str_exp = find_dollar_sign(hd_text, exec, 0);
 	if (!str_exp)
 		return (12);
 	write(fds[1], str_exp, ft_strlen(str_exp));
