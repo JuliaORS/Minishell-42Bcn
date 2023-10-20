@@ -151,7 +151,7 @@ int ft_exit(t_exec *exec, char **arg)
 	int	n;
 
 	flag = 0;
-	if (isatty(STDIN_FILENO))
+	if (isatty(STDIN_FILENO) && exec->in_parent == 1)
 	{
 		ft_printf(STDERR_FILENO, "exit\n");
 		clear_history();

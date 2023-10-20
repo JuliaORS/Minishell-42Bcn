@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+int	shlvl_update(int shlvl_);
 /*
 increas the memory size of env array by one char * and copy it
 */
@@ -90,4 +91,50 @@ void	replace_env_var(char **env, char *target, char *replace)
 	env[idx] = ft_strdup(replace);
 	free(temp);
 	return ;
+}
+/*
+get the SHLVL from env copied from shell and add 1 to it
+- combined key_val_ manopulatio and atoi -> itoa to add 1
+- carefull with variable and free on ft_strjoin to avoid leak of SF
+- idx and tmp passed as arguments because of norminette rules of 4 variables max
+*/
+int	shlvl_add(t_exec *exec, int idx, char *tmp)
+{
+	int		shlvl_;
+	char	**temp;
+	char	*tmp_join;
+
+	tmp_join = NULL;
+	idx = search_env_var(exec->env, extract_variable("SHLVL="));
+	if (idx == -1)
+		return (export_exec(exec, "SHLVL=1", 1));
+	temp = key_val_pair(exec->env[idx]);
+	shlvl_= ft_atoi(temp[1]);
+	shlvl_ = shlvl_update(shlvl_);
+	free_pntr(temp[1]);
+	temp[1] = ft_itoa(shlvl_);
+	tmp_join = ft_strjoin(temp[0], "=");
+	if (tmp_join)
+	{
+		tmp = ft_strjoin(tmp_join, temp[1]);
+		free_pntr(tmp_join);
+	}
+	free_key_val(temp);
+	if (!tmp)
+		return (0);
+	export_exec(exec, tmp, 1);
+	return (1);
+}
+int	shlvl_update(int shlvl_)
+{
+	if (shlvl_ < 0 )
+	 	shlvl_ = 0;
+	else
+		shlvl_++;
+	if (shlvl_ > 1000)
+	{
+		ft_printf(STDERR_FILENO, "minishell: warning: shell level (%i) too high, resetting to 1\n", shlvl_);
+		shlvl_ = 1;
+	}
+	return (shlvl_);
 }

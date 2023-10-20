@@ -24,16 +24,14 @@ duplicate envrionment from main to run our minishell
 char	**env_dup(char **env, int i, int j)
 {
 	char	**env_dup;
-	size_t	size;
+	int		size;
 
 	size = count_var_env(env);
-	env_dup = ft_calloc(size, sizeof(char *));
+	env_dup = ft_calloc(size + 1, sizeof(char *));
 	if (!env_dup)
 		return (NULL);
-	while (env && env[i])
+	while (env[i])
 	{
-		if (!ft_strncmp("OLDPWD=", env[i], 7))
-			i++;
 		env_dup[j] = ft_strdup(env[i]);
 		if (!env_dup[j])
 		{

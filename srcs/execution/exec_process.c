@@ -21,7 +21,6 @@ int	exec_machine(t_proc *pcs_chain, t_exec *exec)
 		exec->in_parent = 1;
 		exec->exit[0] = exec_builtin(pcs_chain, exec);
 		back_up_stdio(exec, 1);
-		//free_exec(&exec);
 		return (exec->exit[0]);
 	}
 	exec->in_parent = 0;
