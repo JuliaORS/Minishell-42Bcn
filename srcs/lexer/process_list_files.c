@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/14 17:03:53 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/14 17:06:10 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/20 13:03:47 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	find_outfile(t_proc *lst_proc, t_tok **lst_tok, int *exit)
 		(*lst_tok) = (*lst_tok)->next;
 	lst_proc->outfile = join_str_toks(lst_tok);
 	if (!lst_proc->outfile)
-		return (msg_error_parsing(12, 0, exit));
+		return (err_msg_parser(MALLOC_MESS, 12, 0, exit));
 	if (type == 4)
 		lst_proc->fd[1] = open(lst_proc->outfile, O_CREAT | O_RDWR | \
 		O_TRUNC, 0666);
@@ -75,7 +75,7 @@ int	find_infile(t_proc *lst_proc, t_tok **lst_tok, int *exit)
 		(*lst_tok) = (*lst_tok)->next;
 	lst_proc->infile = join_str_toks(lst_tok);
 	if (!lst_proc->infile)
-		return (msg_error_parsing(12, 0, exit));
+		return (err_msg_parser(MALLOC_MESS, 12, 0, exit));
 	lst_proc->fd[0] = open(lst_proc->infile, O_RDONLY);
 	return (0);
 }
@@ -88,7 +88,7 @@ int	find_heredoc(t_proc *lst_proc, t_tok **lst_tok, int n_hd, int *exit)
 		(*lst_tok) = (*lst_tok)->next;
 	lst_proc->hd_lim[n_hd] = join_str_toks(lst_tok);
 	if (!lst_proc->hd_lim)
-		return (msg_error_parsing(12, 0, exit));
+		return (err_msg_parser(MALLOC_MESS, 12, 0, exit));
 	return (0);
 }
 
@@ -96,6 +96,6 @@ int	create_str(t_proc *lst_proc, t_tok **lst_tok, int n_str, int *exit)
 {
 	lst_proc->arg[n_str] = join_str_toks(lst_tok);
 	if (!lst_proc->arg[n_str])
-		return (msg_error_parsing(12, 0, exit));
+		return (err_msg_parser(MALLOC_MESS, 12, 0, exit));
 	return (0);
 }

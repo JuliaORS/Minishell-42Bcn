@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 16:45:27 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/19 13:15:36 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/20 12:54:49 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,20 +22,20 @@ void	init_error(t_exec *exec)
 	g_exit_sig = 0;
 }
 
-void	update_error(t_exec *exec)
+void	update_signal_error(t_exec *exec)
 {
 	if (g_exit_sig)
 		exec->exit[0] = g_exit_sig;
 }
 
-int	msg_error_parsing(int type, int ch, int *exit)
+int	err_msg_parser(char *msg, int type, int ch, int *exit)
 {
 	*exit = type;
 	if (type == 12)
-		ft_printf(STDERR_FILENO, "minishell🦄: Cannot allocate memory hola\n");
+		ft_printf(STDERR_FILENO, "minishell: %s\n", msg);
 	else if (type == 258 && ch == 1)
-		ft_printf(STDERR_FILENO, "minishell🦄: syntax error near unexpected token `newline'\n");
+		ft_printf(STDERR_FILENO, "minishell: %s `newline'\n", msg);
 	else if (type == 258 && ch != 1)
-		ft_printf(STDERR_FILENO, "minishell🦄: syntax error near unexpected token `%c'\n", ch);
+		ft_printf(STDERR_FILENO, "minishell: %s `%c'\n", msg, ch);
 	return (type);
 }
