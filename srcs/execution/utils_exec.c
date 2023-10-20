@@ -12,9 +12,17 @@
 
 
 #include "minishell.h"
-
+/*
+init key element for our execution 
+copy environmnt and then modify shlvl and oldpwd accordingly
+initialized the dir_init var to 0 (used in cd to update or create OLDPWD as 
+bash doesn,t start with it)
+init all the ressources that will use malloc later on to NULL
+*/
 void	init_exec(t_exec *exec, char **env)
 {
+	int idx;
+
 	if (!exec)
 	{	
 		error_msg("init empty struct", 0, exec, NULL);
@@ -23,6 +31,10 @@ void	init_exec(t_exec *exec, char **env)
 	exec->env = env_dup(env, 0, 0); 
 	if (!exec->env)
 		error_msg(MALLOC_MESS, 0, exec, NULL);
+	shlvl_add(exec, 0, NULL);
+	idx = search_env_var(exec->env, "OLDPWD");
+	if (idx > 0)
+		exec->env = downsize_env(exec->env, idx, 0, 0);
 	exec->dir_init = 0;
 	exec->pids = NULL;
 	exec->pipes = NULL;
@@ -109,3 +121,4 @@ void	free_split(char ***split_result)
 	free(*split_result);
 	*split_result = NULL;
 }
+

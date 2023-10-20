@@ -141,6 +141,8 @@ void	free_split(char ***split_result);
 char	**key_val_pair(char *str);
 void	free_key_val(char **kvp);
 void	free_pntr(void *pntr);
+int		export_exec(t_exec *exec, char *arg, int type);
+int		shlvl_add(t_exec *exec, int idx, char *tmp);
 
 
 /*buil-tins and environtment prototypes*/
@@ -167,6 +169,7 @@ char	**downsize_env(char **env, int idx, int i, int j);
 char    *ft_getenv(char **env, char *target);
 void	replace_env_var(char **env, char *target, char *replace);
 char	*extract_value(char *key_value);
+char	*build_env_var(char *arg, t_exec *exec, int type, int idx);
 
 /* exec total malloc : pids, pipes, valid_path,   */
 #endif

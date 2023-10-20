@@ -38,7 +38,7 @@ int ft_unset(t_exec *exec, char **arg)
 			{
 				exec->env = downsize_env(exec->env, idx, 0, 0);
 					if (!exec->env)
-					ft_printf(STDERR_FILENO, "minishell: unset: calloc failed\n");
+						ft_printf(STDERR_FILENO, "minishell: unset: calloc failed\n");
 			}
 		}
 		i++;
