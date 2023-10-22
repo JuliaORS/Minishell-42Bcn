@@ -26,7 +26,6 @@ int	ft_pwd(t_exec *exec, char **arg)
 
 	(void) arg;
 	(void) exec;
-	// buffer = ;
 	if (getcwd(buffer, PATH_MAX)!= NULL)
 	{
 		ft_printf(STDOUT_FILENO, "%s\n", buffer);

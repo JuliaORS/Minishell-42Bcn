@@ -96,8 +96,10 @@ void	command_process(t_proc *pcs, t_exec *exec)
 {
 	if (!pcs || !pcs->arg[0])
 		return ;
-	if (pcs->fd[0] == -1 || pcs->fd[1] == -1)
-		error_msg(BADF_MESS, EBADF, exec, pcs);
+	if (pcs->fd[0] == -1)
+		error_fd_msg("No such file or directory", exec, pcs, pcs->infile);
+	if (pcs->fd[1] == -1)
+		error_fd_msg("No such file or directory", exec, pcs, pcs->outfile);
 	io_redirect(pcs, exec);
 	close_all_pipes(exec);
 	if (is_builtin(pcs))

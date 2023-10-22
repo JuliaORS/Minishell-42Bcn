@@ -120,3 +120,13 @@ void	free_split(char ***split_result)
 	*split_result = NULL;
 }
 
+int	error_fd_msg(char *msg, t_exec *exec, t_proc *pcs, char *fname)
+{
+	ft_printf(STDERR_FILENO, "minishell: %s: %s\n", fname, msg);
+	if (exec)
+		free_exec(&exec);
+	if (exec->in_parent && is_builtin(pcs))
+		return (EXIT_FAILURE);
+	else
+		exit(EXIT_FAILURE);
+}

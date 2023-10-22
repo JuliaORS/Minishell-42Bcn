@@ -92,22 +92,23 @@ int	error_builtin(char *msg, int nb, char *bltn)
 		ft_printf(STDERR_FILENO, "minishell: %s: %s\n", msg, bltn);
 	else
 		ft_printf(STDERR_FILENO, "minishell: %s\n", msg);
-	// if (exec)
-	// 	free_exec(&exec);
 	return (nb);
 }
 /* 
 Objective : apply execve with many error handling
-1 - first if the path is findable (the path reach a file that exist - 
-we verify that (again) with access and F_OK) we then test several cases:
-1.a - if the file is not exectutable ( a script.sh where -x- right are
+1 - first we check if the the command is a directory using opendir()
+2 - if not, and if it is not an emty command (!= "") 
+we check if the path is findable and exist - we verify that (again) with access F_OK) 
+we then test several cases:
+2.a - if the file is not exectutable ( a script.sh where -x- right are
 not for user or group -> we return error 126 and exit message)
-1.b - else we can apply execve and return the error message if issue
-2 - if the path is not ok but arg_cmd[0] contains a "/" it is possible
-that our command is a relative path with directory like subdir/scripth.sh
-and in that case iterating or env wasn't a clear succees, so we apply execve 
-with arg_cmd[0] as path
-3 - if nothing worked, command is clearly unknown -> exit error message  
+2.b - else we can apply execve and return the error 1 if issue
+3 - if the argument / command start with "/" it is a path to a exe or .sh that was 
+provdied -> if it exist with access F_OK we then  try to execute it
+4 - If no execution we have 2 message for the 127 "not found" exit:
+4.a- if the command start with "/" and could not be executed -> No such file with
+with exit 127
+4.b - otherwise it was a command and not a file -> command not found
 */
 void	exec_bash(t_proc **exec_trgt, t_exec **exec)
 {
@@ -126,10 +127,12 @@ void	exec_bash(t_proc **exec_trgt, t_exec **exec)
 		if (execve((*exec)->path, (*exec_trgt)->arg, (*exec)->env) == -1)
 			exit(EXIT_FAILURE);
 	}
-	if ((ft_strchr((*exec_trgt)->arg[0], '/') && access((*exec_trgt)->arg[0], F_OK) == 0)) //SPECIAL CASE ABSOLUTE / RELATIVE PATH
-	{
-		if (execve((*exec_trgt)->arg[0], (*exec_trgt)->arg, (*exec)->env) == -1)
-			exit(EXIT_FAILURE);
-	}
+	// if ((ft_strchr((*exec_trgt)->arg[0], '/') && access((*exec_trgt)->arg[0], F_OK) == 0))
+	// {
+	// 	if (execve((*exec_trgt)->arg[0], (*exec_trgt)->arg, (*exec)->env) == -1)
+	// 		exit(EXIT_FAILURE);
+	// }
+	if (ft_strchr((*exec_trgt)->arg[0], '/'))
+		error_msg("No such file or directory", CMNOFOUND, *exec, *exec_trgt);
 	error_msg(CMNF_MESS, CMNOFOUND, *exec, *exec_trgt);
 }
