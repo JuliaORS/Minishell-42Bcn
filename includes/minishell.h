@@ -24,12 +24,14 @@
 # include "libft/libft.h"
 # include "ft_printf/ft_printf.h"
 # include <limits.h>
+# include <dirent.h>
 
 /*========================== system error management ==========================*/
 # define EBADF 9
 # define ENOMEM 12
 # define NOPERM 126
 # define CMNOFOUND 127
+# define FILE_MAX 255
 
 # define MALLOC_MESS "malloc failed: Cannot allocate memory"
 # define BADF_MESS  "Bad file descriptor"

@@ -37,7 +37,7 @@ int	is_builtin(t_proc*pcs_chain)
 {
 	char	*cmd;
 	
-	if (!pcs_chain || !pcs_chain->arg)
+	if (!pcs_chain || !pcs_chain->arg[0] || !pcs_chain->arg)
 		return (0);
 	cmd = pcs_chain->arg[0];
 	if (!ft_strncmp(cmd, "cd", 3))
@@ -111,14 +111,22 @@ with arg_cmd[0] as path
 */
 void	exec_bash(t_proc **exec_trgt, t_exec **exec)
 {
-	if (access((*exec)->path, F_OK) == 0)
+	DIR *d;
+
+	d = opendir((*exec_trgt)->arg[0]);
+	if (d)
+	{
+		closedir(d);
+		error_msg("is a directory", 126, *exec, *exec_trgt);
+	}
+	if (access((*exec)->path, F_OK) == 0 && (*exec_trgt)->arg[0][0] != '\0')
 	{
 		if (access((*exec)->path, X_OK) != 0)
 			error_msg(NOPERM_MESS, NOPERM, *exec, *exec_trgt);
 		if (execve((*exec)->path, (*exec_trgt)->arg, (*exec)->env) == -1)
 			exit(EXIT_FAILURE);
 	}
-	if (ft_strchr((*exec_trgt)->arg[0], '/') && access((*exec_trgt)->arg[0], F_OK) == 0) //SPECIAL CASE ABSOLUTE / RELATIVE PATH
+	if ((ft_strchr((*exec_trgt)->arg[0], '/') && access((*exec_trgt)->arg[0], F_OK) == 0)) //SPECIAL CASE ABSOLUTE / RELATIVE PATH
 	{
 		if (execve((*exec_trgt)->arg[0], (*exec_trgt)->arg, (*exec)->env) == -1)
 			exit(EXIT_FAILURE);
