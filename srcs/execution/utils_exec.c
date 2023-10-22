@@ -33,7 +33,7 @@ void	init_exec(t_exec *exec, char **env)
 		error_msg(MALLOC_MESS, 0, exec, NULL);
 	shlvl_add(exec, 0, NULL);
 	idx = search_env_var(exec->env, "OLDPWD");
-	if (idx > 0)
+	if (idx >= 0)
 		exec->env = downsize_env(exec->env, idx, 0, 0);
 	exec->dir_init = 0;
 	exec->pids = NULL;
@@ -67,8 +67,6 @@ void	free_exec(t_exec **exec)
 {
 	if (!*exec)
 		return ;
-	// if((*exec)->env)    
-	// 	free_env((*exec)->env);
 	if ((*exec)->pids)
 	{
 		free((*exec)->pids);
@@ -122,3 +120,13 @@ void	free_split(char ***split_result)
 	*split_result = NULL;
 }
 
+int	error_fd_msg(char *msg, t_exec *exec, t_proc *pcs, char *fname)
+{
+	ft_printf(STDERR_FILENO, "minishell: %s: %s\n", fname, msg);
+	if (exec)
+		free_exec(&exec);
+	if (exec->in_parent && is_builtin(pcs))
+		return (EXIT_FAILURE);
+	else
+		exit(EXIT_FAILURE);
+}

@@ -39,6 +39,8 @@ char	**search_path(char *env[])
 		if (env[i])
 			path = env[i] + 5;
 	}
+	if (!path)
+		return (NULL);
 	path_matrix = ft_split(path, ':');
 	return (path_matrix);
 }

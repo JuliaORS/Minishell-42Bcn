@@ -18,30 +18,34 @@ char    *extract_path(char *keyvalue);
 
 /*
 checking that the path leads to a correct directoy
-1. check with access that the path exist (F_OK) and we have access rights (X_OK)
-    and display corresponding error messages
-2. check that the path endpoint is a directory (combining stat and S_ISDIR)
+1. check that the path leads to a directory with opendir() and exit if error
+2. check that the file name is not bigger than 1 byte
+3. check with access that the path exist (F_OK) and if so 
+that we have access rights (X_OK) and display corresponding error messages
+4. check that the path endpoint is a directory (combining stat and S_ISDIR)
 */
 int check_directory(const char *path)
 {
-    struct stat info;
+    struct stat path_info;
 
-    if (stat(path, &info) == 0)
+    if (ft_strlen(path) > FILE_MAX) 
     {
-        if (!S_ISDIR(info.st_mode))
-        {
-            ft_printf(STDERR_FILENO, "minishell: cd: %s: Not a directory\n", path);
-            return (1);
-        }
+        ft_printf(STDERR_FILENO, "minishell: cd: %s: File name too long\n", path);
+        return (1);
     }
-    if (access(path,F_OK) == -1)
+    if (stat(path, &path_info) < 0)
     {
         ft_printf(STDERR_FILENO, "minishell: cd: %s: No such file or directory\n", path);
         return (1);
     }
-    if (access(path, X_OK) == -1)
+    if (!S_ISDIR(path_info.st_mode))
     {
-        ft_printf(STDERR_FILENO, "minishell: cd: : %s: Permission denied\n", path);
+        ft_printf(STDERR_FILENO, "minishell: cd: %s: Not a directory\n", path);
+        return (1);
+    }
+    if (access(path, X_OK) < 0)
+    {
+        ft_printf(STDERR_FILENO, "minishell: cd: %s: Permission denied\n", path);
         return (1);
     }
     return (0);
@@ -49,9 +53,10 @@ int check_directory(const char *path)
 
 /*
 actual cd buitlins : 
+first we savet the current directory to update OLDPWD later on
 case with no arguments going to HOME var :
     1. we extract HOME=XXXX from env and get the path (part after =)
-    2. if chdir return issue -> error messafe
+    2. if chdir return issue -> error message
 case with arguments
     1. check that the path is correct with function check_directory
     2. go to the directory and return error if issue with chdir()
@@ -99,14 +104,14 @@ void update_env_dir(t_exec *exec, char *old_path)
     old_path = ft_strjoin("OLD", old_path);
     curr_dir = getcwd(NULL, 1056);
     curr_path = ft_strjoin("PWD=", curr_dir);
-    free(curr_dir);
+    free_pntr(curr_dir);
     if (exec->dir_init == 0)
         exec->env = realloc_env(exec->env, old_path);
     else
         replace_env_var(exec->env, "OLDPWD", old_path);
     replace_env_var(exec->env, "PWD", curr_path);
-    free(curr_path);
-    free(old_path);
+    free_pntr(curr_path);
+    free_pntr(old_path);
     return ;
 }
 

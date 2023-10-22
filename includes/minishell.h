@@ -24,12 +24,14 @@
 # include "libft/libft.h"
 # include "ft_printf/ft_printf.h"
 # include <limits.h>
+# include <dirent.h>
 
 /*========================== system error management ==========================*/
 # define EBADF 9
 # define ENOMEM 12
 # define NOPERM 126
 # define CMNOFOUND 127
+# define FILE_MAX 255
 
 # define MALLOC_MESS "malloc failed: Cannot allocate memory"
 # define BADF_MESS  "Bad file descriptor"
@@ -136,6 +138,7 @@ void	back_up_stdio(t_exec *exec, int io);
 void	close_all_pipes(t_exec *exec);
 void	free_exec(t_exec **exec);
 int		error_msg(char *msg, int nb, t_exec *exec, t_proc *pcs);
+int		error_fd_msg(char *msg, t_exec *exec, t_proc *pcs, char *fname);
 int		fd_is_open(int fd);
 void	free_split(char ***split_result);
 char	**key_val_pair(char *str);
@@ -143,7 +146,6 @@ void	free_key_val(char **kvp);
 void	free_pntr(void *pntr);
 int		export_exec(t_exec *exec, char *arg, int type);
 int		shlvl_add(t_exec *exec, int idx, char *tmp);
-
 
 /*buil-tins and environtment prototypes*/
 void	builtins(char **arg, t_exec *exec);

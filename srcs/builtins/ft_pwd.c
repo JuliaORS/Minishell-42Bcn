@@ -22,17 +22,15 @@ correctly
 */
 int	ft_pwd(t_exec *exec, char **arg)
 {
-	char *buffer;
+	char buffer[PATH_MAX];
 
 	(void) arg;
 	(void) exec;
-	buffer = getcwd(NULL, 1056);
-	if (buffer != NULL)
+	if (getcwd(buffer, PATH_MAX)!= NULL)
 	{
-		printf("%s\n", buffer);
-		free(buffer);
+		ft_printf(STDOUT_FILENO, "%s\n", buffer);
 		return (0);
 	}
-	perror("Error finding current directory");
+	ft_printf(STDERR_FILENO, "Error finding current directory");
 	return (1);
 }
