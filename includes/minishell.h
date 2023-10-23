@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 17:05:20 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/19 16:12:33 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/23 12:01:24 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@
 # define BADF_MESS  "Bad file descriptor"
 # define CMNF_MESS "command not found"
 # define NOPERM_MESS "Permission denied"
+# define SYNTAX_MESS "syntax error near unexpected token"
 
 /*SIGNALS MODE*/
 # define READ		1
@@ -78,9 +79,9 @@ typedef struct s_exec {
 }	t_exec;
 
 //LEXER
-void	init_error(t_exec *exec);
+int		err_msg_parser(char *msg, int type, int ch, int *exit);
 void	update_error(t_exec *exec);
-int		msg_error_parsing(int type, int ch, int *exit);
+void	init_error(t_exec *exec);
 /*tokenization process*/
 int		manage_input(char *line, t_proc **lst_proc, t_exec *exec);
 int		parsing_input(char *line, int *exit);
