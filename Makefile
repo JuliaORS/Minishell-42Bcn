@@ -13,12 +13,12 @@
 NAME        = minishell
 HEADER      = ./includes/
 SRC_PATH    = srcs/
-SRC         = lexer/minishell.c lexer/manage_input.c lexer/parser.c \
-				lexer/token_list.c lexer/token_list_utils.c lexer/expander.c \
-				lexer/expander_utils.c lexer/expander_utils2.c \
-				lexer/process_list.c lexer/process_list_files.c \
-			    lexer/process_list_utils.c lexer/print_free_list.c \
-            	lexer/error_parsing.c lexer/signals.c lexer/heredoc.c \
+SRC         = minishell.c signals.c lexer/manage_input.c lexer/parser.c \
+			lexer/token_list.c lexer/token_list_utils.c lexer/expander.c \
+			lexer/expander_utils.c lexer/expander_utils2.c \
+			lexer/process_list.c lexer/process_list_files.c \
+			lexer/process_list_utils.c lexer/print_free_list.c \
+            lexer/error_parsing.c lexer/heredoc.c \
             execution/exec_process.c execution/manage_process.c \
             execution/pipes.c execution/utils_exec.c execution/parse_path.c \
             builtins/ft_cd.c builtins/ft_echo.c builtins/ft_export.c \
@@ -30,8 +30,8 @@ LIBFT       = $(LIBFT_PATH)/libft.a
 PRINTF_PATH = includes/ft_printf/
 PRINTF      = $(PRINTF_PATH)/libftprintf.a
 RLINE_PATH  = includes/readline/
-RLINE       = $(RLINE_PATH)/libreadline.a
-RLINE_H     = $(RLINE_PATH)/libhistory.a
+RLINE_MK 	= $(RLINE_PATH)/Makefile
+RLINE       = $(RLINE_PATH)/libreadline.a $(RLINE_PATH)/libhistory.a
 LIB_FLAGS   = -lreadline -ltermcap -lft -lftprintf
 OBJ_PATH    = ./OBJ/
 OBJ         = $(addprefix $(OBJ_PATH), $(SRC:.c=.o))
@@ -40,23 +40,23 @@ INC         = -I$(addprefix $(INC_PATH), $(HEADER))
 CC          = gcc
 CFLAGS      = -Wall -Wextra -Werror -MMD 
 RM          = rm -f
+
 #Implicit Method
-
-$(OBJ_PATH)%.o: $(SRC_PATH)%.c Makefile $(LIBFT) $(RLINE) $(RLINE_H) $(PRINTF)
+$(OBJ_PATH)%.o: $(SRC_PATH)%.c Makefile $(LIBFT) $(RLINE) $(PRINTF)
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@
-# My methods
 
-all: $(OBJ_PATH) subsystems $(NAME)
+# My methods
+all: $(RLINE_MK) $(OBJ_PATH) subsystems $(NAME)
 
 -include $(DEP)
 $(NAME):  $(OBJ)
-	@$(CC) $(OBJ) -o $(NAME) $(RLINE_H) $(RLINE) $(LIB_FLAGS) -L $(LIBFT_PATH) -L $(PRINTF_PATH) 
+	@$(CC) $(OBJ) -o $(NAME) $(RLINE) $(LIB_FLAGS) -L $(LIBFT_PATH) -L $(PRINTF_PATH) 
 	$(info MINISHELL compiled)
 
 subsystems:
 	@make -s -C $(LIBFT_PATH)
-	@make -s -C $(RLINE_PATH) 
 	@make -s -C $(PRINTF_PATH)
+	@make -s -C $(RLINE_PATH) 
 
 $(OBJ_PATH):
 	mkdir -p $(OBJ_PATH)
@@ -64,6 +64,11 @@ $(OBJ_PATH):
 	mkdir -p $(OBJ_PATH)/builtins
 	mkdir -p $(OBJ_PATH)/env
 	mkdir -p $(OBJ_PATH)/execution
+
+$(RLINE_MK):
+	pwd ${BLOCK}
+	cd ./${RLINE_PATH} && ./configure
+	cd ${BLOCK}
 
 clean:
 	@$(RM) $(OBJS) $(DEPS)
@@ -75,6 +80,14 @@ fclean: clean
 	@$(RM) $(NAME)
 	@make -s -C $(LIBFT_PATH) fclean
 	@make -s -C $(PRINTF_PATH) fclean
+
 re: fclean all
+
+readline:
+	@make $(RLINE_MK)
+
+cleanrl:
+	@make clean -s -C $(RLINE_PATH)
+
 # Phony
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re 
