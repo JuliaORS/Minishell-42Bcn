@@ -44,7 +44,7 @@ traverse the string as long as digit and flag that a digit was encountered
 if first non-zero encountered, start measuring. then traverse all the space
 if the string is not terminated (i.e  contained a non-digit or non-space), if
 it never encountered a number (never started looop) or if the number is 
-bigger than upper base 10 limit of LONG_MAX -> invalid
+bigger than upper base 10 limit of LONG_MAX -> invalid (nb_len > 19)
  */
 int valid_number(const char *str)
 {
@@ -95,6 +95,12 @@ int	check_arg(const char *arg, int i)
 		return (1);
 	return (0);
 }
+/*
+atoi with a twist : check number is not bigger than LONG_MAX and is correct 
+(not ++ etc..)
+special case for exit -- (exit args) which is valid and exit early
+vs exit --1 which is incorrect
+*/
 int	ft_atoi_checker(const char *str, int *flag)
 {
 	int		i;
@@ -103,6 +109,8 @@ int	ft_atoi_checker(const char *str, int *flag)
 
 	i = 0;
 	result = 0;
+	if (!ft_strncmp(str, "--", 3))
+		return (0);
 	if(check_arg(str, 0))
 		return (*flag = -1);
 	sign = traverse_blank(str, &i);
