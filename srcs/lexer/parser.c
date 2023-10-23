@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/14 16:13:18 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/23 10:54:56 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/23 11:06:35 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,10 @@ int	check_pipes(char *line, int *i, int *exit)
 		j++;
 	}
 	if (j + 1 == *i)
+		return (err_msg_parser(SYNTAX_MESS, 258, '|', exit));
+	while (line[*i + 1] == ' ')
+		*i += 1;
+	if (!line[*i + 1] || line[*i + 1] == '|')
 		return (err_msg_parser(SYNTAX_MESS, 258, '|', exit));
 	return (0);
 }

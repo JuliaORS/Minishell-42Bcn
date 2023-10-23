@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 18:08:01 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/23 10:59:00 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/23 12:05:42 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,11 @@ int	exec_hd(t_proc *proc, int n_hd, t_exec *exec)
 	pipe(fds);
 	pid = fork ();
 	if (pid == -1)
+	{
 		error_msg("fork failed", ENOMEM, exec, NULL);
+		exec->exit[0] = 12;
+		return (exec->exit[0]);
+	}
 	if (pid == 0)
 	{
 		init_signals(HEREDOC);
@@ -98,7 +102,11 @@ int	exec_hd(t_proc *proc, int n_hd, t_exec *exec)
 	if (exec->exit[0] == 12)
 		err_msg_parser(MALLOC_MESS, 12, 0, &exec->exit[0]);
 	if (proc->intype == 1)
+	{
+		if (proc->fd[0])
+			close(proc->fd[0]);
 		proc->fd[0] = fds[0];
+	}
 	else
 		close(fds[0]);
 	return (exec->exit[0]);

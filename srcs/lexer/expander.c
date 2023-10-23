@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 12:09:34 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/23 10:52:49 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/23 12:10:23 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@ char	*find_dollar_sign(char *str, t_exec *exec, int *flag_exp)
 	return (str);
 }
 
-int skip_hdoc(t_tok **lst_tok)
+int	skip_hdoc(t_tok **lst_tok)
 {
-	t_tok   *tmp;
-	
+	t_tok	*tmp;
+
 	if (!(*lst_tok))
 		return (0);
 	tmp = ft_lstlast_tok(*lst_tok);
@@ -45,19 +45,19 @@ int skip_hdoc(t_tok **lst_tok)
 	if (tmp && tmp->type == 7)
 		return (1);
 	else if (tmp && tmp->type == 3 && tmp->prev && tmp->prev->type == 7)
-	   return (1);
+		return (1);
 	return (0);
 }
 
-char *expander(t_tok **lst_tok, char *str, t_exec *exec, int type)
+char	*expander(t_tok **lst_tok, char *str, t_exec *exec, int type)
 {
 	char	*str_exp;
 	int		flag_exp;
 
 	if (skip_hdoc(lst_tok))
 	{
-		if (new_tok(lst_tok, str, type, &exec->exit[0]))
-			return (NULL);
+		new_tok(lst_tok, str, type, &exec->exit[0]);
+		return (NULL);
 	}
 	str_exp = find_dollar_sign(str, exec, &flag_exp);
 	if (!str_exp)
@@ -66,7 +66,7 @@ char *expander(t_tok **lst_tok, char *str, t_exec *exec, int type)
 		return (NULL);
 	}
 	if (ft_strlen(str_exp) == 0)
-		return(str_exp);
+		return (str_exp);
 	else if (flag_exp == 1 && type == 2)
 		split_tok(lst_tok, str_exp, &exec->exit[0]);
 	else
@@ -76,7 +76,7 @@ char *expander(t_tok **lst_tok, char *str, t_exec *exec, int type)
 
 int	remove_dol_end(t_tok **lst_tok, int *exit)
 {
-	t_tok   *tmp;
+	t_tok	*tmp;
 	char	*sub_str;
 
 	if (!(*lst_tok))

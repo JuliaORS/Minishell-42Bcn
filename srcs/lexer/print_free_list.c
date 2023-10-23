@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 12:54:07 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/15 19:39:45 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/23 11:18:50 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,8 @@ void	ft_print_process(t_proc **lst_proc)
 		}
 		printf("arg[%i]-> '%s'\n", i, (*lst_proc)->arg[i]);
 		i = 0;
-		printf("outfile-> '%s'\n", (*lst_proc)->outfile);
-		printf("infile-> '%s'\n", (*lst_proc)->infile);
+		printf("outfile-> '%s' i fd = %i\n", (*lst_proc)->outfile, (*lst_proc)->fd[1]);
+		printf("infile-> '%s' i fd = %i\n", (*lst_proc)->infile, (*lst_proc)->fd[0]);
 		if ((*lst_proc)->hd_lim)
 		{
 			while ((*lst_proc)->hd_lim[i])

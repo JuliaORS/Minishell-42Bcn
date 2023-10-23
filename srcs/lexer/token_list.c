@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 12:52:12 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/23 10:57:22 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/23 12:12:47 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,8 @@ int	create_tok_str(t_tok **lst_tok, char *line, int *i, t_exec *exec)
 		return (exec->exit[0]);
 	if (ft_strlen(str_exp) == 0)
 		free(str_exp);
-	if (str_exp[ft_strlen(str_exp) - 1] == ' ' && (line[len] == '"' || line[len] == '\''))
+	if (str_exp[ft_strlen(str_exp) - 1] == ' ' && (line[len] == '"' \
+		|| line[len] == '\''))
 		new_tok(lst_tok, NULL, 3, &exec->exit[0]);
 	return (0);
 }
@@ -117,7 +118,7 @@ int	create_tokens(t_tok **lst_tok, char *input, t_exec *exec)
 		i++;
 	}
 	free(line);
-	if (ft_lstsize_tok(*lst_tok) == 1 && (*lst_tok)->type == 3 )
+	if (ft_lstsize_tok(*lst_tok) == 1 && (*lst_tok)->type == 3)
 		return (1);
 	return (exec->exit[0]);
 }
