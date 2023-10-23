@@ -100,10 +100,17 @@ void	command_process(t_proc *pcs, t_exec *exec)
 		error_fd_msg("No such file or directory", exec, pcs, pcs->infile);
 	if (pcs->fd[1] == -1)
 		error_fd_msg("No such file or directory", exec, pcs, pcs->outfile);
+	if (pcs->fd[0] == -2)
+		error_fd_msg("Permission denied", exec, pcs, pcs->infile);
+	if (pcs->fd[1] == -2)
+		error_fd_msg("Permission denied", exec, pcs, pcs->outfile);
 	io_redirect(pcs, exec);
 	close_all_pipes(exec);
 	if (is_builtin(pcs))
-		exec_builtin(pcs, exec);
+	{
+		exec->exit[0] = exec_builtin(pcs, exec);
+		exit(exec->exit[0]);
+	}
 	else
 		build_execve(&pcs, &exec);
 }

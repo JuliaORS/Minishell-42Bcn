@@ -98,7 +98,10 @@ void	close_all_pipes(t_exec *exec)
 		close(exec->pipes[i][0]);
 		close(exec->pipes[i][1]);
 		if (exec->pipes[i])
+		{
 			free(exec->pipes[i]);
+			exec->pipes[i] = NULL;
+		}
 		i++;
 	}
 	free(exec->pipes);
