@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 12:09:34 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/19 12:36:59 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/23 10:52:49 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char *expander(t_tok **lst_tok, char *str, t_exec *exec, int type)
 	str_exp = find_dollar_sign(str, exec, &flag_exp);
 	if (!str_exp)
 	{
-		msg_error_parsing(12, 0, &exec->exit[0]);
+		err_msg_parser(MALLOC_MESS, 12, 0, &exec->exit[0]);
 		return (NULL);
 	}
 	if (ft_strlen(str_exp) == 0)
@@ -86,7 +86,7 @@ int	remove_dol_end(t_tok **lst_tok, int *exit)
 	{
 		sub_str = ft_substr(tmp->str, 0, ft_strlen(tmp->str) - 1);
 		if (!sub_str)
-			return (msg_error_parsing(12, 0, exit));
+			return (err_msg_parser(MALLOC_MESS, 12, 0, exit));
 		free(tmp->str);
 		tmp->str = sub_str;
 	}

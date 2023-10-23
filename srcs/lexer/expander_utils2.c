@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 12:30:00 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/19 11:51:50 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/23 10:52:06 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	add_new_tok_exp(t_tok **lst_tok, char *str, int *exit)
 	wo = 0;
 	mat_str = ft_split(str, ' ');
 	if (!mat_str)
-		return (msg_error_parsing(12, 0, exit));
+		return (err_msg_parser(MALLOC_MESS, 12, 0, exit));
 	while (mat_str[num_words])
 		num_words++;
 	while (mat_str[wo] != NULL && *exit == 0)

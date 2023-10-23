@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 18:08:01 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/19 18:17:49 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/23 10:59:00 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int	exec_hd(t_proc *proc, int n_hd, t_exec *exec)
 	exec->exit[0] = check_hd_exit(pid, exec);
 	close(fds[1]);
 	if (exec->exit[0] == 12)
-		msg_error_parsing(12, 0, &exec->exit[0]);
+		err_msg_parser(MALLOC_MESS, 12, 0, &exec->exit[0]);
 	if (proc->intype == 1)
 		proc->fd[0] = fds[0];
 	else

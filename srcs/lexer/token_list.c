@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 12:52:12 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/19 13:10:20 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/23 10:57:22 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	create_tok_quote(t_tok **lst_tok, char *line, int *i, t_exec *exec)
 	pos = ft_strchr(line + 1, line[0]);
 	str = ft_substr(line, 1, ft_strlen(line) - ft_strlen(pos) - 1);
 	if (!str)
-		return (msg_error_parsing(12, 0, &exec->exit[0]));
+		return (err_msg_parser(MALLOC_MESS, 12, 0, &exec->exit[0]));
 	*i = *i + (ft_strlen(line) - ft_strlen(pos));
 	if (line[0] == '"' && ft_strlen(str) == 0)
 		new_tok(lst_tok, str, 0, &exec->exit[0]);
