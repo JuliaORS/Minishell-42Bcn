@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 12:09:34 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/23 12:10:23 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/23 15:46:47 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ char	*expander(t_tok **lst_tok, char *str, t_exec *exec, int type)
 	char	*str_exp;
 	int		flag_exp;
 
+	flag_exp = 0;
 	if (skip_hdoc(lst_tok))
 	{
 		new_tok(lst_tok, str, type, &exec->exit[0]);

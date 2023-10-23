@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 12:10:04 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/23 12:10:48 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/23 15:56:12 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,12 +74,11 @@ char	*get_str_exp(char *str, int *i, int j, t_exec *exec)
 		if (str_aft_exp)
 			str_aft_exp[0] = '\0';
 	}
+	free(str_bef_exp);
 	if (!str_aft_exp)
 		return (NULL);
-	free(str_bef_exp);
 	str_final = create_new_str(str, str_aft_exp, i, j);
-	if (str_aft_exp)
-		free(str_aft_exp);
+	free(str_aft_exp);
 	return (str_final);
 }
 

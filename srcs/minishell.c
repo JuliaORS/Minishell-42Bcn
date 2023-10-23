@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 16:19:21 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/23 12:02:29 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/23 18:27:18 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ void	main_loop(t_exec *exec)
 	t_proc	*lst_proc;
 
 	lst_proc = NULL;
-	init_error(exec);
 	while (1)
 	{
 		init_signals(READ);
@@ -34,16 +33,13 @@ void	main_loop(t_exec *exec)
 			exec->exit[0] = manage_input(input, &lst_proc, exec);
 			if (!exec->exit[0])
 			{
-				
 				exec->total_cmd = measure_list(&lst_proc);
 				if (!manage_heredoc(&lst_proc, exec))
 					exec->exit[0] = exec_machine(lst_proc, exec);
-
 			}
-			
-			free (input);
-			free_lst_proc(&lst_proc);
 		}
+		free (input);
+		free_lst_proc(&lst_proc);
 	}
 	free(input);
 	free_lst_proc(&lst_proc);
@@ -52,7 +48,7 @@ void	main_loop(t_exec *exec)
 int	main(int argc, char **argv, char **env)
 {
 	t_exec	exec;
-
+	
 	(void)argc;
 	(void)argv;
 	init_exec(&exec, env);

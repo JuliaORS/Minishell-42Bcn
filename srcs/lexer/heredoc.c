@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 18:08:01 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/23 12:05:42 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/23 18:40:19 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int	create_input_hd(t_proc *lst_proc, int *fds, int n_hd, t_exec *exec)
 	char	*hd_text;
 	char	*str_exp;
 
+	init_signals(HEREDOC);
 	hd_text = NULL;
 	while (1)
 	{
@@ -54,10 +55,12 @@ int	create_input_hd(t_proc *lst_proc, int *fds, int n_hd, t_exec *exec)
 	if (!str_exp)
 		return (12);
 	write(fds[1], str_exp, ft_strlen(str_exp));
+	close(fds[1]);
+	close(fds[0]);
 	return (0);
 }
 
-int	check_hd_exit(int pid, t_exec *exec)
+int	check_hd_exit(int pid, t_exec *exec, int fd0, int fd1)
 {
 	int		exit_process;
 
@@ -72,6 +75,11 @@ int	check_hd_exit(int pid, t_exec *exec)
 		exec->exit[0] = 1;
 		return (1);
 	}
+	close(fd1);
+	if (exec->exit[0])
+		close(fd0);
+	if (exec->exit[0] == 12)
+		err_msg_parser(MALLOC_MESS, 12, 0, &exec->exit[0]);
 	return (exec->exit[0]);
 }
 
@@ -84,23 +92,14 @@ int	exec_hd(t_proc *proc, int n_hd, t_exec *exec)
 	pipe(fds);
 	pid = fork ();
 	if (pid == -1)
-	{
 		error_msg("fork failed", ENOMEM, exec, NULL);
-		exec->exit[0] = 12;
-		return (exec->exit[0]);
-	}
 	if (pid == 0)
 	{
-		init_signals(HEREDOC);
 		exit_hd = create_input_hd(proc, fds, n_hd, exec);
-		close(fds[1]);
-		close(fds[0]);
 		exit (exit_hd);
 	}
-	exec->exit[0] = check_hd_exit(pid, exec);
-	close(fds[1]);
-	if (exec->exit[0] == 12)
-		err_msg_parser(MALLOC_MESS, 12, 0, &exec->exit[0]);
+	if (check_hd_exit(pid, exec, fds[0], fds[1]))
+		return (1);
 	if (proc->intype == 1)
 	{
 		if (proc->fd[0])
@@ -126,7 +125,7 @@ int	manage_heredoc(t_proc **lst_proc, t_exec *exec)
 			while ((*lst_proc)->hd_lim[n_hd])
 			{
 				if (exec_hd(*lst_proc, n_hd, exec))
-					return (exec->exit[0]);
+					break ;
 				n_hd++;
 			}
 		}
