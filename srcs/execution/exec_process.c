@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 21:20:02 by rjobert           #+#    #+#             */
-/*   Updated: 2023/10/23 09:23:22 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/15 18:42:24 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	exec_machine(t_proc *pcs_chain, t_exec *exec)
 }
 
 
-int	is_builtin(t_proc *pcs_chain)
+int	is_builtin(t_proc*pcs_chain)
 {
 	char	*cmd;
 	

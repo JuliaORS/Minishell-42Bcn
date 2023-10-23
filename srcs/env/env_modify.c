@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_modify.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rjobert <rjobert@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/27 13:28:54 by rjobert           #+#    #+#             */
-/*   Updated: 2023/10/20 11:05:34 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/09/27 13:28:56 by rjobert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,6 @@ int	shlvl_add(t_exec *exec, int idx, char *tmp)
 	export_exec(exec, tmp, 1);
 	return (1);
 }
-
 int	shlvl_update(int shlvl_)
 {
 	if (shlvl_ < 0 )

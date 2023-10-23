@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 19:04:54 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/20 13:04:05 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/15 12:30:24 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	new_process(t_proc **lst_proc, t_tok **lst_tok, int pos, int *exit)
 	n_hd = 0;
 	proc = create_node_proc(lst_proc, lst_tok, pos);
 	if (!proc)
-		return (err_msg_parser(MALLOC_MESS, 12, 0, exit));
+		return (msg_error_parsing(12, 0, exit));
 	while (*lst_tok && (*lst_tok)->type != 8 && !*exit)
 	{
 		if ((*lst_tok)->type == 4 || (*lst_tok)->type == 5)

@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 12:10:04 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/20 14:27:02 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/19 18:38:10 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,7 @@ char	*get_str_exp(char *str, int *i, int j, t_exec *exec)
 	else
 	{
 		str_aft_exp = malloc (sizeof(char) * 1);
-		if (str_aft_exp)
-			str_aft_exp[0] = '\0';
+		str_aft_exp[0] = '\0';
 	}
 	if (!str_aft_exp)
 		return (NULL);
@@ -112,10 +111,7 @@ char	*expand_error(char *str, int *i, t_exec *exec)
 
 	str_exp = ft_itoa(exec->exit[1]);
 	if (!str_exp)
-	{
-		free (str);
 		return (NULL);
-	}
 	str_final = create_new_str(str, str_exp, i, 1);
 	free(str_exp);
 	free(str);

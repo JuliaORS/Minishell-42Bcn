@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 20:24:48 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/20 13:04:38 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/15 18:01:34 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int	new_tok(t_tok **lst_tok, char *str, int type, int *exit)
 
 	new_tok_node = ft_lstnew_tok(str, type);
 	if (!new_tok_node)
-		return (err_msg_parser(MALLOC_MESS, 12, 0, exit));
+		return (msg_error_parsing(12, 0, exit));
 	ft_lstadd_back_tok(lst_tok, new_tok_node);
 	return (0);
 }
