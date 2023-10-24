@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 19:04:54 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/15 12:30:24 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/23 12:11:55 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,13 @@ int	create_array_arg(t_proc *proc, t_tok **lst_tok)
 			n_arg++;
 		*lst_tok = (*lst_tok)->next;
 	}
-	proc->arg = (char **)malloc(sizeof(char *) * (n_arg + 1));
-	if (!proc->arg)
-		return (1);
-	proc->arg[n_arg] = NULL;
+	//if (n_arg != 0)
+	//{
+		proc->arg = (char **)malloc(sizeof(char *) * (n_arg + 1));
+		if (!proc->arg)
+			return (1);
+		proc->arg[n_arg] = NULL;
+	//}
 	*lst_tok = tmp;
 	return (0);
 }
@@ -68,7 +71,6 @@ t_proc	*create_node_proc(t_proc **lst_proc, t_tok **lst_tok, int pos)
 		return (NULL);
 	ft_lstadd_back_proc(lst_proc, proc);
 	proc->pos = pos;
-	create_array_arg(proc, lst_tok);
 	if (create_array_arg(proc, lst_tok))
 		return (NULL);
 	if (create_array_hdoc(proc, lst_tok))
@@ -86,7 +88,7 @@ int	new_process(t_proc **lst_proc, t_tok **lst_tok, int pos, int *exit)
 	n_hd = 0;
 	proc = create_node_proc(lst_proc, lst_tok, pos);
 	if (!proc)
-		return (msg_error_parsing(12, 0, exit));
+		return (err_msg_parser(MALLOC_MESS, 12, 0, exit));
 	while (*lst_tok && (*lst_tok)->type != 8 && !*exit)
 	{
 		if ((*lst_tok)->type == 4 || (*lst_tok)->type == 5)

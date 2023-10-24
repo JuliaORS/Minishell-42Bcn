@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 12:52:12 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/19 13:10:20 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/23 15:57:33 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	create_tok_quote(t_tok **lst_tok, char *line, int *i, t_exec *exec)
 	pos = ft_strchr(line + 1, line[0]);
 	str = ft_substr(line, 1, ft_strlen(line) - ft_strlen(pos) - 1);
 	if (!str)
-		return (msg_error_parsing(12, 0, &exec->exit[0]));
+		return (err_msg_parser(MALLOC_MESS, 12, 0, &exec->exit[0]));
 	*i = *i + (ft_strlen(line) - ft_strlen(pos));
 	if (line[0] == '"' && ft_strlen(str) == 0)
 		new_tok(lst_tok, str, 0, &exec->exit[0]);
@@ -78,7 +78,8 @@ int	create_tok_str(t_tok **lst_tok, char *line, int *i, t_exec *exec)
 		return (exec->exit[0]);
 	if (ft_strlen(str_exp) == 0)
 		free(str_exp);
-	if (str_exp[ft_strlen(str_exp) - 1] == ' ' && (line[len] == '"' || line[len] == '\''))
+	if (str_exp[ft_strlen(str_exp) - 1] == ' ' && (line[len] == '"' \
+		|| line[len] == '\''))
 		new_tok(lst_tok, NULL, 3, &exec->exit[0]);
 	return (0);
 }
@@ -117,7 +118,7 @@ int	create_tokens(t_tok **lst_tok, char *input, t_exec *exec)
 		i++;
 	}
 	free(line);
-	if (ft_lstsize_tok(*lst_tok) == 1 && (*lst_tok)->type == 3 )
+	if (ft_lstsize_tok(*lst_tok) == 1 && (*lst_tok)->type == 3)
 		return (1);
 	return (exec->exit[0]);
 }
