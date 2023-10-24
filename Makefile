@@ -28,23 +28,24 @@ SRC         = minishell.c signals.c lexer/manage_input.c lexer/parser.c \
 			env/env_setup.c env/env_modify.c env/env_search.c
 SRCS		= $(addprefix $(SRC_PATH), $(SRC))
 
-LIBFT_PATH	= includes/libft/
+LIBFT_PATH	= libs/libft/
 LIBFT		= $(LIBFT_PATH)/libft.a
 
-PRINTF_PATH	= includes/ft_printf/
+PRINTF_PATH	= libs/ft_printf/
 PRINTF		= $(PRINTF_PATH)/libftprintf.a
 
-RLINE_PATH	= includes/readline/
+RLINE_PATH	= libs/readline/
 RLINE_MK	= $(RLINE_PATH)/Makefile
 RLINE		= $(RLINE_PATH)/libreadline.a $(RLINE_PATH)/libhistory.a
 
-LIB_FLAGS	= -lreadline -ltermcap $(RLINE) $(LIBFT) -L$(LIBFT_PATH) $(PRINTF) -L$(PRINTF_PATH)
+LIB_FLAGS	=  $(LIBFT) -L$(LIBFT_PATH) $(PRINTF) -L$(PRINTF_PATH) \
+				-lreadline -ltermcap -L$(RLINE_PATH) 
 
 OBJ_PATH	= ./OBJ/
 OBJ			= $(addprefix $(OBJ_PATH), $(SRC:.c=.o))
 DEP			= $(addprefix $(OBJ_PATH), $(OBJ:.o=.d))
 
-INC_PATH	= ./includes/ $(LIBFT_PATH) $(PRINTF_PATH) $(RLINE_PATH)
+INC_PATH	= ./includes/ ./libs/ $(LIBFT_PATH) $(PRINTF_PATH) $(RLINE_PATH)
 INC			= $(addprefix -I, $(INC_PATH))
 
 CC			= gcc
