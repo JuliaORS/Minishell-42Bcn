@@ -31,7 +31,7 @@ PACKAGE_TARNAME = readline
 srcdir = .
 
 top_srcdir = .
-BUILD_DIR = /Users/julolle-/Desktop/ProvaJoanJulia/libs/readline
+BUILD_DIR = .
 
 INSTALL = /usr/bin/install -c
 INSTALL_PROGRAM = ${INSTALL}
