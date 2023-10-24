@@ -53,7 +53,7 @@ CFLAGS		= -Wall -Wextra -Werror -MMD
 RM			= rm -f
 
 
-all: $(RLINE_MK) $(OBJ_PATH) subsystems $(NAME)
+all: readline $(OBJ_PATH) subsystems $(NAME)
 
 clean:
 	@$(RM) $(OBJS) $(DEPS)
@@ -69,7 +69,9 @@ fclean: clean
 re: fclean all
 
 readline:
-	@make $(RLINE_MK)
+		cd libs/readline && ./configure 
+		@$(MAKE) -C libs/readline --no-print-directory
+#	@make $(RLINE_MK)
 
 cleanrl:
 	@make clean -s -C $(RLINE_PATH)
@@ -92,9 +94,8 @@ $(OBJ_PATH):
 	mkdir -p $(OBJ_PATH)/execution
 
 $(RLINE_MK):
-	pwd ${BLOCK}
-	cd ./${RLINE_PATH} && ./configure
-	cd ${BLOCK}
+		cd libs/readline && ./configure 
+		@$(MAKE) -C libs/readline --no-print-directory
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c Makefile $(LIBFT) $(RLINE) $(PRINTF) $(HEADER)
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@
@@ -103,3 +104,6 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.c Makefile $(LIBFT) $(RLINE) $(PRINTF) $(HEADER)
 
 # Phony
 .PHONY: all clean fclean re readline cleanrl
+
+
+#&>/dev/null
