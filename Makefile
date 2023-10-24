@@ -53,7 +53,7 @@ CFLAGS		= -Wall -Wextra -Werror -MMD
 RM			= rm -f
 
 
-all: readline $(OBJ_PATH) subsystems $(NAME)
+all: $(RLINE_MK) $(OBJ_PATH) subsystems $(NAME)
 
 clean:
 	@$(RM) $(OBJS) $(DEPS)
@@ -68,11 +68,6 @@ fclean: clean
 
 re: fclean all
 
-readline:
-		cd libs/readline && ./configure 
-		@$(MAKE) -C libs/readline --no-print-directory
-#	@make $(RLINE_MK)
-
 cleanrl:
 	@make clean -s -C $(RLINE_PATH)
 
@@ -86,16 +81,16 @@ subsystems:
 	@make -s -C $(PRINTF_PATH)
 	@make -s -C $(RLINE_PATH) 
 
+$(RLINE_MK):
+		cd libs/readline && ./configure 
+		@$(MAKE) -C libs/readline --no-print-directory
+
 $(OBJ_PATH):
 	mkdir -p $(OBJ_PATH)
 	mkdir -p $(OBJ_PATH)/lexer
 	mkdir -p $(OBJ_PATH)/builtins
 	mkdir -p $(OBJ_PATH)/env
 	mkdir -p $(OBJ_PATH)/execution
-
-$(RLINE_MK):
-		cd libs/readline && ./configure 
-		@$(MAKE) -C libs/readline --no-print-directory
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c Makefile $(LIBFT) $(RLINE) $(PRINTF) $(HEADER)
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@
