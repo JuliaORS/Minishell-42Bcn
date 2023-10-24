@@ -65,6 +65,12 @@ typedef struct s_tok {
 	struct s_tok	*next;
 }	t_tok;
 
+typedef struct s_exp_env {
+	char				*var;
+	int					type;
+	struct s_exp_env	*next;
+} t_xpenv;
+
 typedef struct s_exec {
 	char	**env;
 	int		**pipes;
@@ -75,6 +81,7 @@ typedef struct s_exec {
 	int		exit[2];
 	int		dir_init;
 	int		in_parent;
+	t_xpenv	*exp_env;
 }	t_exec;
 
 //LEXER
@@ -147,7 +154,7 @@ void	free_pntr(void *pntr);
 int		export_exec(t_exec *exec, char *arg, int type);
 int		shlvl_add(t_exec *exec, int idx, char *tmp);
 
-/*buil-tins and environtment prototypes*/
+/*buil-tins prototypes*/
 void	builtins(char **arg, t_exec *exec);
 int		ft_pwd(t_exec *exec, char **arg);
 int		ft_cd(t_exec *exec, char **arg);
@@ -172,6 +179,10 @@ char    *ft_getenv(char **env, char *target);
 void	replace_env_var(char **env, char *target, char *replace);
 char	*extract_value(char *key_value);
 char	*build_env_var(char *arg, t_exec *exec, int type, int idx);
+void	free_xpenv(t_xpenv	**list);
+t_xpenv	*create_xp_env(char **env);
+void	add_expenv(t_xpenv **xpenv, char *env, int type);
+
 
 /* exec total malloc : pids, pipes, valid_path,   */
 #endif
