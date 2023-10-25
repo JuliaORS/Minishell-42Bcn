@@ -6,13 +6,18 @@
 #    By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/03 17:22:44 by julolle-          #+#    #+#              #
-#    Updated: 2023/08/03 17:22:44 by julolle-         ###   ########.fr        #
+#    Updated: 2023/10/25 13:38:39 by julolle-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+DEF_COLOR	:=	\033[1;97m
+RED			:=	\033[1;91m
+GREEN		:=	\033[1;92m
+CIAN		:=	\033[1;96m
+
 NAME        = minishell
 
-HEADER      = ./includes/minishell.h
+HEADER      = ./includes/minishell.h ./includes/defines.h
 
 SRC_PATH    = srcs/
 SRC         = minishell.c signals.c lexer/manage_input.c lexer/parser.c \
@@ -36,7 +41,7 @@ PRINTF_PATH	= libs/ft_printf/
 PRINTF		= $(PRINTF_PATH)/libftprintf.a
 
 RLINE_PATH	= libs/readline/
-RLINE_MK	= $(RLINE_PATH)/Makefile
+RLINE_MK	= $(RLINE_PATH)/libreadline.a
 RLINE		= $(RLINE_PATH)/libreadline.a $(RLINE_PATH)/libhistory.a
 
 LIB_FLAGS	=  $(LIBFT) -L$(LIBFT_PATH) $(PRINTF) -L$(PRINTF_PATH) \
@@ -55,52 +60,50 @@ RM			= rm -f
 
 
 all: $(RLINE_MK) $(OBJ_PATH) subsystems $(NAME)
-
+	
 clean:
 	@$(RM) $(OBJS) $(DEPS)
 	@$(RM) -rf $(OBJ_PATH)
 	@make -s -C $(LIBFT_PATH) clean
 	@make -s -C $(PRINTF_PATH) clean
+	@echo "$(RED)Objects removed$(DEF_COLOR)"
 
 fclean: clean
 	@$(RM) $(NAME)
 	@make -s -C $(LIBFT_PATH) fclean
 	@make -s -C $(PRINTF_PATH) fclean
+	@echo "$(RED)Minishell removed$(DEF_COLOR)"
 
 re: fclean all
 
-readline:
-	@make $(RLINE_MK)
-
 cleanrl:
-	@make clean -s -C $(RLINE_PATH)
-
+	@make -s -C $(RLINE_PATH) mostlyclean
+	@echo "$(RED)READLINE removed$(DEF_COLOR)"
 
 $(NAME):  $(OBJ)
 	@$(CC) $(OBJ) -o $(NAME) $(LIB_FLAGS)
-	$(info MINISHELL compiled)
+	@echo "$(GREEN)MINISHELL compiled :D$(DEF_COLOR)"
 
 subsystems:
 	@make -s -C $(LIBFT_PATH)
 	@make -s -C $(PRINTF_PATH)
-	@make -s -C $(RLINE_PATH) 
 
 $(OBJ_PATH):
-	mkdir -p $(OBJ_PATH)
-	mkdir -p $(OBJ_PATH)/lexer
-	mkdir -p $(OBJ_PATH)/builtins
-	mkdir -p $(OBJ_PATH)/env
-	mkdir -p $(OBJ_PATH)/execution
+	@mkdir -p $(OBJ_PATH)
+	@mkdir -p $(OBJ_PATH)/lexer
+	@mkdir -p $(OBJ_PATH)/builtins
+	@mkdir -p $(OBJ_PATH)/env
+	@mkdir -p $(OBJ_PATH)/execution
 
 $(RLINE_MK):
-	pwd ${BLOCK}
-	cd ./${RLINE_PATH} && ./configure
-	cd ${BLOCK}
+	@cd libs/readline && ./configure &>/dev/null
+	@$(MAKE) -C $(RLINE_PATH) --no-print-directory
+	@echo "$(CIAN)READLINE compiled$(DEF_COLOR)"
 
-$(OBJ_PATH)%.o: $(SRC_PATH)%.c Makefile $(LIBFT) $(RLINE) $(PRINTF) $(HEADER)
+$(OBJ_PATH)%.o: $(SRC_PATH)%.c Makefile $(LIBFT) $(PRINTF) $(HEADER)
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
 -include $(DEP)
 
 # Phony
-.PHONY: all clean fclean re readline cleanrl
+.PHONY: all clean fclean re cleanrl
