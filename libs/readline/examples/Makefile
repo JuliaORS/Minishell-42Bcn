@@ -32,7 +32,7 @@ datadir = ${datarootdir}
 
 top_srcdir = ..
 #BUILD_DIR = .
-BUILD_DIR = /sgoinfre/Perso/julolle-/Projects/Minishell/libs/readline
+BUILD_DIR = /Users/julolle-/Desktop/prova11/libs/readline
 installdir = $(datadir)/readline
 
 INSTALL = /usr/bin/install -c
