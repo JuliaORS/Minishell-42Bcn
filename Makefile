@@ -11,9 +11,10 @@
 # **************************************************************************** #
 
 DEF_COLOR	:=	\033[1;97m
-RED			:=	\033[1;91m
+PINK		:=	\033[1;95m
 GREEN		:=	\033[1;92m
 CIAN		:=	\033[1;96m
+
 
 NAME        = minishell
 
@@ -66,19 +67,19 @@ clean:
 	@$(RM) -rf $(OBJ_PATH)
 	@make -s -C $(LIBFT_PATH) clean
 	@make -s -C $(PRINTF_PATH) clean
-	@echo "$(RED)Objects removed$(DEF_COLOR)"
+	@echo "$(PINK)Objects removed$(DEF_COLOR)"
 
 fclean: clean
 	@$(RM) $(NAME)
 	@make -s -C $(LIBFT_PATH) fclean
 	@make -s -C $(PRINTF_PATH) fclean
-	@echo "$(RED)Minishell removed$(DEF_COLOR)"
+	@echo "$(PINK)Minishell removed$(DEF_COLOR)"
 
 re: fclean all
 
 cleanrl:
 	@make -s -C $(RLINE_PATH) mostlyclean
-	@echo "$(RED)READLINE removed$(DEF_COLOR)"
+	@echo "$(PINK)READLINE removed$(DEF_COLOR)"
 
 $(NAME):  $(OBJ)
 	@$(CC) $(OBJ) -o $(NAME) $(LIB_FLAGS)

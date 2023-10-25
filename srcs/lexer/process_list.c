@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 19:04:54 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/23 12:11:55 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/25 15:28:09 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,9 @@ int	new_process(t_proc **lst_proc, t_tok **lst_tok, int pos, int *exit)
 	t_proc	*proc;
 	int		n_str;
 	int		n_hd;
+	int 	flag;
 
+	flag = 0;
 	n_str = 0;
 	n_hd = 0;
 	proc = create_node_proc(lst_proc, lst_tok, pos);
@@ -91,14 +93,16 @@ int	new_process(t_proc **lst_proc, t_tok **lst_tok, int pos, int *exit)
 		return (err_msg_parser(MALLOC_MESS, 12, 0, exit));
 	while (*lst_tok && (*lst_tok)->type != 8 && !*exit)
 	{
-		if ((*lst_tok)->type == 4 || (*lst_tok)->type == 5)
+		if (((*lst_tok)->type == 4 || (*lst_tok)->type == 5) && !flag)
 			find_outfile(proc, lst_tok, exit);
-		else if ((*lst_tok)->type == 6)
+		else if ((*lst_tok)->type == 6  && !flag)
 			find_infile(proc, lst_tok, exit);
-		else if ((*lst_tok)->type == 7)
+		else if ((*lst_tok)->type == 7 && !flag)
 			find_heredoc(proc, lst_tok, n_hd++, exit);
-		else if ((*lst_tok)->type <= 2)
+		else if ((*lst_tok)->type <= 2 && !flag)
 			create_str(proc, lst_tok, n_str++, exit);
+		if (proc->fd[0] == -1 || proc->fd[1] == -1)
+			flag = 1;
 		if (*lst_tok)
 			*lst_tok = (*lst_tok)->next;
 	}
