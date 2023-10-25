@@ -6,9 +6,12 @@
 #    By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/16 11:52:04 by julolle-          #+#    #+#              #
-#    Updated: 2023/10/03 18:59:11 by julolle-         ###   ########.fr        #
+#    Updated: 2023/10/25 13:09:08 by julolle-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
+DEF_COLOR	:=	\033[1;97m
+CIAN		:=	\033[1;96m
 
 NAME		:= libft.a
 HEADER      := libft.h
@@ -35,7 +38,7 @@ all:	$(NAME)
 -include $(DEPS)
 $(NAME): $(OBJS)
 	$(AR) $(ARFLAGS) $(NAME) $(OBJS)
-	$(info LIBFT compiled)
+	@echo "$(CIAN)LIBFT compiled :D$(DEF_COLOR)"
 
 -include $(DEPSBONUS)
 bonus : $(OBJS) $(OBJSBONUS)
