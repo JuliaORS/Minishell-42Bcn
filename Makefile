@@ -6,7 +6,7 @@
 #    By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/03 17:22:44 by julolle-          #+#    #+#              #
-#    Updated: 2023/10/24 12:41:34 by julolle-         ###   ########.fr        #
+#    Updated: 2023/10/25 13:38:39 by julolle-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -97,7 +97,7 @@ $(OBJ_PATH):
 $(RLINE_MK):
 	@cd libs/readline && ./configure &>/dev/null
 	@$(MAKE) -C $(RLINE_PATH) --no-print-directory
-	@echo "$(CIAN)READLINE compiled :D$(DEF_COLOR)"
+	@echo "$(CIAN)READLINE compiled$(DEF_COLOR)"
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c Makefile $(LIBFT) $(PRINTF) $(HEADER)
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@
