@@ -92,6 +92,7 @@ void	free_exec(t_exec **exec);
 int		error_msg(char *msg, int nb, t_exec *exec, t_proc *pcs);
 int		error_fd_msg(char *msg, t_exec *exec, t_proc *pcs, char *fname);
 int		fd_is_open(int fd);
+int		check_io_fd(t_proc *pcs, t_exec *exec);
 void	free_split(char ***split_result);
 char	**key_val_pair(char *str);
 void	free_key_val(char **kvp);
@@ -99,7 +100,7 @@ void	free_pntr(void *pntr);
 int		export_exec(t_exec *exec, char *arg, int type);
 int		shlvl_add(t_exec *exec, int idx, char *tmp);
 
-/*buil-tins and environtment prototypes*/
+/*buil-tins prototypes*/
 void	builtins(char **arg, t_exec *exec);
 int		ft_pwd(t_exec *exec, char **arg);
 int		ft_cd(t_exec *exec, char **arg);
@@ -124,6 +125,10 @@ char    *ft_getenv(char **env, char *target);
 void	replace_env_var(char **env, char *target, char *replace);
 char	*extract_value(char *key_value);
 char	*build_env_var(char *arg, t_exec *exec, int type, int idx);
+void	free_xpenv(t_xpenv	**list);
+t_xpenv	*create_xp_env(char **env);
+void	add_expenv(t_xpenv **xpenv, char *env, int type);
+
 
 /* exec total malloc : pids, pipes, valid_path,   */
 

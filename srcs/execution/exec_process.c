@@ -19,6 +19,9 @@ int	exec_machine(t_proc *pcs_chain, t_exec *exec)
 	if (exec->total_cmd == 1 && is_builtin(pcs_chain))
 	{
 		exec->in_parent = 1;
+		exec->exit[0] = check_io_fd(pcs_chain, exec);
+		if (exec->exit[0])
+			return(exec->exit[0]);
 		io_redirect(pcs_chain, exec);
 		exec->exit[0] = exec_builtin(pcs_chain, exec);
 		back_up_stdio(exec, 1);
@@ -127,11 +130,6 @@ void	exec_bash(t_proc **exec_trgt, t_exec **exec)
 		if (execve((*exec)->path, (*exec_trgt)->arg, (*exec)->env) == -1)
 			exit(EXIT_FAILURE);
 	}
-	// if ((ft_strchr((*exec_trgt)->arg[0], '/') && access((*exec_trgt)->arg[0], F_OK) == 0))
-	// {
-	// 	if (execve((*exec_trgt)->arg[0], (*exec_trgt)->arg, (*exec)->env) == -1)
-	// 		exit(EXIT_FAILURE);
-	// }
 	if (ft_strchr((*exec_trgt)->arg[0], '/'))
 		error_msg("No such file or directory", CMNOFOUND, *exec, *exec_trgt);
 	error_msg(CMNF_MESS, CMNOFOUND, *exec, *exec_trgt);
