@@ -6,7 +6,7 @@
 #    By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/16 11:52:04 by julolle-          #+#    #+#              #
-#    Updated: 2023/10/25 13:09:08 by julolle-         ###   ########.fr        #
+#    Updated: 2023/10/25 13:12:38 by julolle-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,7 @@ all:	$(NAME)
 -include $(DEPS)
 $(NAME): $(OBJS)
 	$(AR) $(ARFLAGS) $(NAME) $(OBJS)
-	@echo "$(CIAN)LIBFT compiled :D$(DEF_COLOR)"
+	@echo "$(CIAN)LIBFT compiled$(DEF_COLOR)"
 
 -include $(DEPSBONUS)
 bonus : $(OBJS) $(OBJSBONUS)

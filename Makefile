@@ -17,7 +17,7 @@ CIAN		:=	\033[1;96m
 
 NAME        = minishell
 
-HEADER      = ./includes/minishell.h
+HEADER      = ./includes/minishell.h ./includes/defines.h
 
 SRC_PATH    = srcs/
 SRC         = minishell.c signals.c lexer/manage_input.c lexer/parser.c \

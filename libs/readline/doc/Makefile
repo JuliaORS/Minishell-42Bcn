@@ -49,7 +49,7 @@ RM = rm -f
 INSTALL = /usr/bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
 
-BUILD_DIR = /Users/julolle-/Desktop/ProvaJoanJulia/libs/readline
+BUILD_DIR = /Users/julolle-/Documents/MSprova/libs/readline
 TEXINPUTDIR = $(srcdir)
 
 MAKEINFO    = LANGUAGE= makeinfo

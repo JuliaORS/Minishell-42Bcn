@@ -6,7 +6,7 @@
 #    By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/17 14:23:19 by rjobert           #+#    #+#              #
-#    Updated: 2023/10/25 13:08:39 by julolle-         ###   ########.fr        #
+#    Updated: 2023/10/25 13:12:24 by julolle-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ all: $(NAME)
 $(NAME): $(LIBFT) $(OBJS)
 	cp $(LIBFT) $(NAME)
 	ar -rcs $(NAME) $(OBJS)
-	@echo "$(CIAN)PRINTF compiled :D$(DEF_COLOR)"
+	@echo "$(CIAN)PRINTF compiled$(DEF_COLOR)"
 
 $(LIBFT):
 	make -C $(LIB_PATH) all 
