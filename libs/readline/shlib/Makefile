@@ -33,10 +33,14 @@ srcdir = .
 VPATH = ..
 topdir = ..
 <<<<<<< HEAD
+<<<<<<< HEAD
 BUILD_DIR = /sgoinfre/Perso/julolle-/Projects/Minishell/libs/readline
 =======
 BUILD_DIR = /Users/rjobert/Desktop/42_cursus/Minishell/merge_team/libs/readline
 >>>>>>> main
+=======
+BUILD_DIR = /sgoinfre/Perso/julolle-/Projects/Minishell/libs/readline
+>>>>>>> ccbeb96ea93087fa9a3cd4690653a591f5280fcc
 
 INSTALL = /usr/bin/install -c
 INSTALL_PROGRAM = ${INSTALL}
