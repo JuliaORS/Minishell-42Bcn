@@ -92,6 +92,7 @@ void	free_exec(t_exec **exec);
 int		error_msg(char *msg, int nb, t_exec *exec, t_proc *pcs);
 int		error_fd_msg(char *msg, t_exec *exec, t_proc *pcs, char *fname);
 int		fd_is_open(int fd);
+int		check_io_fd(t_proc *pcs, t_exec *exec);
 void	free_split(char ***split_result);
 char	**key_val_pair(char *str);
 void	free_key_val(char **kvp);

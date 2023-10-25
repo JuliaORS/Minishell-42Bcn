@@ -136,3 +136,34 @@ int	error_fd_msg(char *msg, t_exec *exec, t_proc *pcs, char *fname)
 	else
 		exit(EXIT_FAILURE);
 }
+/*
+check that any infile or outfile used in prompt exist or are ok permission-wise
+*/
+int	check_io_fd(t_proc *pcs, t_exec *exec)
+{
+	// ft_printf(2, "in the cmd %s the fd[%i] is %i for infile %s\n", pcs->arg[0], 0, pcs->fd[0], pcs->infile);
+	// ft_printf(2, "in the cmd %s the fd[%i] is %i for infile %s\n", pcs->arg[0], 1, pcs->fd[1], pcs->outfile);
+	struct stat st;
+	
+	if (pcs->fd[0] == -1)
+	{
+		if (!stat(pcs->infile, &st) && S_ISDIR(st.st_mode))
+			return(error_fd_msg("Is a directory", exec, pcs, pcs->infile));
+		if (!access(pcs->infile, F_OK) && access(pcs->infile, R_OK))
+			return(error_fd_msg("Permission denied", exec, pcs, pcs->infile));
+		if (access(pcs->infile, F_OK))
+			return (error_fd_msg("No such file or directory", exec, pcs, pcs->infile));
+		return(EXIT_FAILURE);
+	}
+	if (pcs->fd[1] == -1)
+	{	
+		if (!stat(pcs->outfile, &st) && S_ISDIR(st.st_mode))
+			return(error_fd_msg("Is a directory", exec, pcs, pcs->outfile));
+		if (!access(pcs->outfile, F_OK) && access(pcs->outfile, W_OK))
+			return(error_fd_msg("Permission denied", exec, pcs, pcs->outfile));
+		if (access(pcs->outfile, F_OK))
+			return (error_fd_msg("No such file or directory", exec, pcs, pcs->outfile));
+		return(EXIT_FAILURE);
+	}
+	return (0);
+}
