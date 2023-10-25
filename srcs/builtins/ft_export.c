@@ -91,13 +91,17 @@ int	ft_export(t_exec *exec, char **arg)
 {
 		int		i;
 		int		type;
+		t_xpenv	*exp_env;
 
 		exec->exit[0] = EXIT_SUCCESS;
-		i = -1;
 		if (!arg[1])
 		{
-			while(exec->env && exec->env[++i])
-				printf("declare -x %s\n", exec->env[i]);
+			exp_env = exec->exp_env;
+			while(exp_env)
+			{
+				printf("declare -x %s\n", exp_env->var);
+				exp_env = exp_env->next;
+			}
 			return (0);
 		}
 		i = 0;
@@ -106,7 +110,7 @@ int	ft_export(t_exec *exec, char **arg)
 			type = check_syntax_export(arg[i]);
 			if (type < 0)
 				exec->exit[0] = EXIT_FAILURE;
-			if (type > 0)
+			else
 				export_exec(exec, arg[i], type);
 		}
 	return (exec->exit[0]);
@@ -123,6 +127,11 @@ int	export_exec(t_exec *exec, char *arg, int type)
 	int		idx;
 	char	*temp_arg;
 	
+	if (type == 0)
+	{
+		add_expenv(&exec->exp_env, arg, type);
+		return (0);
+	}
 	idx = search_env_var(exec->env, extract_variable(arg));
 	temp_arg = build_env_var(arg, exec, type, idx);
 	if (idx >= 0 && exec->env[idx])
@@ -132,6 +141,7 @@ int	export_exec(t_exec *exec, char *arg, int type)
 	}
 	else	
 		exec->env = realloc_env(exec->env, temp_arg);
+	add_expenv(&exec->exp_env, temp_arg, type);
 	free_pntr(temp_arg);
 	if (!exec->env[idx])
 		return (-1);

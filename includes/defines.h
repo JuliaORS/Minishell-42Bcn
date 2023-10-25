@@ -53,6 +53,12 @@ typedef struct s_tok {
 	struct s_tok	*next;
 }	t_tok;
 
+typedef struct s_exp_env {
+	char				*var;
+	int					type;
+	struct s_exp_env	*next;
+}	t_xpenv;
+
 typedef struct s_exec {
 	char	**env;
 	int		**pipes;
@@ -63,6 +69,7 @@ typedef struct s_exec {
 	int		exit[2];
 	int		dir_init;
 	int		in_parent;
+	t_xpenv	*exp_env;
 }	t_exec;
 
 #endif
