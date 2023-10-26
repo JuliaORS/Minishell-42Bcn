@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 17:05:20 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/24 11:04:33 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/26 12:06:03 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,11 @@ void	free_lst_tok(t_tok **lst_tok);
 
 /*expansion*/
 int		remove_dol_end(t_tok **lst_tok, int *exit);
-char 	*expander(t_tok **lst_tok, char *str, t_exec *exec, int type);
+char	*expander(t_tok **lst_tok, char *str, t_exec *exec, int type);
 char	*find_dollar_sign(char *str, t_exec *exec, int *flag_exp);
 char	*expand_error(char *str, int *i, t_exec *exec);
+char	*expand_num_null(char *str, int *i);
+char	*create_new_str(char *str, char *str_aft_exp, int *i, int j);
 char	*check_expand(char *str, int *i, t_exec *exec, int *flag_exp);
 int		split_tok(t_tok **lst_tok, char *str, int *exit);
 
@@ -64,10 +66,10 @@ void	update_error(t_exec *exec);
 void	init_error(t_exec *exec);
 
 /*signals*/
-void    init_signals(int mode);
+void	init_signals(int mode);
 
 /*heredoc*/
-int	manage_heredoc(t_proc **lst_proc, t_exec *exec);
+int		manage_heredoc(t_proc **lst_proc, t_exec *exec);
 
 /*exec and process functions*/
 int		exec_machine(t_proc *pcs_chain, t_exec *exec);
@@ -80,7 +82,7 @@ char	*exec_path(char **all_path, t_proc *exec_trgt);
 void	build_execve(t_proc **exec_trgt, t_exec **exec);
 void	exec_bash(t_proc **exec_trgt, t_exec **exec);
 char	**search_path(char *env[]);
-void	relative_path_clean(t_proc **proc,  t_exec **exec);
+void	relative_path_clean(t_proc **proc, t_exec **exec);
 
 /*utils for process and env*/
 void	init_exec(t_exec *exec, char **env);
@@ -121,14 +123,13 @@ char	*extract_variable(char *key_value);
 int		search_env_var(char **env, char *var);
 char	**realloc_env(char **env, char *var);
 char	**downsize_env(char **env, int idx, int i, int j);
-char    *ft_getenv(char **env, char *target);
+char	*ft_getenv(char **env, char *target);
 void	replace_env_var(char **env, char *target, char *replace);
 char	*extract_value(char *key_value);
 char	*build_env_var(char *arg, t_exec *exec, int type, int idx);
 void	free_xpenv(t_xpenv	**list);
 t_xpenv	*create_xp_env(char **env);
 void	add_expenv(t_xpenv **xpenv, char *env, int type);
-
 
 /* exec total malloc : pids, pipes, valid_path,   */
 

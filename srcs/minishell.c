@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 16:19:21 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/23 18:27:18 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/26 11:24:43 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	main_loop(t_exec *exec)
 int	main(int argc, char **argv, char **env)
 {
 	t_exec	exec;
-	
+
 	(void)argc;
 	(void)argv;
 	init_exec(&exec, env);

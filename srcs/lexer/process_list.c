@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 19:04:54 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/23 12:11:55 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/26 13:02:13 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,13 @@ int	create_array_arg(t_proc *proc, t_tok **lst_tok)
 			n_arg++;
 		*lst_tok = (*lst_tok)->next;
 	}
-	//if (n_arg != 0)
-	//{
+	if (n_arg != 0)
+	{
 		proc->arg = (char **)malloc(sizeof(char *) * (n_arg + 1));
 		if (!proc->arg)
 			return (1);
 		proc->arg[n_arg] = NULL;
-	//}
+	}
 	*lst_tok = tmp;
 	return (0);
 }
@@ -81,17 +81,17 @@ t_proc	*create_node_proc(t_proc **lst_proc, t_tok **lst_tok, int pos)
 int	new_process(t_proc **lst_proc, t_tok **lst_tok, int pos, int *exit)
 {
 	t_proc	*proc;
-	int		n_str;
 	int		n_hd;
+	int		n_str;
 
-	n_str = 0;
 	n_hd = 0;
+	n_str = 0;
 	proc = create_node_proc(lst_proc, lst_tok, pos);
 	if (!proc)
 		return (err_msg_parser(MALLOC_MESS, 12, 0, exit));
 	while (*lst_tok && (*lst_tok)->type != 8 && !*exit)
 	{
-		if ((*lst_tok)->type == 4 || (*lst_tok)->type == 5)
+		if (((*lst_tok)->type == 4 || (*lst_tok)->type == 5))
 			find_outfile(proc, lst_tok, exit);
 		else if ((*lst_tok)->type == 6)
 			find_infile(proc, lst_tok, exit);

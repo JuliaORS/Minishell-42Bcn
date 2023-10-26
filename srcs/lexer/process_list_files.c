@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/14 17:03:53 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/25 13:43:26 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/26 12:53:51 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char	*join_str_toks(t_tok **lst_tok)
 int	find_outfile(t_proc *lst_proc, t_tok **lst_tok, int *exit)
 {
 	int		type;
-	
+
 	if (lst_proc->outfile)
 	{
 		close (lst_proc->fd[1]);
@@ -53,6 +53,8 @@ int	find_outfile(t_proc *lst_proc, t_tok **lst_tok, int *exit)
 	lst_proc->outfile = join_str_toks(lst_tok);
 	if (!lst_proc->outfile)
 		return (err_msg_parser(MALLOC_MESS, 12, 0, exit));
+	if (lst_proc->fd[0] == -1 || lst_proc->fd[1] == -1)
+		return (0);	
 	if (type == 4)
 		lst_proc->fd[1] = open(lst_proc->outfile, O_CREAT | O_RDWR | \
 		O_TRUNC, 0666);
@@ -76,6 +78,8 @@ int	find_infile(t_proc *lst_proc, t_tok **lst_tok, int *exit)
 	lst_proc->infile = join_str_toks(lst_tok);
 	if (!lst_proc->infile)
 		return (err_msg_parser(MALLOC_MESS, 12, 0, exit));
+	if (lst_proc->fd[0] == -1 || lst_proc->fd[1] == -1)
+		return (0);	
 	lst_proc->fd[0] = open(lst_proc->infile, O_RDONLY);
 	return (0);
 }

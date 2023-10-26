@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 DEF_COLOR	:=	\033[1;97m
-RED			:=	\033[1;91m
+PINK		:=	\033[1;95m
 GREEN		:=	\033[1;92m
 CIAN		:=	\033[1;96m
 
@@ -41,11 +41,10 @@ PRINTF_PATH	= libs/ft_printf/
 PRINTF		= $(PRINTF_PATH)/libftprintf.a
 
 RLINE_PATH	= libs/readline/
-RLINE_MK	= $(RLINE_PATH)/libreadline.a
-RLINE		= $(RLINE_PATH)/libreadline.a $(RLINE_PATH)/libhistory.a
+RLINE		= $(RLINE_PATH)/libreadline.a
 
-LIB_FLAGS	=  $(LIBFT) -L$(LIBFT_PATH) $(PRINTF) -L$(PRINTF_PATH) \
-				-lreadline -ltermcap -L$(RLINE_PATH) 
+LIB_PATH	= -L$(LIBFT_PATH) -L$(PRINTF_PATH) -L$(RLINE_PATH) 
+LIB_FLAGS	= $(LIBFT) $(PRINTF) -lreadline -ltermcap 
 
 OBJ_PATH	= ./OBJ/
 OBJ			= $(addprefix $(OBJ_PATH), $(SRC:.c=.o))
@@ -59,29 +58,29 @@ CFLAGS		= -Wall -Wextra -Werror -MMD
 RM			= rm -f
 
 
-all: $(RLINE_MK) $(OBJ_PATH) subsystems $(NAME)
+all: $(RLINE) $(OBJ_PATH) subsystems $(NAME)
 	
 clean:
 	@$(RM) $(OBJS) $(DEPS)
 	@$(RM) -rf $(OBJ_PATH)
 	@make -s -C $(LIBFT_PATH) clean
 	@make -s -C $(PRINTF_PATH) clean
-	@echo "$(RED)Objects removed$(DEF_COLOR)"
+	@echo "$(PINK)Objects removed$(DEF_COLOR)"
 
 fclean: clean
 	@$(RM) $(NAME)
 	@make -s -C $(LIBFT_PATH) fclean
 	@make -s -C $(PRINTF_PATH) fclean
-	@echo "$(RED)Minishell removed$(DEF_COLOR)"
+	@echo "$(PINK)Minishell removed$(DEF_COLOR)"
 
 re: fclean all
 
 cleanrl:
 	@make -s -C $(RLINE_PATH) mostlyclean
-	@echo "$(RED)READLINE removed$(DEF_COLOR)"
+	@echo "$(PINK)READLINE removed$(DEF_COLOR)"
 
 $(NAME):  $(OBJ)
-	@$(CC) $(OBJ) -o $(NAME) $(LIB_FLAGS)
+	@$(CC) $(OBJ) -o $(NAME) $(LIB_FLAGS) $(LIB_PATH)
 	@echo "$(GREEN)MINISHELL compiled :D$(DEF_COLOR)"
 
 subsystems:
@@ -95,7 +94,7 @@ $(OBJ_PATH):
 	@mkdir -p $(OBJ_PATH)/env
 	@mkdir -p $(OBJ_PATH)/execution
 
-$(RLINE_MK):
+$(RLINE):
 	@cd libs/readline && ./configure &>/dev/null
 	@$(MAKE) -C $(RLINE_PATH) --no-print-directory
 	@echo "$(CIAN)READLINE compiled$(DEF_COLOR)"

@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 12:10:04 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/23 15:56:12 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/26 11:17:50 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,16 +102,11 @@ char	*check_expand(char *str, int *i, t_exec *exec, int *flag_exp)
 		return (str);
 }
 
-char	*expand_error(char *str, int *i, t_exec *exec)
+char	*expand_num_null(char *str, int *i)
 {
 	char	*str_final;
-	char	*str_exp;
 
-	str_exp = ft_itoa(exec->exit[1]);
-	if (!str_exp)
-		return (NULL);
-	str_final = create_new_str(str, str_exp, i, 1);
-	free(str_exp);
+	str_final = create_new_str(str, NULL, i, 1);
 	free(str);
 	return (str_final);
 }
