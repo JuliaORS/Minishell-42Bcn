@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 19:04:54 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/26 12:10:32 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/26 12:12:24 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	create_array_arg(t_proc *proc, t_tok **lst_tok)
 		*lst_tok = (*lst_tok)->next;
 	}
 	if (n_arg != 0)
-	{	
+	{
 		proc->arg = (char **)malloc(sizeof(char *) * (n_arg + 1));
 		if (!proc->arg)
 			return (1);
