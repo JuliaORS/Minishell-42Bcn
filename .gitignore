@@ -7,3 +7,5 @@
 .nfs.*
 minishell_tester/
 mpanic/
+._.DS_Store
+.DS_Store

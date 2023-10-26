@@ -32,7 +32,7 @@ datadir = ${datarootdir}
 
 top_srcdir = ..
 #BUILD_DIR = .
-BUILD_DIR = /Users/julolle-/Desktop/MS_desktop/libs/readline
+BUILD_DIR = /Users/julolle-/Desktop/MS_desk/libs/readline
 installdir = $(datadir)/readline
 
 INSTALL = /usr/bin/install -c
