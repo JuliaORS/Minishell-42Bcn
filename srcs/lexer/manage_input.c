@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 19:06:32 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/26 12:47:40 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/26 15:08:58 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ int	manage_input(char *line, t_proc **lst_proc, t_exec *exec)
 		free_lst_proc(lst_proc);
 		return (exec->exit[0]);
 	}
-	//ft_print_process(lst_proc);
-	//ft_print_list_tok(&lst_tok);
+	//print_process_list(lst_proc);
+	//print_tok_list(&lst_tok);
 	free_lst_tok(&lst_tok);
 	return (exec->exit[0]);
 }

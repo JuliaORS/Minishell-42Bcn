@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 18:08:01 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/23 18:40:19 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/26 16:56:58 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,9 @@ int	create_input_hd(t_proc *lst_proc, int *fds, int n_hd, t_exec *exec)
 	char	*input_hd;
 	char	*hd_text;
 	char	*str_exp;
+	int		flag_exp;
 
+	flag_exp = 0;
 	init_signals(HEREDOC);
 	hd_text = NULL;
 	while (1)
@@ -46,12 +48,12 @@ int	create_input_hd(t_proc *lst_proc, int *fds, int n_hd, t_exec *exec)
 			ft_strlen(lst_proc->hd_lim[n_hd]) + 1))
 			break ;
 		hd_text = join_input(input_hd, hd_text);
+		free (input_hd);
 		if (!hd_text)
 			return (12);
-		free (input_hd);
 	}
 	free (input_hd);
-	str_exp = find_dollar_sign(hd_text, exec, 0);
+	str_exp = find_dollar_sign(hd_text, exec, &flag_exp);
 	if (!str_exp)
 		return (12);
 	write(fds[1], str_exp, ft_strlen(str_exp));
