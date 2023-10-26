@@ -13,8 +13,9 @@
 
 #include "minishell.h"
 
-void    update_env_dir(t_exec *exec, char *old_path);
+void    update_env_dir(t_exec *exec, char *old_path, char **arg);
 char    *extract_path(char *keyvalue);
+void    check_set_pwd(t_exec *exec, char **curr_dir, char **curr_path, char **arg);
 
 /*
 checking that the path leads to a correct directoy
@@ -81,12 +82,12 @@ int    ft_cd(t_exec *exec, char **arg)
     }
     else if (check_directory(arg[1]))
         return (1) ;
-    else if (chdir(arg[1]) == -1)
+    else if (chdir(arg[1]) != 0)
     {
 		ft_printf(STDERR_FILENO, "cd: %s\n", arg[1]); 
         return (1);
     }
-    update_env_dir(exec, old_path);
+    update_env_dir(exec, old_path, arg);
     exec->dir_init = 1;
     return (0);
 }
@@ -96,23 +97,44 @@ from old_path (saved before applying chdir()) and then using getcwd(), add
 prefix PWD or OLDPWD to old and new path and replace the corresponding index in 
 the environment
 */
-void update_env_dir(t_exec *exec, char *old_path)
+void    update_env_dir(t_exec *exec, char *old_path, char **arg)
 {
     char *curr_dir;
     char *curr_path;
 
+    curr_dir = getcwd(NULL, PATH_MAX);
+    if (!old_path)
+        old_path = curr_dir;
     old_path = ft_strjoin("OLD", old_path);
-    curr_dir = getcwd(NULL, 1056);
-    curr_path = ft_strjoin("PWD=", curr_dir);
-    free_pntr(curr_dir);
+    check_set_pwd(exec, &curr_dir, &curr_path, arg);
     if (exec->dir_init == 0)
         exec->env = realloc_env(exec->env, old_path);
     else
         replace_env_var(exec->env, "OLDPWD", old_path);
-    replace_env_var(exec->env, "PWD", curr_path);
-    free_pntr(curr_path);
     free_pntr(old_path);
     return ;
+}
+
+void    check_set_pwd(t_exec *exec, char **curr_dir, char **curr_path, char **arg)
+{
+    char *reset_pwd;
+
+    if (!*curr_dir)
+    {
+        reset_pwd = ft_strjoin("/", arg[1]);
+        replace_env_var(exec->env, "PWD", ft_strjoin(ft_getenv(exec->env, "PWD"),reset_pwd));
+        free(reset_pwd);
+        ft_printf(STDERR_FILENO, "cd: error retrieving current directory:" 
+        " getcwd: cannot access parent directories: No such file or directory\n");
+    }
+    else
+    {
+        *curr_path = ft_strjoin("PWD=", *curr_dir);
+        replace_env_var(exec->env, "PWD", *curr_path);
+        free_pntr(*curr_dir);
+        free_pntr(*curr_path);
+    }
+    return;
 }
 
 char *extract_path(char *keyvalue)
