@@ -31,7 +31,7 @@ PACKAGE_TARNAME = readline
 srcdir = .
 
 top_srcdir = .
-BUILD_DIR = /Users/julolle-/Desktop/MSdes/libs/readline
+BUILD_DIR = /Users/julolle-/Desktop/MS_desktop/libs/readline
 
 INSTALL = /usr/bin/install -c
 INSTALL_PROGRAM = ${INSTALL}
