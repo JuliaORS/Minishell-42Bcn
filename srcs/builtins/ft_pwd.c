@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "minishell.h"
 
 /*
@@ -23,6 +22,7 @@ correctly
 int	ft_pwd(t_exec *exec, char **arg)
 {
 	char buffer[PATH_MAX];
+	char *backup;
 
 	(void) arg;
 	(void) exec;
@@ -31,6 +31,14 @@ int	ft_pwd(t_exec *exec, char **arg)
 		ft_printf(STDOUT_FILENO, "%s\n", buffer);
 		return (0);
 	}
-	ft_printf(STDERR_FILENO, "Error finding current directory");
+	else
+	{
+		backup = extract_value(ft_getenv(exec->env, "PWD"));
+		ft_printf(STDOUT_FILENO, "%s\n", backup);
+		if (backup)
+			free(backup);
+		return (0);
+	}
+	ft_printf(STDERR_FILENO, "Error finding current directory\n");
 	return (1);
 }
