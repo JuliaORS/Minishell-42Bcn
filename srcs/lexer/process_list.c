@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 19:04:54 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/26 12:12:24 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/26 13:02:13 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,27 +80,25 @@ t_proc	*create_node_proc(t_proc **lst_proc, t_tok **lst_tok, int pos)
 
 int	new_process(t_proc **lst_proc, t_tok **lst_tok, int pos, int *exit)
 {
-	t_proc		*proc;
-	t_pr_aux	var;
+	t_proc	*proc;
+	int		n_hd;
+	int		n_str;
 
-	var.n_hd = 0;
-	var.n_str = 0;
-	var.wrong_fl = 0;
+	n_hd = 0;
+	n_str = 0;
 	proc = create_node_proc(lst_proc, lst_tok, pos);
 	if (!proc)
 		return (err_msg_parser(MALLOC_MESS, 12, 0, exit));
 	while (*lst_tok && (*lst_tok)->type != 8 && !*exit)
 	{
-		if (((*lst_tok)->type == 4 || (*lst_tok)->type == 5) && !var.wrong_fl)
+		if (((*lst_tok)->type == 4 || (*lst_tok)->type == 5))
 			find_outfile(proc, lst_tok, exit);
-		else if ((*lst_tok)->type == 6 && !var.wrong_fl)
+		else if ((*lst_tok)->type == 6)
 			find_infile(proc, lst_tok, exit);
-		else if ((*lst_tok)->type == 7 && !var.wrong_fl)
-			find_heredoc(proc, lst_tok, var.n_hd++, exit);
+		else if ((*lst_tok)->type == 7)
+			find_heredoc(proc, lst_tok, n_hd++, exit);
 		else if ((*lst_tok)->type <= 2)
-			create_str(proc, lst_tok, var.n_str++, exit);
-		if (proc->fd[0] == -1 || proc->fd[1] == -1)
-			var.wrong_fl = 1;
+			create_str(proc, lst_tok, n_str++, exit);
 		if (*lst_tok)
 			*lst_tok = (*lst_tok)->next;
 	}

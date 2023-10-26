@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 21:20:02 by rjobert           #+#    #+#             */
-/*   Updated: 2023/10/26 12:10:25 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/26 12:18:06 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ int	is_builtin(t_proc *pcs_chain)
 
 	if (!pcs_chain || !pcs_chain->arg || !pcs_chain->arg[0])
 		return (0);
-	printf("hola2\n");
 	cmd = pcs_chain->arg[0];
 	if (!ft_strncmp(cmd, "cd", 3))
 		return (1);

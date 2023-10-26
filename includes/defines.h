@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 10:57:07 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/26 12:03:19 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/26 13:02:49 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,6 @@ typedef struct s_tok {
 	struct s_tok	*prev;
 	struct s_tok	*next;
 }	t_tok;
-
-typedef struct s_pr_aux {
-	int				n_hd;
-	int				n_str;
-	int				wrong_fl;
-}	t_pr_aux;
 
 typedef struct s_proc {
 	char			**arg;
