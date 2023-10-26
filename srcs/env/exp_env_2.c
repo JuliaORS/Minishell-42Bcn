@@ -39,9 +39,8 @@ void	free_xpenv(t_xpenv	**list)
 	while (head)
 	{
 		tmp = head->next;
-		free(head->var);
-		head->var = NULL;
-		free(head);
+		free_pntr(head->var);
+		free_pntr(head);
 		head = tmp;
 	}
 	*list = NULL;

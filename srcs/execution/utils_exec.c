@@ -28,6 +28,15 @@ void	init_exec(t_exec *exec, char **env)
 		error_msg("init empty struct", 0, exec, NULL);
 		return ;
 	}
+	exec->env = NULL;
+	exec->exp_env = NULL;
+	exec->dir_init = 0;
+	exec->pids = NULL;
+	exec->pipes = NULL;
+	exec->path = NULL;
+	exec->exit[0] = 0;
+	exec->exit[1] = 0;
+	g_exit_sig = 0;
 	exec->env = env_dup(env, 0, 0); 
 	if (!exec->env)
 		error_msg(MALLOC_MESS, 0, exec, NULL);
@@ -36,13 +45,6 @@ void	init_exec(t_exec *exec, char **env)
 	if (idx >= 0)
 		exec->env = downsize_env(exec->env, idx, 0, 0);
 	exec->exp_env = create_xp_env(exec->env);
-	exec->dir_init = 0;
-	exec->pids = NULL;
-	exec->pipes = NULL;
-	exec->path = NULL;
-	exec->exit[0] = 0;
-	exec->exit[1] = 0;
-	g_exit_sig = 0;
 }
 
 int	measure_list(t_proc **list)
@@ -81,8 +83,6 @@ void	free_exec(t_exec **exec)
 		close_all_pipes(*exec);
 		(*exec)->pipes = NULL;
 	}
-	// if ((*exec)->exp_env)
-	// 	free_xpenv(&(*exec)->exp_env);
 	if ((*exec)->path)
 	{
 		free((*exec)->path);

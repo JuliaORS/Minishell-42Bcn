@@ -132,7 +132,9 @@ int	export_exec(t_exec *exec, char *arg, int type)
 		add_expenv(&exec->exp_env, arg, type);
 		return (0);
 	}
-	idx = search_env_var(exec->env, extract_variable(arg));
+	temp_arg = extract_variable(arg);
+	idx = search_env_var(exec->env, temp_arg);
+	free_pntr(temp_arg);
 	temp_arg = build_env_var(arg, exec, type, idx);
 	if (idx >= 0 && exec->env[idx])
 	{
@@ -152,24 +154,29 @@ char	*build_env_var(char *arg, t_exec *exec, int type, int idx)
 {
 	char	**tmp;
 	char	*env_var;
+	char	*tmp_var;
 	
 	env_var = NULL;
+	tmp_var = NULL;
 	tmp = key_val_pair(arg);
 	if (tmp[1] == NULL)
-		tmp[1] = "";
+		tmp[1] = ""; 
 	if (type == 2 && idx >= 0)
 		env_var = ft_strjoin(exec->env[idx], tmp[1]);
 	if (idx < 0)
 		env_var = ft_strdup(arg);
 	else if (type == 1 && idx >= 0)
 	{
-		env_var = ft_strjoin(extract_variable(arg), "=");
-		if (!env_var)
+		env_var = extract_variable(arg);
+		tmp_var = ft_strjoin(env_var, "=");
+		free_pntr(env_var);
+		if (!tmp_var)
 		{
 			free_key_val(tmp);
 			return (NULL);
 		}
-		env_var = ft_strjoin(env_var, tmp[1]);
+		env_var = ft_strjoin(tmp_var, tmp[1]);
+		free_pntr(tmp_var);
 	}
 	free_key_val(tmp);
 	if (!env_var)
