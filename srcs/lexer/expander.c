@@ -6,11 +6,25 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 12:09:34 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/23 15:46:47 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/26 11:17:55 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*expand_error(char *str, int *i, t_exec *exec)
+{
+	char	*str_final;
+	char	*str_exp;
+
+	str_exp = ft_itoa(exec->exit[1]);
+	if (!str_exp)
+		return (NULL);
+	str_final = create_new_str(str, str_exp, i, 1);
+	free(str_exp);
+	free(str);
+	return (str_final);
+}
 
 char	*find_dollar_sign(char *str, t_exec *exec, int *flag_exp)
 {
@@ -23,6 +37,8 @@ char	*find_dollar_sign(char *str, t_exec *exec, int *flag_exp)
 		{
 			if (str[i + 1] && str[i + 1] == '?')
 				str = expand_error(str, &i, exec);
+			else if (str[i + 1] && ('0' <= str[i + 1] && str[i + 1] <= '9'))
+				str = expand_num_null(str, &i);
 			else
 				str = check_expand(str, &i, exec, flag_exp);
 			if (!str)

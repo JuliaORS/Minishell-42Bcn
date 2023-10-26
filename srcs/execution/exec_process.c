@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 21:20:02 by rjobert           #+#    #+#             */
-/*   Updated: 2023/10/23 12:07:16 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/26 12:10:25 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,13 @@ int	exec_machine(t_proc *pcs_chain, t_exec *exec)
 }
 
 
-int	is_builtin(t_proc*pcs_chain)
+int	is_builtin(t_proc *pcs_chain)
 {
 	char	*cmd;
-	
-	if (!pcs_chain || !pcs_chain->arg[0] || !pcs_chain->arg)
+
+	if (!pcs_chain || !pcs_chain->arg || !pcs_chain->arg[0])
 		return (0);
+	printf("hola2\n");
 	cmd = pcs_chain->arg[0];
 	if (!ft_strncmp(cmd, "cd", 3))
 		return (1);

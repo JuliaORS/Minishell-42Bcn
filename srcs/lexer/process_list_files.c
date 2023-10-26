@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/14 17:03:53 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/25 13:43:26 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/26 11:59:40 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char	*join_str_toks(t_tok **lst_tok)
 int	find_outfile(t_proc *lst_proc, t_tok **lst_tok, int *exit)
 {
 	int		type;
-	
+
 	if (lst_proc->outfile)
 	{
 		close (lst_proc->fd[1]);
