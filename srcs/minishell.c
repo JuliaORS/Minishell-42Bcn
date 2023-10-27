@@ -6,11 +6,13 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 16:19:21 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/26 20:16:13 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/27 11:28:27 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	clear_exec(t_exec *exec);
 
 void	start_ms(char *input, t_exec *exec)
 {
@@ -48,8 +50,7 @@ void	main_loop(t_exec *exec)
 		start_ms(input, exec);
 		free (input);
 	}
-	free (input);
-	rl_clear_history();
+	free(input);
 }
 
 int	main(int argc, char **argv, char **env)
@@ -61,5 +62,16 @@ int	main(int argc, char **argv, char **env)
 		return (1);
 	init_exec(&exec, env);
 	main_loop(&exec);
+	clear_exec(&exec);
+	rl_clear_history();
 	return (exec.exit[0]);
+}
+
+void	clear_exec(t_exec *exec)
+{
+	free_exec(&exec);
+	if (exec->env)
+		free_env(exec->env);
+	if (exec->exp_env)
+		free_xpenv(&exec->exp_env);
 }
