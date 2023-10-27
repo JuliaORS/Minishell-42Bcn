@@ -14,7 +14,7 @@
 
 char	*exp_env_format(char *env, int type);
 
-t_xpenv *node_exp_env(char *env, int type)
+t_xpenv	*node_exp_env(char *env, int type)
 {
 	t_xpenv	*exp_env;
 
@@ -45,7 +45,7 @@ char	*exp_env_format(char *env, int type)
 		free(temp_var);
 		temp_var = ft_strjoin("\"", temp_val);
 		free(temp_val);
-		temp_val = ft_strjoin(temp_var,"\"");
+		temp_val = ft_strjoin(temp_var, "\"");
 		free(temp_var);
 		temp_var = ft_strjoin(value, temp_val);
 		free(temp_val);
@@ -54,10 +54,9 @@ char	*exp_env_format(char *env, int type)
 	return (temp_var);
 }
 
-int	search_n_replace(t_xpenv *head, char *env, int type)
+int	search_n_replace(t_xpenv *head, char *env, char *temp, int type)
 {
-	char *temp_node;
-	char *temp;
+	char	*temp_node;
 
 	if (type == 0)
 		temp = ft_strdup(env);
@@ -86,8 +85,8 @@ int	search_n_replace(t_xpenv *head, char *env, int type)
 
 void	add_expenv(t_xpenv **xpenv, char *env, int type)
 {
-	t_xpenv *node;
-	t_xpenv *head;
+	t_xpenv	*node;
+	t_xpenv	*head;
 
 	node = node_exp_env(env, type);
 	if (!node)
@@ -98,16 +97,16 @@ void	add_expenv(t_xpenv **xpenv, char *env, int type)
 		return ;
 	}
 	head = *xpenv;
-	if (search_n_replace(head, env, type) == 1)
+	if (search_n_replace(head, env, NULL, type) == 1)
 	{
 		free_pntr(node->var);
 		free(node);
-		return;
+		return ;
 	}
-	while(head)
+	while (head)
 	{
 		if (!head->next)
-			break;
+			break ;
 		head = head->next;
 	}
 	head->next = node;

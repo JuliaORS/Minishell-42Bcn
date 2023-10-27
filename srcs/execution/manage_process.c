@@ -10,10 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "minishell.h"
 
 void	close_cmd_fd(t_proc *pcs);
+
 /*
 wait for each process to finish, starting by the last one - to make sure
 all commands execute correctly
@@ -25,7 +25,7 @@ void	wait_processes(t_exec *exec)
 	int		total_cmd;
 	int		signal;
 
-   	total_cmd = exec->total_cmd - 1;
+	total_cmd = exec->total_cmd - 1;
 	while (total_cmd >= 0)
 	{
 		wpid = waitpid(0, &status, 0);
@@ -128,31 +128,31 @@ Inputs for execve are exec path (/bin/cat), an array of command info
  4 - we can clean our path matrix, and free the cmplete_path after using
  execve_bash : an application of execve with special error handling
  */
-void	build_execve(t_proc **exec_trgt, t_exec **exec)
+void	build_execve(t_proc **x_trgt, t_exec **exec)
 {
 	char	**env_paths;
 	int		relative_path;
 
-	if (!*exec_trgt || !(*exec_trgt)->arg)
+	if (!*x_trgt || !(*x_trgt)->arg)
 		return ;
 	relative_path = 0;
 	env_paths = search_path((*exec)->env);
 	if (env_paths == NULL)
 	{
-		if (execve((*exec_trgt)->arg[0], (*exec_trgt)->arg, (*exec)->env) == -1)
-			error_msg("No such file or directory", CMNOFOUND, *exec, *exec_trgt);
+		if (execve((*x_trgt)->arg[0], (*x_trgt)->arg, (*exec)->env) == -1)
+			error_msg("No such file or directory", CMNOFOUND, *exec, *x_trgt);
 	}
-	if ((*exec_trgt)->arg[0][0] == '/' || ((*exec_trgt)->arg[0][0] == '.' && 
-		(*exec_trgt)->arg[0][1] == '/'))
-		{
-			(*exec)->path = (*exec_trgt)->arg[0];
-			relative_path = 1;
-		}
+	if ((*x_trgt)->arg[0][0] == '/' || ((*x_trgt)->arg[0][0] == '.' && \
+	(*x_trgt)->arg[0][1] == '/'))
+	{
+		(*exec)->path = (*x_trgt)->arg[0];
+		relative_path = 1;
+	}
 	else
-		(*exec)->path = exec_path(env_paths, *exec_trgt);
+		(*exec)->path = exec_path(env_paths, *x_trgt);
 	if (relative_path == 1)
-		relative_path_clean(exec_trgt, exec);
-	exec_bash(exec_trgt, exec);
+		relative_path_clean(x_trgt, exec);
+	exec_bash(x_trgt, exec);
 	free_split(&env_paths);
 }
 
@@ -162,8 +162,8 @@ to avoid duplicate  with children or fd leaks later on
 */
 void	close_cmd_fd(t_proc *pcs)
 {
-		if (fd_is_open(pcs->fd[0]))
-			close(pcs->fd[0]);
-		if (fd_is_open(pcs->fd[1]))
-			close(pcs->fd[1]);
+	if (fd_is_open(pcs->fd[0]))
+		close(pcs->fd[0]);
+	if (fd_is_open(pcs->fd[1]))
+		close(pcs->fd[1]);
 }

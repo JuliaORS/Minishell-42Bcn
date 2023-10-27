@@ -21,7 +21,7 @@ int	exec_machine(t_proc *pcs_chain, t_exec *exec)
 		exec->in_parent = 1;
 		exec->exit[0] = check_io_fd(pcs_chain, exec);
 		if (exec->exit[0])
-			return(exec->exit[0]);
+			return (exec->exit[0]);
 		io_redirect(pcs_chain, exec);
 		exec->exit[0] = exec_builtin(pcs_chain, exec);
 		back_up_stdio(exec, 1);
@@ -35,7 +35,6 @@ int	exec_machine(t_proc *pcs_chain, t_exec *exec)
 	free_exec(&exec);
 	return (exec->exit[0]);
 }
-
 
 int	is_builtin(t_proc *pcs_chain)
 {
@@ -64,24 +63,26 @@ int	is_builtin(t_proc *pcs_chain)
 int	exec_builtin(t_proc *pcs_chain, t_exec *exec)
 {
 	char	*cmd;
+
 	if (!pcs_chain)
 		return (1);
 	cmd = pcs_chain->arg[0];
 	if (!ft_strncmp(cmd, "cd", 3))
 		return (ft_cd(exec, pcs_chain->arg));
 	else if (!ft_strncmp(cmd, "pwd", 4))
-		return(ft_pwd(exec, pcs_chain->arg));
+		return (ft_pwd(exec, pcs_chain->arg));
 	else if (!ft_strncmp(cmd, "echo", 5))
-		return(ft_echo(exec, pcs_chain->arg));
+		return (ft_echo(exec, pcs_chain->arg));
 	else if (!ft_strncmp(cmd, "env", 5))
-		return(ft_env(exec, pcs_chain->arg));
+		return (ft_env(exec, pcs_chain->arg));
 	else if (!ft_strncmp(cmd, "export", 7))
 		return (ft_export(exec, pcs_chain->arg));
 	else if (!ft_strncmp(cmd, "unset", 6))
 		return (ft_unset(exec, pcs_chain->arg));
 	else if (!ft_strncmp(cmd, "exit", 5))
 		return (ft_exit(exec, pcs_chain->arg));
-	ft_printf(STDERR_FILENO, "minishell: %s: not a valid option\n", pcs_chain->arg[0]);
+	ft_printf(STDERR_FILENO, "minishell: %s: not a valid option\n", \
+	pcs_chain->arg[0]);
 	return (EXIT_FAILURE);
 }
 
@@ -97,28 +98,30 @@ int	error_builtin(char *msg, int nb, char *bltn)
 		ft_printf(STDERR_FILENO, "minishell: %s\n", msg);
 	return (nb);
 }
+
 /* 
 Objective : apply execve with many error handling
 1 - first we check if the the command is a directory using opendir()
 2 - if not, and if it is not an emty command (!= "") 
-we check if the path is findable and exist - we verify that (again) with access F_OK) 
-we then test several cases:
+we check if the path is findable and exist - we verify that (again) 
+with access F_OK) we then test several cases:
 2.a - if the file is not exectutable ( a script.sh where -x- right are
 not for user or group -> we return error 126 and exit message)
 2.b - else we can apply execve and return the error 1 if issue
-3 - if the argument / command start with "/" it is a path to a exe or .sh that was 
-provdied -> if it exist with access F_OK we then  try to execute it
+3 - if the argument / command start with "/" it is a path to a exe
+ or .sh that was provdied -> if it exist with access F_OK we then 
+  try to execute it
 4 - If no execution we have 2 message for the 127 "not found" exit:
-4.a- if the command start with "/" and could not be executed -> No such file with
-with exit 127
+4.a- if the command start with "/" and could not be executed:
+ No such file with with exit 127
 4.b - otherwise it was a command and not a file -> command not found
 */
 void	exec_bash(t_proc **exec_trgt, t_exec **exec)
 {
-	DIR *d;
+	DIR	*d;
 
 	d = opendir((*exec_trgt)->arg[0]);
-	if (d && ft_strchr((*exec_trgt)->arg[0],'/'))
+	if (d && ft_strchr((*exec_trgt)->arg[0], '/'))
 	{
 		closedir(d);
 		error_msg("is a directory", 126, *exec, *exec_trgt);

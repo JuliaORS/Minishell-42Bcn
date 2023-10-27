@@ -100,7 +100,7 @@ char	**key_val_pair(char *str);
 void	free_key_val(char **kvp);
 void	free_pntr(void *pntr);
 int		export_exec(t_exec *exec, char *arg, int type);
-int		shlvl_add(t_exec *exec, int idx, char *tmp);
+int		shlvl_add(t_exec *exec, int idx, char *tmp, char *tmp_join);
 
 /*buil-tins prototypes*/
 void	builtins(char **arg, t_exec *exec);

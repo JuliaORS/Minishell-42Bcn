@@ -13,8 +13,9 @@
 #include "minishell.h"
 
 int	shlvl_update(int shlvl_);
+
 /*
-increas the memory size of env array by one char * and copy it while freeing up
+increase the memory size of env array by one char * and copy it while freeing up
 the memory used from the source
 */
 char	**realloc_env(char **env, char *var)
@@ -23,7 +24,7 @@ char	**realloc_env(char **env, char *var)
 	int		i;
 	int		size;
 
-	size = count_var_env(env) + 1; 
+	size = count_var_env(env) + 1;
 	new_env = ft_calloc(size + 1, sizeof(char *));
 	if (!new_env)
 		return (NULL);
@@ -37,8 +38,9 @@ char	**realloc_env(char **env, char *var)
 	new_env[size] = NULL;
 	new_env[size - 1] = ft_strdup(var);
 	free_pntr(env);
-	return(new_env);
+	return (new_env);
 }
+
 /*
 we allocate memory of previous array size - 1 (as we will delete
 one char *). We then we traverse the array and :
@@ -71,9 +73,8 @@ char	**downsize_env(char **env, int idx, int i, int j)
 	}
 	new_env[j] = NULL;
 	free(env);
-	return(new_env);
+	return (new_env);
 }
-
 
 /*
 search for a target in the env, found it's index and repalce (cpy and
@@ -81,39 +82,39 @@ delete previous value) -> do nothing if no index found
 */
 void	replace_env_var(char **env, char *target, char *replace)
 {
-	int	idx;
-	char *temp;
+	int		idx;
+	char	*temp;
 
 	idx = search_env_var(env, target);
 	if (idx == -1)
-		return;
-	temp = env[idx]; 
+		return ;
+	temp = env[idx];
 	env[idx] = ft_strdup(replace);
 	free(temp);
 	return ;
 }
+
 /*
 get the SHLVL from env copied from shell and add 1 to it
 - combined key_val_ manopulatio and atoi -> itoa to add 1
 - carefull with variable and free on ft_strjoin to avoid leak of SF
 - idx and tmp passed as arguments because of norminette rules of 4 variables max
 */
-int	shlvl_add(t_exec *exec, int idx, char *tmp)
+int	shlvl_add(t_exec *exec, int idx, char *tmp, char *tmp_join)
 {
-	int		shlvl_;
 	char	**temp;
-	char	*tmp_join;
+	int		shl_vl;
 
-	tmp_join = extract_variable("SHLVL=") ;
+	tmp_join = extract_variable("SHLVL=");
 	idx = search_env_var(exec->env, tmp_join);
 	free_pntr(tmp_join);
 	if (idx == -1)
 		return (export_exec(exec, "SHLVL=1", 1));
 	temp = key_val_pair(exec->env[idx]);
-	shlvl_= ft_atoi(temp[1]);
-	shlvl_ = shlvl_update(shlvl_);
+	shl_vl = ft_atoi(temp[1]);
+	shl_vl = shlvl_update(shl_vl);
 	free_pntr(temp[1]);
-	temp[1] = ft_itoa(shlvl_);
+	temp[1] = ft_itoa(shl_vl);
 	tmp_join = ft_strjoin(temp[0], "=");
 	if (tmp_join)
 	{
@@ -123,20 +124,21 @@ int	shlvl_add(t_exec *exec, int idx, char *tmp)
 	free_key_val(temp);
 	if (!tmp)
 		return (0);
-	export_exec(exec, tmp, 1);  //HERE IS THE LEAK
+	export_exec(exec, tmp, 1);
 	free_pntr(tmp);
 	return (1);
 }
 
 int	shlvl_update(int shlvl_)
 {
-	if (shlvl_ < 0 )
-	 	shlvl_ = 0;
+	if (shlvl_ < 0)
+		shlvl_ = 0;
 	else
 		shlvl_++;
 	if (shlvl_ > 1000)
 	{
-		ft_printf(STDERR_FILENO, "minishell: warning: shell level (%i) too high, resetting to 1\n", shlvl_);
+		ft_printf(STDERR_FILENO, "minishell: warning: shell level (%i)"
+			" too high, resetting to 1\n", shlvl_);
 		shlvl_ = 1;
 	}
 	return (shlvl_);

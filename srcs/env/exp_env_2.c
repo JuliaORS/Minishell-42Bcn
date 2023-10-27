@@ -14,7 +14,7 @@
 
 t_xpenv	*create_xp_env(char **env)
 {
-	int	i;
+	int		i;
 	t_xpenv	*exp_env;
 
 	if (!*env)
@@ -28,13 +28,14 @@ t_xpenv	*create_xp_env(char **env)
 	}
 	return (exp_env);
 }
+
 void	free_xpenv(t_xpenv	**list)
 {
 	t_xpenv	*tmp;
 	t_xpenv	*head;
 
 	if (!*list)
-		return;
+		return ;
 	head = *list;
 	while (head)
 	{

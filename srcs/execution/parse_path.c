@@ -31,7 +31,7 @@ char	**search_path(char *env[])
 	path = NULL;
 	i = 0;
 	if (!env || !*env)
-		return (NULL) ;
+		return (NULL);
 	else
 	{
 		while (env[i] && ft_strncmp(env[i], "PATH", 4))
@@ -85,11 +85,11 @@ there can be weird test like :
  need to clean both and end-up with ./script"quote.sh 
  (which woulld be wrong for cdl but correct for execve)
  */
-void	relative_path_clean(t_proc **proc,  t_exec **exec)
+void	relative_path_clean(t_proc **proc, t_exec **exec)
 {
 	int	i;
 
-	if (!*proc|| !*exec)
+	if (!*proc || !*exec)
 		return ;
 	if (ft_strchr((*proc)->arg[0], 32))
 		error_msg(CMNF_MESS, CMNOFOUND, *exec, *proc);

@@ -55,7 +55,7 @@ int	count_var_env(char **env)
 	int	i;
 
 	i = 0;
-	while(env && env[i])
+	while (env && env[i])
 		i++;
 	return (i);
 }
@@ -69,7 +69,7 @@ void	free_env(char	**env)
 	int	i;
 
 	i = 0;
-	while(env && env[i])
+	while (env && env[i])
 	{
 		if (env[i])
 			free(env[i]);
@@ -92,7 +92,7 @@ int	ft_env(t_exec *exec, char **arg)
 		return (1);
 	}
 	i = 0;
-	while(exec->env && exec->env[i] && i < count_var_env(exec->env))
+	while (exec->env && exec->env[i] && i < count_var_env(exec->env))
 	{
 		printf("%s\n", exec->env[i]);
 		i++;
@@ -103,17 +103,17 @@ int	ft_env(t_exec *exec, char **arg)
 /*
 look for a variable in env and return its key=value pair
 */
-char    *ft_getenv(char **env, char *target)
+char	*ft_getenv(char **env, char *target)
 {
-    int i;
-    int idx;
+	int	i;
+	int	idx;
 
-    if (!env)
-        return (NULL);
-    i = 0;
-    idx = search_env_var(env, target);
-    if (idx == -1)
-        return (NULL);
-    else
-        return (env[idx]);
+	if (!env)
+		return (NULL);
+	i = 0;
+	idx = search_env_var(env, target);
+	if (idx == -1)
+		return (NULL);
+	else
+		return (env[idx]);
 }

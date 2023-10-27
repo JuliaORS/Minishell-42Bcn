@@ -27,11 +27,11 @@ SRC         = minishell.c signals.c lexer/manage_input.c lexer/parser.c \
 			lexer/process_list_utils.c lexer/free_lexer.c \
 			lexer/debug_lexer.c lexer/error_parsing.c lexer/heredoc.c \
 			execution/exec_process.c execution/manage_process.c \
-			execution/pipes.c execution/utils_exec.c execution/parse_path.c \
-			builtins/ft_cd.c builtins/ft_echo.c builtins/ft_export.c \
-			builtins/ft_pwd.c builtins/ft_unset.c builtins/ft_exit.c \
-			env/env_setup.c env/env_modify.c env/env_search.c  env/exp_env.c \
-			env/exp_env_2.c
+			execution/pipes.c execution/utils_exec.c execution/utils_exec_2.c \
+			execution/parse_path.c  builtins/ft_cd.c builtins/ft_echo.c \
+			builtins/ft_export.c builtins/ft_pwd.c builtins/ft_unset.c \
+			builtins/ft_exit.c env/env_setup.c env/env_modify.c \
+			env/env_search.c env/exp_env.c env/exp_env_2.c
 SRCS		= $(addprefix $(SRC_PATH), $(SRC))
 
 LIBFT_PATH	= libs/libft/
