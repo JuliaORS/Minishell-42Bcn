@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 12:09:34 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/26 16:56:53 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/27 18:26:54 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ char	*expander(t_tok **lst_tok, char *str, t_exec *exec, int type)
 	else if (flag_exp == 1 && type == 2)
 		split_tok(lst_tok, str_exp, &exec->exit[0]);
 	else
-		new_tok(lst_tok, str_exp, type, &exec->exit[0]);
+		new_tok(lst_tok, ft_strdup(str_exp), type, &exec->exit[0]);
 	return (str_exp);
 }
 

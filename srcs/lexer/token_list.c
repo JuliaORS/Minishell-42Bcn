@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 12:52:12 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/26 11:25:10 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/27 18:39:40 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	create_tok_quote(t_tok **lst_tok, char *line, int *i, t_exec *exec)
 {
 	char	*pos;
 	char	*str;
+	char	*str_exp;
 
 	if (remove_dol_end(lst_tok, &exec->exit[0]))
 		return (exec->exit[0]);
@@ -27,7 +28,11 @@ int	create_tok_quote(t_tok **lst_tok, char *line, int *i, t_exec *exec)
 	if (line[0] == '"' && ft_strlen(str) == 0)
 		new_tok(lst_tok, str, 0, &exec->exit[0]);
 	else if (line[0] == '"' && ft_strlen(str) != 0)
-		expander(lst_tok, str, exec, 0);
+	{
+		str_exp = expander(lst_tok, str, exec, 0);
+		if (str_exp)
+			free(str_exp);
+	}
 	else
 		new_tok(lst_tok, str, 1, &exec->exit[0]);
 	return (0);
@@ -64,7 +69,9 @@ int	create_tok_str(t_tok **lst_tok, char *line, int *i, t_exec *exec)
 	int		len;
 	char	*str;
 	char	*str_exp;
+	int		j;
 
+	j = 0;
 	len = 0;
 	while (line[len] != '"' && line[len] != '\'' && line[len] != '>' && \
 		line[len] != '<' && line[len] != '|' && line[len] != ' ' && \
@@ -77,11 +84,10 @@ int	create_tok_str(t_tok **lst_tok, char *line, int *i, t_exec *exec)
 	str_exp = expander(lst_tok, str, exec, 2);
 	if (!str_exp)
 		return (exec->exit[0]);
-	if (ft_strlen(str_exp) == 0)
-		free(str_exp);
-	if (str_exp[ft_strlen(str_exp) - 1] == ' ' && (line[len] == '"' \
-		|| line[len] == '\''))
+	if (ft_strlen(str_exp) != 0 && str_exp[ft_strlen(str_exp) - 1] == ' ' && \
+		(line[len] == '"' || line[len] == '\''))
 		new_tok(lst_tok, NULL, 3, &exec->exit[0]);
+	free (str_exp);
 	return (0);
 }
 
