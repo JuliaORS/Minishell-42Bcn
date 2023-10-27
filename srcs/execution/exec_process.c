@@ -118,7 +118,7 @@ void	exec_bash(t_proc **exec_trgt, t_exec **exec)
 	DIR *d;
 
 	d = opendir((*exec_trgt)->arg[0]);
-	if (d)
+	if (d && ft_strchr((*exec_trgt)->arg[0],'/'))
 	{
 		closedir(d);
 		error_msg("is a directory", 126, *exec, *exec_trgt);

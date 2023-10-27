@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+void	clear_exec(t_exec *exec);
 
 void	main_loop(t_exec *exec)
 {
@@ -53,6 +54,16 @@ int	main(int argc, char **argv, char **env)
 	(void)argv;
 	init_exec(&exec, env);
 	main_loop(&exec);
+	clear_exec(&exec);
 	rl_clear_history();
 	return (exec.exit[0]);
+}
+
+void	clear_exec(t_exec *exec)
+{
+	free_exec(&exec);
+	if (exec->env)
+		free_env(exec->env);
+	if (exec->exp_env)
+		free_xpenv(&exec->exp_env);
 }

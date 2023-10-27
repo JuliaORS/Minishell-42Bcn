@@ -120,7 +120,7 @@ int	ft_export(t_exec *exec, char **arg)
 based on the type of export or concat, we search for the occurence of the 
 variable in env. if not found (index returned -1) we add it
 if it is found -> if export mode classic we remplace, if concat mode we
-add it to the current value
+add it to the current value, we then add it to exp_env data structure
 */
 int	export_exec(t_exec *exec, char *arg, int type)
 {
@@ -132,7 +132,9 @@ int	export_exec(t_exec *exec, char *arg, int type)
 		add_expenv(&exec->exp_env, arg, type);
 		return (0);
 	}
-	idx = search_env_var(exec->env, extract_variable(arg));
+	temp_arg = extract_variable(arg);
+	idx = search_env_var(exec->env, temp_arg);
+	free_pntr(temp_arg);
 	temp_arg = build_env_var(arg, exec, type, idx);
 	if (idx >= 0 && exec->env[idx])
 	{
@@ -143,33 +145,60 @@ int	export_exec(t_exec *exec, char *arg, int type)
 		exec->env = realloc_env(exec->env, temp_arg);
 	add_expenv(&exec->exp_env, temp_arg, type);
 	free_pntr(temp_arg);
-	if (!exec->env[idx])
+	if (idx>=0 && !exec->env[idx])
 		return (-1);
 	return (0);
 }
+/*
+Description:
+The build_env_var function is designed to create or modify an 
+env variable based on the provided arguments, existing environment, 
+and type of operation specified (export or concatenate).
 
+Parameters:
+char *arg: The string containing the potential env var key-value pair.
+t_exec *exec: our exec state stored in a struct
+int type: An integer indicating the type of operation: (add, replace or concat)
+
+Returns: a string representing the built or modified environment variable.
+NULL if there is a failure in processing (like memory allocation errors)
+
+-The function starts by splitting the arg into a key-value pair.
+-If the type is 2 (concatenate) and the variable already exists in 
+the environment (idx >= 0)
+ it concatenates the new value to the existing value.
+-If the variable doesn't exist in the environment (idx < 0), 
+it simply duplicates the arg.
+-If the type is 1 (replace or add) and the variable exists (idx >= 0), 
+it replaces the value of the variable in the environment with the new value. The variable key and the = sign are added to this new value.
+*/
 char	*build_env_var(char *arg, t_exec *exec, int type, int idx)
 {
 	char	**tmp;
 	char	*env_var;
+	char	*tmp_var;
 	
 	env_var = NULL;
+	tmp_var = NULL;
 	tmp = key_val_pair(arg);
 	if (tmp[1] == NULL)
-		tmp[1] = "";
+		tmp[1] = ""; 
 	if (type == 2 && idx >= 0)
 		env_var = ft_strjoin(exec->env[idx], tmp[1]);
 	if (idx < 0)
 		env_var = ft_strdup(arg);
 	else if (type == 1 && idx >= 0)
 	{
-		env_var = ft_strjoin(extract_variable(arg), "=");
-		if (!env_var)
+		env_var = extract_variable(arg);
+		tmp_var = ft_strjoin(env_var, "=");
+		free_pntr(env_var);
+		if (!tmp_var)
 		{
 			free_key_val(tmp);
 			return (NULL);
 		}
-		env_var = ft_strjoin(env_var, tmp[1]);
+		env_var = ft_strjoin(tmp_var, tmp[1]);
+		free_pntr(tmp_var);
 	}
 	free_key_val(tmp);
 	if (!env_var)

@@ -46,6 +46,7 @@ char	*exp_env_format(char *env, int type)
 		temp_var = ft_strjoin("\"", temp_val);
 		free(temp_val);
 		temp_val = ft_strjoin(temp_var,"\"");
+		free(temp_var);
 		temp_var = ft_strjoin(value, temp_val);
 		free(temp_val);
 		free(value);
@@ -79,6 +80,7 @@ int	search_n_replace(t_xpenv *head, char *env, int type)
 		free(temp_node);
 		head = head->next;
 	}
+	free(temp);
 	return (0);
 }
 
@@ -88,24 +90,25 @@ void	add_expenv(t_xpenv **xpenv, char *env, int type)
 	t_xpenv *head;
 
 	node = node_exp_env(env, type);
+	if (!node)
+		return ;
 	if (!*xpenv)
-		*xpenv = node;
-	else
 	{
-		head = *xpenv;
+		*xpenv = node;
+		return ;
+	}
+	head = *xpenv;
+	while (head)
+	{
 		if (search_n_replace(head, env, type) == 1)
 		{
 			free(node->var);
 			free(node);
 			return;
 		}
-		else
-		{
-			while (head &&head->next)
-				head = head->next;
-			head->next = node;
-		}
+		if (!head->next)
+			break;
+		head = head->next;
 	}
-	return;
+	head->next = node;
 }
-

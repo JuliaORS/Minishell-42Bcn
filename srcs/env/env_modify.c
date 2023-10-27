@@ -14,7 +14,8 @@
 
 int	shlvl_update(int shlvl_);
 /*
-increas the memory size of env array by one char * and copy it
+increas the memory size of env array by one char * and copy it while freeing up
+the memory used from the source
 */
 char	**realloc_env(char **env, char *var)
 {
@@ -30,7 +31,6 @@ char	**realloc_env(char **env, char *var)
 	while (env && i < size - 1)
 	{
 		new_env[i] = ft_strdup(env[i]);
-		//printf("new_env is :%s \n\nold env is :%s\n\n", new_env[i], env[i]);
 		free_pntr(env[i]);
 		i++;
 	}
@@ -104,8 +104,9 @@ int	shlvl_add(t_exec *exec, int idx, char *tmp)
 	char	**temp;
 	char	*tmp_join;
 
-	tmp_join = NULL;
-	idx = search_env_var(exec->env, extract_variable("SHLVL="));
+	tmp_join = extract_variable("SHLVL=") ;
+	idx = search_env_var(exec->env, tmp_join);
+	free_pntr((void *) tmp_join);
 	if (idx == -1)
 		return (export_exec(exec, "SHLVL=1", 1));
 	temp = key_val_pair(exec->env[idx]);
@@ -123,8 +124,10 @@ int	shlvl_add(t_exec *exec, int idx, char *tmp)
 	if (!tmp)
 		return (0);
 	export_exec(exec, tmp, 1);
+	free_pntr(tmp);
 	return (1);
 }
+
 int	shlvl_update(int shlvl_)
 {
 	if (shlvl_ < 0 )
