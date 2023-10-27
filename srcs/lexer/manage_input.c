@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 19:06:32 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/26 20:15:42 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/27 11:16:56 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	manage_input(char *line, t_proc **lst_proc, t_exec *exec)
 {
 	t_tok	*lst_tok;
-	
+
 	lst_tok = NULL;
 	if (parsing_input(line, &exec->exit[0]))
 		return (exec->exit[0]);
@@ -30,8 +30,6 @@ int	manage_input(char *line, t_proc **lst_proc, t_exec *exec)
 		free_lst_proc(lst_proc);
 		return (exec->exit[0]);
 	}
-	//print_process_list(lst_proc);
-	//print_tok_list(&lst_tok);
 	free_lst_tok(&lst_tok);
 	return (exec->exit[0]);
 }
