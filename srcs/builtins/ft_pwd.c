@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin.c                                          :+:      :+:    :+:   */
+/*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rjobert <rjobert@student.42barcelo>        +#+  +:+       +#+        */
+/*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 12:15:32 by rjobert           #+#    #+#             */
-/*   Updated: 2023/09/25 12:15:35 by rjobert          ###   ########.fr       */
+/*   Updated: 2023/10/27 13:06:22 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@ correctly
 */
 int	ft_pwd(t_exec *exec, char **arg)
 {
-	char buffer[PATH_MAX];
-	char *backup;
+	char	buffer[PATH_MAX];
+	char	*backup;
 
 	(void) arg;
 	(void) exec;
-	if (getcwd(buffer, PATH_MAX)!= NULL)
+	if (getcwd(buffer, PATH_MAX) != NULL)
 	{
 		ft_printf(STDOUT_FILENO, "%s\n", buffer);
 		return (0);

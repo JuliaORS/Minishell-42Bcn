@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin.c                                          :+:      :+:    :+:   */
+/*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rjobert <rjobert@student.42barcelo>        +#+  +:+       +#+        */
+/*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/28 12:15:32 by rjobert           #+#    #+#             */
-/*   Updated: 2023/09/28 12:15:35 by rjobert          ###   ########.fr       */
+/*   Created: 2023/10/27 12:59:55 by julolle-          #+#    #+#             */
+/*   Updated: 2023/10/27 13:00:40 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ because echo -n can also be echo -nnnnnnnn but no echo -nnnnnannnn
 int	check_flag(char **arg)
 {
 	int	i;
+
 	if (!arg)
 		return (-1);
 	if (arg && arg[1])
@@ -30,7 +31,7 @@ int	check_flag(char **arg)
 		if (arg[1][i] == '\0')
 			return (1);
 	}
-    return (0);
+	return (0);
 }
 
 /*
@@ -49,10 +50,10 @@ int	ft_echo(t_exec *exec, char **arg)
 	int	flag;
 
 	(void) exec;
-    flag = check_flag(arg);
-    i = 1;
-    if (flag == 1)
-        i = 2;
+	flag = check_flag(arg);
+	i = 1;
+	if (flag == 1)
+		i = 2;
 	if (arg[1])
 	{
 		while (arg && arg[i])
@@ -60,7 +61,7 @@ int	ft_echo(t_exec *exec, char **arg)
 			if (!ft_strncmp(arg[i], "-n", 3) && flag == 1)
 				i++;
 			ft_putstr_fd(arg[i], STDOUT_FILENO);
-			if (arg[i + 1]) 
+			if (arg[i + 1])
 				write(STDOUT_FILENO, " ", 1);
 			i++;
 		}

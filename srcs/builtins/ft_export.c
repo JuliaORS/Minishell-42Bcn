@@ -1,13 +1,12 @@
-
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin.c                                          :+:      :+:    :+:   */
+/*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rjobert <rjobert@student.42barcelo>        +#+  +:+       +#+        */
+/*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/25 12:15:32 by rjobert           #+#    #+#             */
-/*   Updated: 2023/09/25 12:15:35 by rjobert          ###   ########.fr       */
+/*   Created: 2023/10/27 13:02:21 by julolle-          #+#    #+#             */
+/*   Updated: 2023/10/27 13:09:09 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,21 +33,25 @@ int	check_syntax_export(char *var)
 		return (0);
 	if (!ft_isalpha(var[0]) && var[0] != '_')
 	{
-		ft_printf(STDERR_FILENO, "minishell: export: `%s': not a valid identifier\n", var); 
+		ft_printf(STDERR_FILENO, \
+			"minishell: export: `%s': not a valid identifier\n", var);
 		return (-1);
 	}
 	i = -1;
-	while (var[++i] && !(var[i] == '=' || ((var[i]) == '+' && var[i + 1] == '=')))
+	while (var[++i] && !(var[i] == '=' || ((var[i]) == '+' && \
+		var[i + 1] == '=')))
 	{
 		if (!ft_isalnum(var[i]) && var[i] != '_')
 		{
-			ft_printf(STDERR_FILENO, "minishell: export: `%s': not a valid identifier\n", var); 
+			ft_printf(STDERR_FILENO, \
+				"minishell: export: `%s': not a valid identifier\n", var);
 			return (-1);
 		}
 	}
 	valid = check_concat_valid(var);
 	return (valid);
 }
+
 /*
 Traverse the string, if see += return 2, if see only = return 1
 otherwise return 0
@@ -60,7 +63,7 @@ int	check_concat_valid(const char *var)
 
 	i = -1;
 	valid = 0;
-	while(var[++i])
+	while (var[++i])
 	{
 		if (var[i] == '+')
 		{
@@ -89,30 +92,30 @@ int	check_concat_valid(const char *var)
 */
 int	ft_export(t_exec *exec, char **arg)
 {
-		int		i;
-		int		type;
-		t_xpenv	*exp_env;
+	int		i;
+	int		type;
+	t_xpenv	*exp_env;
 
-		exec->exit[0] = EXIT_SUCCESS;
-		if (!arg[1])
+	exec->exit[0] = EXIT_SUCCESS;
+	if (!arg[1])
+	{
+		exp_env = exec->exp_env;
+		while (exp_env)
 		{
-			exp_env = exec->exp_env;
-			while(exp_env)
-			{
-				printf("declare -x %s\n", exp_env->var);
-				exp_env = exp_env->next;
-			}
-			return (0);
+			printf("declare -x %s\n", exp_env->var);
+			exp_env = exp_env->next;
 		}
-		i = 0;
-		while (arg && arg[++i])
-		{
-			type = check_syntax_export(arg[i]);
-			if (type < 0)
-				exec->exit[0] = EXIT_FAILURE;
-			else
-				export_exec(exec, arg[i], type);
-		}
+		return (0);
+	}
+	i = 0;
+	while (arg && arg[++i])
+	{
+		type = check_syntax_export(arg[i]);
+		if (type < 0)
+			exec->exit[0] = EXIT_FAILURE;
+		else
+			export_exec(exec, arg[i], type);
+	}
 	return (exec->exit[0]);
 }
 
@@ -126,7 +129,7 @@ int	export_exec(t_exec *exec, char *arg, int type)
 {
 	int		idx;
 	char	*temp_arg;
-	
+
 	if (type == 0)
 	{
 		add_expenv(&exec->exp_env, arg, type);
@@ -141,14 +144,15 @@ int	export_exec(t_exec *exec, char *arg, int type)
 		free_pntr(exec->env[idx]);
 		exec->env[idx] = ft_strdup(temp_arg);
 	}
-	else	
+	else
 		exec->env = realloc_env(exec->env, temp_arg);
 	add_expenv(&exec->exp_env, temp_arg, type);
 	free_pntr(temp_arg);
-	if (idx>=0 && !exec->env[idx])
+	if (idx >= 0 && !exec->env[idx])
 		return (-1);
 	return (0);
 }
+
 /*
 Description:
 The build_env_var function is designed to create or modify an 
@@ -170,19 +174,20 @@ the environment (idx >= 0)
 -If the variable doesn't exist in the environment (idx < 0), 
 it simply duplicates the arg.
 -If the type is 1 (replace or add) and the variable exists (idx >= 0), 
-it replaces the value of the variable in the environment with the new value. The variable key and the = sign are added to this new value.
+it replaces the value of the variable in the environment with the new value. 
+The variable key and the = sign are added to this new value.
 */
 char	*build_env_var(char *arg, t_exec *exec, int type, int idx)
 {
 	char	**tmp;
 	char	*env_var;
 	char	*tmp_var;
-	
+
 	env_var = NULL;
 	tmp_var = NULL;
 	tmp = key_val_pair(arg);
 	if (tmp[1] == NULL)
-		tmp[1] = ""; 
+		tmp[1] = "";
 	if (type == 2 && idx >= 0)
 		env_var = ft_strjoin(exec->env[idx], tmp[1]);
 	if (idx < 0)

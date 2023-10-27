@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rjobert <rjobert@student.42barcelo>        +#+  +:+       +#+        */
+/*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/13 11:06:06 by rjobert           #+#    #+#             */
-/*   Updated: 2023/10/13 11:06:09 by rjobert          ###   ########.fr       */
+/*   Updated: 2023/10/27 13:02:02 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ instance)
 */
 int	traverse_blank(const char *str, int *n)
 {
-	int sign;
+	int	sign;
 	int	i;
 
 	sign = 1;
@@ -46,12 +46,12 @@ if the string is not terminated (i.e  contained a non-digit or non-space), if
 it never encountered a number (never started looop) or if the number is 
 bigger than upper base 10 limit of LONG_MAX -> invalid (nb_len > 19)
  */
-int valid_number(const char *str)
+int	valid_number(const char *str)
 {
-	int contain_int;
+	int	contain_int;
 	int	frst_nb;
 	int	nb_len;
-	
+
 	contain_int = 0;
 	frst_nb = 0;
 	nb_len = 0;
@@ -66,7 +66,7 @@ int valid_number(const char *str)
 	}
 	while (*str == 32)
 		str++;
-	if ( contain_int == 0 || nb_len > 19 || *str != '\0')
+	if (contain_int == 0 || nb_len > 19 || *str != '\0')
 		return (1);
 	return (0);
 }
@@ -95,6 +95,7 @@ int	check_arg(const char *arg, int i)
 		return (1);
 	return (0);
 }
+
 /*
 atoi with a twist : check number is not bigger than LONG_MAX and is correct 
 (not ++ etc..)
@@ -103,15 +104,15 @@ vs exit --1 which is incorrect
 */
 int	ft_atoi_checker(const char *str, int *flag)
 {
-	int		i;
-	int		sign;
+	int					i;
+	int					sign;
 	unsigned long long	result;
 
 	i = 0;
 	result = 0;
 	if (!ft_strncmp(str, "--", 3))
 		return (0);
-	if(check_arg(str, 0))
+	if (check_arg(str, 0))
 		return (*flag = -1);
 	sign = traverse_blank(str, &i);
 	while (str[i] != '\0' && ('0' <= str[i] && str[i] <= '9'))
@@ -144,6 +145,7 @@ int	exit_err_msg(char *msg, int n, t_exec *exec, char **arg)
 	free_exec(&exec);
 	exit (n);
 }
+
 /*
 -if no argument: exit program with zero 
 -if one argument : check that only contain number and no overflow:
@@ -153,7 +155,7 @@ don't exit, return 1 with message too many params. if in children
 exit
 - display "exit" before exiting only in parent
 */
-int ft_exit(t_exec *exec, char **arg)
+int	ft_exit(t_exec *exec, char **arg)
 {
 	int	flag;
 	int	n;
