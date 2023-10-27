@@ -68,17 +68,21 @@ update_env_dir
 int    ft_cd(t_exec *exec, char **arg)
 {
     char *old_path;
+    char *temp;
 
 	old_path = ft_getenv(exec->env, "PWD");
     if (arg[1] && arg[1][0] == '\0')
         return (0);
     if (!arg[1])
     {
-        if (chdir(extract_path(ft_getenv(exec->env, "HOME"))) == -1)
+        temp = extract_path(ft_getenv(exec->env, "HOME"));
+        if (chdir(temp) == -1)
         {
 		    ft_printf(STDERR_FILENO, "cd: HOME not set\n");
+            free(temp);
             return (1);
         }
+        free(temp);
     }
     else if (check_directory(arg[1]))
         return (1) ;
