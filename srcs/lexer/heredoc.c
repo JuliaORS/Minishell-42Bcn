@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 18:08:01 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/23 18:40:19 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/26 19:23:27 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ char	*join_input(char *input_hd, char *hd_text)
 		str_join = ft_strjoin(hd_text, input_hd);
 		free(hd_text);
 	}
+	free (input_hd);
 	if (!str_join)
 		return (NULL);
 	str_final = ft_strjoin(str_join, "\n");
@@ -36,7 +37,9 @@ int	create_input_hd(t_proc *lst_proc, int *fds, int n_hd, t_exec *exec)
 	char	*input_hd;
 	char	*hd_text;
 	char	*str_exp;
+	int		flag_exp;
 
+	flag_exp = 0;
 	init_signals(HEREDOC);
 	hd_text = NULL;
 	while (1)
@@ -48,15 +51,13 @@ int	create_input_hd(t_proc *lst_proc, int *fds, int n_hd, t_exec *exec)
 		hd_text = join_input(input_hd, hd_text);
 		if (!hd_text)
 			return (12);
-		free (input_hd);
 	}
 	free (input_hd);
-	str_exp = find_dollar_sign(hd_text, exec, 0);
+	str_exp = find_dollar_sign(hd_text, exec, &flag_exp);
 	if (!str_exp)
 		return (12);
 	write(fds[1], str_exp, ft_strlen(str_exp));
-	close(fds[1]);
-	close(fds[0]);
+	free(str_exp);
 	return (0);
 }
 
@@ -96,10 +97,11 @@ int	exec_hd(t_proc *proc, int n_hd, t_exec *exec)
 	if (pid == 0)
 	{
 		exit_hd = create_input_hd(proc, fds, n_hd, exec);
+		close(fds[1]);
+		close(fds[0]);
 		exit (exit_hd);
 	}
-	if (check_hd_exit(pid, exec, fds[0], fds[1]))
-		return (1);
+	check_hd_exit(pid, exec, fds[0], fds[1]);
 	if (proc->intype == 1)
 	{
 		if (proc->fd[0])
