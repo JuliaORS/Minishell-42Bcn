@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rjobert <rjobert@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/27 12:52:29 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/27 13:10:44 by julolle-         ###   ########.fr       */
+/*   Created: 2023/10/27 14:09:29 by rjobert           #+#    #+#             */
+/*   Updated: 2023/10/27 14:09:33 by rjobert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 void	update_env_dir(t_exec *exec, char *old_path, char **arg);
-char	*extract_path(char *keyvalue);
+int		check_path(char *keyvalue);
 void	check_set_pwd(t_exec *exec, char **curr_dir, char **curr_path, \
 	char **arg);
 
@@ -30,28 +30,19 @@ int	check_directory(const char *path)
 	struct stat	path_info;
 
 	if (ft_strlen(path) > FILE_MAX)
-	{
 		ft_printf(STDERR_FILENO, "minishell: cd: %s: File name too long\n", \
 			path);
-		return (1);
-	}
 	if (stat(path, &path_info) < 0)
-	{
 		ft_printf(STDERR_FILENO, \
 			"minishell: cd: %s: No such file or directory\n", path);
-		return (1);
-	}
 	if (!S_ISDIR(path_info.st_mode))
-	{
 		ft_printf(STDERR_FILENO, "minishell: cd: %s: Not a directory\n", path);
-		return (1);
-	}
 	if (access(path, X_OK) < 0)
-	{
-		ft_printf(STDERR_FILENO, "minishell: cd: %s: Permission denied\n", path);
-		return (1);
-	}
-	return (0);
+		ft_printf(STDERR_FILENO, "minishell: cd: %s: Permission denied\n", \
+			path);
+	else
+		return (0);
+	return (1);
 }
 
 /*
@@ -70,21 +61,14 @@ update_env_dir
 int	ft_cd(t_exec *exec, char **arg)
 {
 	char	*old_path;
-	char	*temp;
 
 	old_path = ft_getenv(exec->env, "PWD");
 	if (arg[1] && arg[1][0] == '\0')
 		return (0);
 	if (!arg[1])
 	{
-		temp = extract_path(ft_getenv(exec->env, "HOME"));
-		if (chdir(temp) == -1)
-		{
-			ft_printf(STDERR_FILENO, "cd: HOME not set\n");
-			free(temp);
+		if (check_path(ft_getenv(exec->env, "HOME")) == -1)
 			return (1);
-		}
-		free(temp);
 	}
 	else if (check_directory(arg[1]))
 		return (1);
@@ -121,37 +105,47 @@ void	update_env_dir(t_exec *exec, char *old_path, char **arg)
 	return ;
 }
 
-void	check_set_pwd(t_exec *exec, char **curr_dir, char **curr_path, char **arg)
+void	check_set_pwd(t_exec *exec, char **c_dir, char **c_path, char **arg)
 {
 	char	*reset_pwd;
 
-	if (!*curr_dir)
+	if (!*c_dir)
 	{
 		reset_pwd = ft_strjoin("/", arg[1]);
 		replace_env_var(exec->env, "PWD", \
 			ft_strjoin(ft_getenv(exec->env, "PWD"), reset_pwd));
 		free(reset_pwd);
 		ft_printf(STDERR_FILENO, "cd: error retrieving current directory:"
-			" getcwd: cannot access parent directories: No such file or directory\n");
+			" getcwd: cannot access parent directories: "
+			"No such file or directory\n");
 	}
 	else
 	{
-		*curr_path = ft_strjoin("PWD=", *curr_dir);
-		replace_env_var(exec->env, "PWD", *curr_path);
-		free_pntr(*curr_dir);
-		free_pntr(*curr_path);
+		*c_path = ft_strjoin("PWD=", *c_dir);
+		replace_env_var(exec->env, "PWD", *c_path);
+		free_pntr(*c_dir);
+		free_pntr(*c_path);
 	}
 	return ;
 }
 
-char	*extract_path(char *keyvalue)
+int	check_path(char *keyvalue)
 {
-	int	i;
+	int		i;
+	char	*temp;
 
 	if (!keyvalue)
-		return (NULL);
+		return (-1);
 	i = 0;
 	while (keyvalue[i] != '=')
 		i++;
-	return (ft_substr(keyvalue, i + 1, ft_strlen(keyvalue)));
+	temp = ft_substr(keyvalue, i + 1, ft_strlen(keyvalue));
+	if (chdir(temp) == -1)
+	{
+		ft_printf(STDERR_FILENO, "cd: HOME not set\n");
+		free(temp);
+		return (-1);
+	}
+	free(temp);
+	return (0);
 }

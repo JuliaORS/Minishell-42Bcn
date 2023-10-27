@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rjobert <rjobert@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/13 11:06:06 by rjobert           #+#    #+#             */
-/*   Updated: 2023/10/27 13:02:02 by julolle-         ###   ########.fr       */
+/*   Created: 2023/10/27 14:10:05 by rjobert           #+#    #+#             */
+/*   Updated: 2023/10/27 14:10:08 by rjobert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,38 +38,6 @@ int	traverse_blank(const char *str, int *n)
 	return (sign);
 }
 
-/*
-this to check if a number is valid 
-traverse the string as long as digit and flag that a digit was encountered
-if first non-zero encountered, start measuring. then traverse all the space
-if the string is not terminated (i.e  contained a non-digit or non-space), if
-it never encountered a number (never started looop) or if the number is 
-bigger than upper base 10 limit of LONG_MAX -> invalid (nb_len > 19)
- */
-int	valid_number(const char *str)
-{
-	int	contain_int;
-	int	frst_nb;
-	int	nb_len;
-
-	contain_int = 0;
-	frst_nb = 0;
-	nb_len = 0;
-	while (ft_isdigit(*str))
-	{
-		contain_int = 1;
-		if (*str != '0')
-			frst_nb = 1;
-		if (frst_nb == 1)
-			nb_len++;
-		str++;
-	}
-	while (*str == 32)
-		str++;
-	if (contain_int == 0 || nb_len > 19 || *str != '\0')
-		return (1);
-	return (0);
-}
 /*
 traverse the string and return if valid :
 need to contain number no bigger than LONG MAX

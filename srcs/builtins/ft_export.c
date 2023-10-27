@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rjobert <rjobert@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/27 13:02:21 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/27 13:09:09 by julolle-         ###   ########.fr       */
+/*   Created: 2023/10/27 14:10:17 by rjobert           #+#    #+#             */
+/*   Updated: 2023/10/27 14:10:20 by rjobert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int		check_concat_valid(const char *var);
 int		export_exec(t_exec *exec, char *arg, int type);
 char	*extract_value(char *key_value);
 char	*build_env_var(char *arg, t_exec *exec, int type, int idx);
+char	*rebuild_var(char *env_var, char *tmp_var, char **tmp, char *arg);
 
 /*
 check that the string respect the variabel environment syntax
@@ -49,30 +50,6 @@ int	check_syntax_export(char *var)
 		}
 	}
 	valid = check_concat_valid(var);
-	return (valid);
-}
-
-/*
-Traverse the string, if see += return 2, if see only = return 1
-otherwise return 0
-*/
-int	check_concat_valid(const char *var)
-{
-	int	i;
-	int	valid;
-
-	i = -1;
-	valid = 0;
-	while (var[++i])
-	{
-		if (var[i] == '+')
-		{
-			if (var[i + 1] && var[i + 1] == '=')
-				return (2);
-		}
-		if (var[i] == '=')
-			valid = 1;
-	}
 	return (valid);
 }
 
@@ -193,20 +170,24 @@ char	*build_env_var(char *arg, t_exec *exec, int type, int idx)
 	if (idx < 0)
 		env_var = ft_strdup(arg);
 	else if (type == 1 && idx >= 0)
-	{
-		env_var = extract_variable(arg);
-		tmp_var = ft_strjoin(env_var, "=");
-		free_pntr(env_var);
-		if (!tmp_var)
-		{
-			free_key_val(tmp);
-			return (NULL);
-		}
-		env_var = ft_strjoin(tmp_var, tmp[1]);
-		free_pntr(tmp_var);
-	}
+		env_var = rebuild_var(env_var, tmp_var, tmp, arg);
 	free_key_val(tmp);
 	if (!env_var)
 		return (NULL);
+	return (env_var);
+}
+
+char	*rebuild_var(char *env_var, char *tmp_var, char **tmp, char *arg)
+{
+	env_var = extract_variable(arg);
+	tmp_var = ft_strjoin(env_var, "=");
+	free_pntr(env_var);
+	if (!tmp_var)
+	{
+		free_key_val(tmp);
+		return (NULL);
+	}
+	env_var = ft_strjoin(tmp_var, tmp[1]);
+	free_pntr(tmp_var);
 	return (env_var);
 }

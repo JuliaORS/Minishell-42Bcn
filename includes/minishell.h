@@ -126,11 +126,10 @@ char	**downsize_env(char **env, int idx, int i, int j);
 char	*ft_getenv(char **env, char *target);
 void	replace_env_var(char **env, char *target, char *replace);
 char	*extract_value(char *key_value);
+int		valid_number(const char *str);
 char	*build_env_var(char *arg, t_exec *exec, int type, int idx);
 void	free_xpenv(t_xpenv	**list);
 t_xpenv	*create_xp_env(char **env);
 void	add_expenv(t_xpenv **xpenv, char *env, int type);
-
-/* exec total malloc : pids, pipes, valid_path,   */
 
 #endif
