@@ -14,7 +14,8 @@
 
 int	shlvl_update(int shlvl_);
 /*
-increas the memory size of env array by one char * and copy it
+increas the memory size of env array by one char * and copy it while freeing up
+the memory used from the source
 */
 char	**realloc_env(char **env, char *var)
 {
