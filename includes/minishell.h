@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 17:05:20 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/26 12:06:03 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/26 15:05:11 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int		create_tokens(t_tok **lst_tok, char *input, t_exec *exec);
 int		new_tok(t_tok **lst_tok, char *str, int type, int *exit);
 int		ft_lstsize_tok(t_tok *lst);
 t_tok	*ft_lstlast_tok(t_tok *lst);
-void	ft_print_list_tok(t_tok **lst_tok);
+void	print_tok_list(t_tok **lst_tok);
 void	free_lst_tok(t_tok **lst_tok);
 
 /*expansion*/
@@ -57,7 +57,7 @@ char	*join_str_toks(t_tok **lst_tok);
 int		find_outfile(t_proc *lst_proc, t_tok **lst_tok, int *err);
 int		find_infile(t_proc *lst_proc, t_tok **lst_tok, int *err);
 int		find_heredoc(t_proc *lst_proc, t_tok **lst_tok, int n_hd, int *err);
-void	ft_print_process(t_proc **lst_proc);
+void	print_process_list(t_proc **lst_proc);
 void	free_lst_proc(t_proc **lst_proc);
 
 /*lexer error managment*/
