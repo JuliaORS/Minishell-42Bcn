@@ -6,17 +6,21 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 18:08:01 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/26 19:23:27 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/27 20:16:11 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*join_input(char *input_hd, char *hd_text)
+char	*join_input(char *input_hd, char *hd_text, t_exec *exec)
 {
 	char	*str_join;
 	char	*str_final;
+	char	*str_exp;
+	int		flag_exp;
 
+	flag_exp = 0;
+	str_exp = NULL;
 	if (!hd_text)
 		str_join = ft_strdup(input_hd);
 	else
@@ -28,18 +32,17 @@ char	*join_input(char *input_hd, char *hd_text)
 	if (!str_join)
 		return (NULL);
 	str_final = ft_strjoin(str_join, "\n");
+	if (str_final)
+		str_exp = find_dollar_sign(str_final, exec, &flag_exp);
 	free(str_join);
-	return (str_final);
+	return (str_exp);
 }
 
 int	create_input_hd(t_proc *lst_proc, int *fds, int n_hd, t_exec *exec)
 {
 	char	*input_hd;
 	char	*hd_text;
-	char	*str_exp;
-	int		flag_exp;
 
-	flag_exp = 0;
 	init_signals(HEREDOC);
 	hd_text = NULL;
 	while (1)
@@ -48,16 +51,15 @@ int	create_input_hd(t_proc *lst_proc, int *fds, int n_hd, t_exec *exec)
 		if (!input_hd || !ft_strncmp(input_hd, lst_proc->hd_lim[n_hd], \
 			ft_strlen(lst_proc->hd_lim[n_hd]) + 1))
 			break ;
-		hd_text = join_input(input_hd, hd_text);
+		hd_text = join_input(input_hd, hd_text, exec);
 		if (!hd_text)
 			return (12);
 	}
 	free (input_hd);
-	str_exp = find_dollar_sign(hd_text, exec, &flag_exp);
-	if (!str_exp)
-		return (12);
-	write(fds[1], str_exp, ft_strlen(str_exp));
-	free(str_exp);
+	if (!hd_text)
+		return (0);
+	write(fds[1], hd_text, ft_strlen(hd_text));
+	free(hd_text);
 	return (0);
 }
 
