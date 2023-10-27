@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "minishell.h"
 /*
 init key element for our execution 
@@ -21,10 +20,10 @@ init all the ressources that will use malloc later on to NULL
 */
 void	init_exec(t_exec *exec, char **env)
 {
-	int idx;
+	int	idx;
 
 	if (!exec)
-	{	
+	{
 		error_msg("init empty struct", 0, exec, NULL);
 		return ;
 	}
@@ -37,11 +36,11 @@ void	init_exec(t_exec *exec, char **env)
 	exec->exit[0] = 0;
 	exec->exit[1] = 0;
 	g_exit_sig = 0;
-	exec->env = env_dup(env, 0, 0); 
+	exec->env = env_dup(env, 0, 0);
 	exec->exp_env = create_xp_env(exec->env);
 	if (!exec->env)
 		error_msg(MALLOC_MESS, 0, exec, NULL);
-	shlvl_add(exec, 0, NULL);
+	shlvl_add(exec, 0, NULL, NULL);
 	idx = search_env_var(exec->env, "OLDPWD");
 	if (idx >= 0)
 		exec->env = downsize_env(exec->env, idx, 0, 0);
@@ -50,7 +49,7 @@ void	init_exec(t_exec *exec, char **env)
 int	measure_list(t_proc **list)
 {
 	int		n;
-	t_proc *lst;
+	t_proc	*lst;
 
 	n = 0;
 	if (!*list)
@@ -124,44 +123,4 @@ void	free_split(char ***split_result)
 	}
 	free(*split_result);
 	*split_result = NULL;
-}
-
-int	error_fd_msg(char *msg, t_exec *exec, t_proc *pcs, char *fname)
-{
-	ft_printf(STDERR_FILENO, "minishell: %s: %s\n", fname, msg);
-	if (exec)
-		free_exec(&exec);
-	if (exec->in_parent && is_builtin(pcs))
-		return (EXIT_FAILURE);
-	else
-		exit(EXIT_FAILURE);
-}
-/*
-check that any infile or outfile used in prompt exist or are ok permission-wise
-*/
-int	check_io_fd(t_proc *pcs, t_exec *exec)
-{
-	struct stat st;
-	
-	if (pcs->fd[0] == -1)
-	{
-		if (!stat(pcs->infile, &st) && S_ISDIR(st.st_mode))
-			return(error_fd_msg("Is a directory", exec, pcs, pcs->infile));
-		if (!access(pcs->infile, F_OK) && access(pcs->infile, R_OK))
-			return(error_fd_msg("Permission denied", exec, pcs, pcs->infile));
-		if (access(pcs->infile, F_OK))
-			return (error_fd_msg("No such file or directory", exec, pcs, pcs->infile));
-		return(EXIT_FAILURE);
-	}
-	if (pcs->fd[1] == -1)
-	{	
-		if (!stat(pcs->outfile, &st) && S_ISDIR(st.st_mode))
-			return(error_fd_msg("Is a directory", exec, pcs, pcs->outfile));
-		if (!access(pcs->outfile, F_OK) && access(pcs->outfile, W_OK))
-			return(error_fd_msg("Permission denied", exec, pcs, pcs->outfile));
-		if (access(pcs->outfile, F_OK))
-			return (error_fd_msg("No such file or directory", exec, pcs, pcs->outfile));
-		return(EXIT_FAILURE);
-	}
-	return (0);
 }

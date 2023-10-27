@@ -31,7 +31,7 @@ void	io_redirect(t_proc *pcs, t_exec *exec)
 	int	pos;
 
 	pos = pcs->pos;
-	back_up_stdio(exec , 0);
+	back_up_stdio(exec, 0);
 	if (exec->pipes && pos > 0)
 		dup2(exec->pipes[pos - 1][0], STDIN_FILENO);
 	if (exec->pipes && pos < exec->total_cmd - 1 && exec->total_cmd > 1)
@@ -55,7 +55,8 @@ process. take exec object, use the number of comands (nbr of process),
 return noting but update the exec object with an array of initialized pipes.
 if n process -> (n - 1) pipes.
 each pipe has 2 ends pipe[0, 1] where [0] is read-end and [1] is write end
-so for 3 cmds and no infile/outfile fds we have pipes[0, 1] = [[3,4],[5,6]] so that : 
+so for 3 cmds and no infile/outfile fds we have pipes[0, 1] = [[3,4],[5,6]]
+so that : 
 cmd0 writes to [0][1] (fd 4) - cmd1 read from [0][0] (fd 3)
 cmd1 write to [1][1] (fd 6) - cmd 2 read from [1][0] (fd 5)
 */
@@ -66,7 +67,7 @@ void	pipefd_calibrate(t_exec *exec)
 	int	nb_cmds;
 
 	if (!exec)
-		return;
+		return ;
 	nb_cmds = (exec)->total_cmd;
 	pipes = malloc(sizeof(int *) * (nb_cmds - 1));
 	if (!pipes)

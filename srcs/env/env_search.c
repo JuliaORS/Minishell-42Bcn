@@ -25,8 +25,8 @@ USER and return it's index position
 */
 int	search_env_var(char **env, char *target)
 {
-	int	i;
-	char *var_extract;
+	int		i;
+	char	*var_extract;
 
 	if (!env)
 		return (-1);
@@ -34,10 +34,11 @@ int	search_env_var(char **env, char *target)
 	while (env && env[i])
 	{
 		var_extract = extract_variable(env[i]);
-		if (!ft_strncmp(var_extract, target, ft_strlen(target) + 1) && var_extract)
+		if (!ft_strncmp(var_extract, target, ft_strlen(target) + 1) \
+		&& var_extract)
 		{
 			free_pntr(var_extract);
-			return(i);
+			return (i);
 		}
 		free_pntr(var_extract);
 		i++;
@@ -96,7 +97,7 @@ char	*extract_value(char *key_value)
 
 char	**key_val_pair(char *str)
 {
-	char **matrix;
+	char	**matrix;
 
 	matrix = malloc(sizeof(char *) * 3);
 	matrix[0] = extract_variable(str);
@@ -126,16 +127,4 @@ void	free_key_val(char **kvp)
 	}
 	free_pntr(kvp);
 	kvp = NULL;
-}
-
-/*
-avoid dangling poitner and double free
-*/
-void	free_pntr(void *pntr)
-{
-	if (pntr !=NULL)
-	{
-		free(pntr);
-		pntr = NULL;
-	}
 }
