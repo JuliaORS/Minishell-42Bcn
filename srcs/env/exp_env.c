@@ -98,14 +98,14 @@ void	add_expenv(t_xpenv **xpenv, char *env, int type)
 		return ;
 	}
 	head = *xpenv;
-	while (head)
+	if (search_n_replace(head, env, type) == 1)
 	{
-		if (search_n_replace(head, env, type) == 1)
-		{
-			free(node->var);
-			free(node);
-			return;
-		}
+		free_pntr(node->var);
+		free(node);
+		return;
+	}
+	while(head)
+	{
 		if (!head->next)
 			break;
 		head = head->next;

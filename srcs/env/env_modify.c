@@ -106,7 +106,7 @@ int	shlvl_add(t_exec *exec, int idx, char *tmp)
 
 	tmp_join = extract_variable("SHLVL=") ;
 	idx = search_env_var(exec->env, tmp_join);
-	free_pntr((void *) tmp_join);
+	free_pntr(tmp_join);
 	if (idx == -1)
 		return (export_exec(exec, "SHLVL=1", 1));
 	temp = key_val_pair(exec->env[idx]);
@@ -123,7 +123,7 @@ int	shlvl_add(t_exec *exec, int idx, char *tmp)
 	free_key_val(temp);
 	if (!tmp)
 		return (0);
-	export_exec(exec, tmp, 1);
+	export_exec(exec, tmp, 1);  //HERE IS THE LEAK
 	free_pntr(tmp);
 	return (1);
 }

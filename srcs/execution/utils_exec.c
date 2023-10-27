@@ -38,13 +38,13 @@ void	init_exec(t_exec *exec, char **env)
 	exec->exit[1] = 0;
 	g_exit_sig = 0;
 	exec->env = env_dup(env, 0, 0); 
+	exec->exp_env = create_xp_env(exec->env);
 	if (!exec->env)
 		error_msg(MALLOC_MESS, 0, exec, NULL);
 	shlvl_add(exec, 0, NULL);
 	idx = search_env_var(exec->env, "OLDPWD");
 	if (idx >= 0)
 		exec->env = downsize_env(exec->env, idx, 0, 0);
-	exec->exp_env = create_xp_env(exec->env);
 }
 
 int	measure_list(t_proc **list)
@@ -141,8 +141,6 @@ check that any infile or outfile used in prompt exist or are ok permission-wise
 */
 int	check_io_fd(t_proc *pcs, t_exec *exec)
 {
-	// ft_printf(2, "in the cmd %s the fd[%i] is %i for infile %s\n", pcs->arg[0], 0, pcs->fd[0], pcs->infile);
-	// ft_printf(2, "in the cmd %s the fd[%i] is %i for infile %s\n", pcs->arg[0], 1, pcs->fd[1], pcs->outfile);
 	struct stat st;
 	
 	if (pcs->fd[0] == -1)

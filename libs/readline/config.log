@@ -46,6 +46,7 @@ PATH: /sbin/
 PATH: /Applications/VMware Fusion.app/Contents/Public/
 PATH: /usr/local/go/bin/
 PATH: /usr/local/munki/
+PATH: /Users/rjobert/.brew/bin/
 PATH: /opt/anaconda3/condabin/
 PATH: /opt/anaconda3/condabin/
 
@@ -1939,7 +1940,9 @@ configure:7077: checking for tgetent
 configure:7077: gcc -o conftest -g -O2   conftest.c  >&5
 Undefined symbols for architecture x86_64:
   "_tgetent", referenced from:
-      _main in conftest-ae6c40.o
+
+      _main in conftest-3ee552.o
+
 ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:7077: $? = 1
@@ -2234,7 +2237,9 @@ configure:7424: checking for mbscasecmp
 configure:7424: gcc -o conftest -g -O2   conftest.c  >&5
 Undefined symbols for architecture x86_64:
   "_mbscasecmp", referenced from:
-      _main in conftest-e80472.o
+
+      _main in conftest-932e64.o
+
 ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:7424: $? = 1
@@ -2374,7 +2379,9 @@ configure:7431: checking for mbscmp
 configure:7431: gcc -o conftest -g -O2   conftest.c  >&5
 Undefined symbols for architecture x86_64:
   "_mbscmp", referenced from:
-      _main in conftest-93b237.o
+
+      _main in conftest-6c6443.o
+
 ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:7431: $? = 1
@@ -2522,7 +2529,9 @@ configure:7453: checking for mbschr
 configure:7453: gcc -o conftest -g -O2   conftest.c  >&5
 Undefined symbols for architecture x86_64:
   "_mbschr", referenced from:
-      _main in conftest-455a3c.o
+
+      _main in conftest-925922.o
+
 ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:7453: $? = 1
