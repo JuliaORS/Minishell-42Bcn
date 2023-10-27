@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 12:10:04 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/26 11:17:50 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/27 18:39:50 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ char	*create_final_str(char *str_exp, char *beg_str, char *end_str, int *i)
 	char	*mid_str;
 	char	*final_str;
 
+	mid_str = NULL;
+	final_str = NULL;
 	if (!str_exp)
 	{
 		final_str = ft_strjoin(beg_str, end_str);
