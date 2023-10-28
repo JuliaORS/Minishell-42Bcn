@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 14:56:40 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/28 13:06:46 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/28 13:08:15 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,7 @@ void	print_process_list(t_proc **lst_proc)
 	while (*lst_proc)
 	{
 		i = 0;
-		ft_printf (1
-		, "\nNUM PROCESS: %i\n", (*lst_proc)->pos);
+		ft_printf (1, "\nNUM PROCESS: %i\n", (*lst_proc)->pos);
 		if ((*lst_proc)->arg)
 		{
 			while ((*lst_proc)->arg[i])
