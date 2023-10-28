@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 14:56:40 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/26 15:10:00 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/28 11:54:17 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	print_process_list(t_proc **lst_proc)
 		{
 			while ((*lst_proc)->arg[i])
 			{
-				printf("arg[%i]-> '%s'\n", i, (*lst_proc)->arg[i]);
+				ft_printf(1, "arg[%i]-> '%s'\n", i, (*lst_proc)->arg[i]);
 				i++;
 			}
 		}
