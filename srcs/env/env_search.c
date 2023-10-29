@@ -34,13 +34,15 @@ int	search_env_var(char **env, char *target)
 	while (env && env[i])
 	{
 		var_extract = extract_variable(env[i]);
-		if (!ft_strncmp(var_extract, target, ft_strlen(target) + 1) \
-		&& var_extract)
+		if (var_extract)
 		{
+			if (!ft_strncmp(var_extract, target, ft_strlen(target) + 1))
+			{
+				free_pntr(var_extract);
+				return (i);
+			}
 			free_pntr(var_extract);
-			return (i);
 		}
-		free_pntr(var_extract);
 		i++;
 	}
 	return (-1);
