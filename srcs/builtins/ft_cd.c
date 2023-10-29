@@ -32,12 +32,12 @@ int	check_directory(const char *path)
 	if (ft_strlen(path) > FILE_MAX)
 		ft_printf(STDERR_FILENO, "minishell: cd: %s: File name too long\n", \
 			path);
-	if (stat(path, &path_info) < 0)
+	else if (stat(path, &path_info) < 0)
 		ft_printf(STDERR_FILENO, \
 			"minishell: cd: %s: No such file or directory\n", path);
-	if (!S_ISDIR(path_info.st_mode))
+	else if (!S_ISDIR(path_info.st_mode))
 		ft_printf(STDERR_FILENO, "minishell: cd: %s: Not a directory\n", path);
-	if (access(path, X_OK) < 0)
+	else if (access(path, X_OK) < 0)
 		ft_printf(STDERR_FILENO, "minishell: cd: %s: Permission denied\n", \
 			path);
 	else
