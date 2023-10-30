@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 17:05:20 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/26 15:05:11 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/30 17:19:43 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # include "defines.h"
 
 /*parser and tokenization*/
+int		void_input(char *input);
 int		manage_input(char *line, t_proc **lst_proc, t_exec *exec);
 int		parsing_input(char *line, int *exit);
 int		create_tokens(t_tok **lst_tok, char *input, t_exec *exec);

@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 16:19:21 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/30 11:42:07 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/30 17:13:23 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	start_ms(char *input, t_exec *exec)
 	t_proc	*lst_proc;
 
 	lst_proc = NULL;
-	if (ft_strlen(input) != 0)
+	if (void_input(input))
 	{
 		init_error(exec);
 		exec->exit[0] = manage_input(input, &lst_proc, exec);
