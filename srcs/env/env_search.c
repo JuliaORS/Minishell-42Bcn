@@ -49,8 +49,10 @@ int	search_env_var(char **env, char *target)
 }
 
 /*
-traverse key_value char * and return the substring of all characters
-before the '=', if no '=' encountered return NULL
+Finds the = sign in the key_value.
+If the = is preceded by a +, it extracts the string before +=. Otherwise,
+it extracts the string before =.
+If no = sign is found, it returns NULL.
 */
 char	*extract_variable(char *key_value)
 {

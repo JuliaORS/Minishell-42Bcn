@@ -41,6 +41,7 @@ int	ft_unset(t_exec *exec, char **arg)
 					ft_printf(STDERR_FILENO, \
 						"minishell: unset: calloc failed\n");
 			}
+			delete_node_xpenv(&exec->exp_env, arg[i]);
 		}
 		i++;
 	}
@@ -63,9 +64,9 @@ int	check_syntax_unset(char *var)
 		return (0);
 	}
 	i = -1;
-	while (var[++i] && var[i] != '=')
+	while (var[++i])
 	{
-		if (!ft_isalnum(var[i]) && var[i] != '_')
+		if (!ft_isalnum(var[i]) && var[i] != '_' && var[i] == '=')
 		{
 			ft_printf(STDERR_FILENO, \
 				"minishell: export: `%s': not a valid identifier\n", var);

@@ -21,8 +21,8 @@ t_proc	*ft_lstnew_proc(void)
 		return (NULL);
 	newcont->arg = NULL;
 	newcont->pos = 0;
-	newcont->fd[0] = 0;
-	newcont->fd[1] = 0;
+	newcont->fd[0] = -2;
+	newcont->fd[1] = -2;
 	newcont->intype = 0;
 	newcont->infile = NULL;
 	newcont->outfile = NULL;

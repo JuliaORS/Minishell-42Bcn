@@ -130,6 +130,7 @@ int		valid_number(const char *str);
 char	*build_env_var(char *arg, t_exec *exec, int type, int idx);
 void	free_xpenv(t_xpenv	**list);
 t_xpenv	*create_xp_env(char **env);
+void	delete_node_xpenv(t_xpenv **head_ref, char *env);
 void	add_expenv(t_xpenv **xpenv, char *env, int type);
 
 #endif

@@ -14,6 +14,11 @@
 
 char	*exp_env_format(char *env, int type);
 
+/* Creates a new node for the export environment list based on the provided env 
+string and the operation type. Allocates memory for the new node, sets the type, 
+and formats the environment variable using exp_env_format. Returns the 
+created node.
+*/
 t_xpenv	*node_exp_env(char *env, int type)
 {
 	t_xpenv	*exp_env;
@@ -28,7 +33,12 @@ t_xpenv	*node_exp_env(char *env, int type)
 	exp_env->var = exp_env_format(env, type);
 	return (exp_env);
 }
-
+/*
+Creates a new node for the export environment list based on the provided env 
+string and the operation type.
+Allocates memory for the new node, sets the type, and formats the environment 
+variable using exp_env_format. Returns the created node.
+*/
 char	*exp_env_format(char *env, int type)
 {
 	char	*value;
@@ -54,6 +64,11 @@ char	*exp_env_format(char *env, int type)
 	return (temp_var);
 }
 
+/*
+Searches for an environment variable in the export environment list.
+If found, replaces the variable in the list with a formatted version and 
+returns 1. Otherwise, returns 0.
+*/
 int	search_n_replace(t_xpenv *head, char *env, char *temp, int type)
 {
 	char	*temp_node;
@@ -82,7 +97,12 @@ int	search_n_replace(t_xpenv *head, char *env, char *temp, int type)
 	free(temp);
 	return (0);
 }
-
+/*
+Adds a new environment variable to the export environment list.
+Creates a new node using node_exp_env.
+If the variable already exists in the list, replaces it. Otherwise, 
+appends the new node to the end of the list.
+*/
 void	add_expenv(t_xpenv **xpenv, char *env, int type)
 {
 	t_xpenv	*node;
