@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 14:56:40 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/28 13:08:15 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/30 15:12:30 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ void	print_process_aux(t_proc *lst_proc)
 	int	i;
 
 	i = 0;
-	ft_printf(1, "arg[%i]-> '%s'\n", i, lst_proc->arg[i]);
 	ft_printf(1, "infile-> '%s' i fd = %i\n", lst_proc->infile, \
 		lst_proc->fd[0]);
 	ft_printf(1, "outfile-> '%s' i fd = %i\n", lst_proc->outfile, \
@@ -51,7 +50,9 @@ void	print_process_list(t_proc **lst_proc)
 				ft_printf(1, "arg[%i]-> '%s'\n", i, (*lst_proc)->arg[i]);
 				i++;
 			}
+			ft_printf(1, "arg[%i]-> '%s'\n", i, (*lst_proc)->arg[i]);
 		}
+		print_process_aux(*lst_proc);
 		(*lst_proc) = (*lst_proc)->next;
 	}
 	*lst_proc = tmp;
