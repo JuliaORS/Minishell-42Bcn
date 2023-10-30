@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 11:31:22 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/14 17:00:38 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/30 11:45:41 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ void	heredoc_handler(int signal, siginfo_t *data, void *n_data)
 	(void) n_data;
 	if (signal == SIGINT)
 	{
-		g_exit_sig = 1;
 		ft_putstr_fd("\n", STDERR_FILENO);
 		rl_replace_line("", 1);
 		exit(1);
@@ -45,13 +44,11 @@ void	exec_handler(int signal, siginfo_t *data, void *n_data)
 	(void) n_data;
 	if (signal == SIGINT)
 	{
-		g_exit_sig = 130;
 		ft_putstr_fd("\n", STDERR_FILENO);
 		rl_replace_line("", 1);
 	}
 	else if (signal == SIGQUIT)
 	{
-		g_exit_sig = 131;
 		ft_putstr_fd("Quit: 3\n", STDERR_FILENO);
 		rl_replace_line("", 1);
 	}
