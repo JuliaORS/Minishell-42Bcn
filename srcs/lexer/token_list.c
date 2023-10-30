@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 12:52:12 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/27 18:39:40 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/30 09:42:32 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,11 @@ void	create_tok_space(t_tok **lst_tok, char *line, int *i, int *exit)
 	len = 0;
 	while (line[len] == ' ' || line[len] == '\0')
 		len++;
-	if (new_tok(lst_tok, NULL, 3, exit))
-		return ;
+	if (*lst_tok)
+	{
+		if (new_tok(lst_tok, NULL, 3, exit))
+			return ;
+	}
 	*i = *i + len - 1;
 }
 
