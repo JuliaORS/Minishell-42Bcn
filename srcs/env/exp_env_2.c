@@ -71,7 +71,7 @@ void	delete_node_xpenv(t_xpenv **head_ref, char *env)
 	prev = NULL;
 	while (temp)
 	{
-		if (!ft_strncmp(env, temp->var, ft_strlen(env)))
+		if (!ft_strncmp(env, temp->var, ft_strlen(env) + 1))
 		{
 			if (prev)
 				prev->next = temp->next;

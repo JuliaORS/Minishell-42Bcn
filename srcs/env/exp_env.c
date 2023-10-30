@@ -13,6 +13,7 @@
 #include "minishell.h"
 
 char	*exp_env_format(char *env, int type);
+void	replace_xp_node(t_xpenv **node, char *env, int type);
 
 /* Creates a new node for the export environment list based on the provided env 
 string and the operation type. Allocates memory for the new node, sets the type, 
@@ -84,10 +85,9 @@ int	search_n_replace(t_xpenv *head, char *env, char *temp, int type)
 			temp_node = ft_strdup(head->var);
 		else
 			temp_node = extract_variable(head->var);
-		if (!ft_strncmp(temp, temp_node, ft_strlen(temp)))
+		if (!ft_strncmp(temp, temp_node, ft_strlen(temp) + 1))
 		{
-			free(head->var);
-			head->var = exp_env_format(env, type);
+			replace_xp_node(&head, env, type);
 			free(temp_node);
 			free(temp);
 			return (1);
@@ -132,4 +132,20 @@ void	add_expenv(t_xpenv **xpenv, char *env, int type)
 		head = head->next;
 	}
 	head->next = node;
+}
+
+/*
+swithcing and replacing node
+unction created just because of norminette ( < 25 lines)
+*/
+void	replace_xp_node(t_xpenv **node, char *env, int type)
+{
+	t_xpenv	*head;
+
+	head = *node;
+	if (!head)
+		return ;
+	free(head->var);
+	head->var = exp_env_format(env, type);
+	head->type = type;
 }
