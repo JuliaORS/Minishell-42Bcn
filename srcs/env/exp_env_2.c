@@ -32,9 +32,11 @@ t_xpenv	*create_xp_env(char **env)
 	}
 	return (exp_env);
 }
+
 /*
 Frees the entire export environment list.
-Iterates through each node in the list, frees the variable, and then the node itself.
+Iterates through each node in the list, frees the variable, and then the node 
+itself.
 */
 void	free_xpenv(t_xpenv	**list)
 {
@@ -57,29 +59,29 @@ void	free_xpenv(t_xpenv	**list)
 /*
 Deletes a specific node in the export environment list that matches the 
 provided env string.
-If the node to delete is found, it updates the next pointers, frees the variable, 
-and then the node itself.
+If the node to delete is found, it updates the next pointers, frees the 
+variable, and then the node itself.
 */
 void	delete_node_xpenv(t_xpenv **head_ref, char *env)
 {
-    t_xpenv *temp;
-	t_xpenv *prev;
-	
+	t_xpenv	*temp;
+	t_xpenv	*prev;
+
 	temp = *head_ref;
 	prev = NULL;
-    while (temp)
-    {
-        if (!ft_strncmp(env, temp->var, ft_strlen(env)))
-        {
+	while (temp)
+	{
+		if (!ft_strncmp(env, temp->var, ft_strlen(env)))
+		{
 			if (prev)
-                prev->next = temp->next; // Remove middle/end node
-            else
-                *head_ref = temp->next;  // Remove head node
-            free_pntr(temp->var);
-            free_pntr(temp);
-            return ;
-        }
-        prev = temp;
-        temp = temp->next;
-    }
+				prev->next = temp->next;
+			else
+				*head_ref = temp->next;
+			free_pntr(temp->var);
+			free_pntr(temp);
+			return ;
+		}
+		prev = temp;
+		temp = temp->next;
+	}
 }

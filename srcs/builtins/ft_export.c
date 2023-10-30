@@ -171,13 +171,14 @@ char	*build_env_var(char *arg, t_exec *exec, int type, int idx)
 		env_var = ft_strjoin(exec->env[idx], tmp[1]);
 	else if (idx < 0 && type != 2)
 		env_var = ft_strdup(arg);
-	else if ((type == 1 && idx >= 0) || (idx < 0 && type == 2 ))
+	else if ((type == 1 && idx >= 0) || (idx < 0 && type == 2))
 		env_var = rebuild_var(env_var, tmp_var, tmp, arg);
 	free_key_val(tmp);
 	if (!env_var)
 		return (NULL);
 	return (env_var);
 }
+
 /*
 Extracts the variable name from arg using extract_variable() before = or +=.
 Joins the extracted variable with =.
