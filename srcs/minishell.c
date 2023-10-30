@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 16:19:21 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/27 14:40:38 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/30 11:42:07 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void	main_loop(t_exec *exec)
 	{
 		init_signals(READ);
 		input = readline("minishell$🦄");
+		update_error(exec);
 		if (input)
 			add_history(input);
 		if (!input)
