@@ -33,6 +33,7 @@ t_xpenv	*node_exp_env(char *env, int type)
 	exp_env->var = exp_env_format(env, type);
 	return (exp_env);
 }
+
 /*
 Creates a new node for the export environment list based on the provided env 
 string and the operation type.
@@ -97,6 +98,7 @@ int	search_n_replace(t_xpenv *head, char *env, char *temp, int type)
 	free(temp);
 	return (0);
 }
+
 /*
 Adds a new environment variable to the export environment list.
 Creates a new node using node_exp_env.
