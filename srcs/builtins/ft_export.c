@@ -148,8 +148,10 @@ NULL if there is a failure in processing (like memory allocation errors)
 -If the type is 2 (concatenate) and the variable already exists in 
 the environment (idx >= 0)
  it concatenates the new value to the existing value.
--If the variable doesn't exist in the environment (idx < 0), 
-it simply duplicates the arg.
+-If the variable doesn't exist in the environment (idx < 0) and is not 
+concat (+=), it simply duplicates the arg.
+- if it is dooesnt exist but is entered as concat (+= ) we use the rebuild
+function
 -If the type is 1 (replace or add) and the variable exists (idx >= 0), 
 it replaces the value of the variable in the environment with the new value. 
 The variable key and the = sign are added to this new value.
@@ -167,16 +169,20 @@ char	*build_env_var(char *arg, t_exec *exec, int type, int idx)
 		tmp[1] = "";
 	if (type == 2 && idx >= 0)
 		env_var = ft_strjoin(exec->env[idx], tmp[1]);
-	if (idx < 0)
+	else if (idx < 0 && type != 2)
 		env_var = ft_strdup(arg);
-	else if (type == 1 && idx >= 0)
+	else if ((type == 1 && idx >= 0) || (idx < 0 && type == 2 ))
 		env_var = rebuild_var(env_var, tmp_var, tmp, arg);
 	free_key_val(tmp);
 	if (!env_var)
 		return (NULL);
 	return (env_var);
 }
-
+/*
+Extracts the variable name from arg using extract_variable() before = or +=.
+Joins the extracted variable with =.
+Joins the result with the value.
+*/
 char	*rebuild_var(char *env_var, char *tmp_var, char **tmp, char *arg)
 {
 	env_var = extract_variable(arg);
