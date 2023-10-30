@@ -6,11 +6,27 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 19:06:32 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/27 14:40:16 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/30 17:13:28 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	void_input(char *input)
+{
+	int	i;
+
+	i = 0;
+	if (!ft_strlen(input))
+		return (0);
+	while (input[i])
+	{
+		if (input[i] != ' ' && input[i] != '\t')
+			return (1);
+		i++;
+	}
+	return (0);
+}
 
 int	manage_input(char *line, t_proc **lst_proc, t_exec *exec)
 {
