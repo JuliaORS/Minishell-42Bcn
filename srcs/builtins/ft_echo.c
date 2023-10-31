@@ -56,9 +56,9 @@ int	ft_echo(t_exec *exec, char **arg)
 	i = 0;
 	if (flag == 1)
 		i = 1;
-	if (arg[++i])
+	if (arg && arg[++i])
 	{
-		while (check_flag(arg[i]))
+		while (arg[i] && check_flag(arg[i]))
 			i++;
 		while (arg && arg[i])
 		{
