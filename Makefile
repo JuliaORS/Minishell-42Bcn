@@ -6,7 +6,7 @@
 #    By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/03 17:22:44 by julolle-          #+#    #+#              #
-#    Updated: 2023/10/25 13:38:39 by julolle-         ###   ########.fr        #
+#    Updated: 2023/10/31 11:02:11 by julolle-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,6 +42,7 @@ PRINTF		= $(PRINTF_PATH)/libftprintf.a
 
 RLINE_PATH	= libs/readline/
 RLINE		= $(RLINE_PATH)/libreadline.a
+RLINE_H		= $(RLINE_PATH)/libhistory.a
 
 LIB_PATH	= -L$(LIBFT_PATH) -L$(PRINTF_PATH) -L$(RLINE_PATH) 
 LIB_FLAGS	= $(LIBFT) $(PRINTF) -lreadline -ltermcap 
@@ -79,8 +80,8 @@ cleanrl:
 	@make -s -C $(RLINE_PATH) mostlyclean
 	@echo "$(PINK)READLINE removed$(DEF_COLOR)"
 
-$(NAME):  $(OBJ)
-	@$(CC) $(OBJ) -o $(NAME) $(LIB_FLAGS) $(LIB_PATH)
+$(NAME)::  $(OBJ) ./$(LIBFT) ./$(PRINTF) ./$(RLINE) ./$(RLINE_H)
+	@$(CC) $(CFLAGS) $(^) -ltermcap -lreadline -o $(NAME)
 	@echo "$(GREEN)MINISHELL compiled :D$(DEF_COLOR)"
 
 subsystems:
@@ -99,10 +100,10 @@ $(RLINE):
 	@$(MAKE) -C $(RLINE_PATH) --no-print-directory
 	@echo "$(CIAN)READLINE compiled$(DEF_COLOR)"
 
-$(OBJ_PATH)%.o: $(SRC_PATH)%.c Makefile $(LIBFT) $(PRINTF) $(HEADER)
+$(OBJ_PATH)%.o: $(SRC_PATH)%.c Makefile $(HEADER)
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
--include $(DEP)
+-include ${DEP}
 
 # Phony
 .PHONY: all clean fclean re cleanrl
