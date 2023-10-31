@@ -6,7 +6,7 @@
 /*   By: julolle- <julolle-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 16:19:21 by julolle-          #+#    #+#             */
-/*   Updated: 2023/10/30 17:13:23 by julolle-         ###   ########.fr       */
+/*   Updated: 2023/10/31 12:50:18 by julolle-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,11 @@ void	main_loop(t_exec *exec)
 		if (input)
 			add_history(input);
 		if (!input)
+		{
+			if (isatty(STDIN_FILENO))
+				ft_printf(STDIN_FILENO, "exit\n");
 			break ;
+		}
 		signal(SIGINT, SIG_IGN);
 		start_ms(input, exec);
 		free (input);
