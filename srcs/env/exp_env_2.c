@@ -62,16 +62,19 @@ provided env string.
 If the node to delete is found, it updates the next pointers, frees the 
 variable, and then the node itself.
 */
-void	delete_node_xpenv(t_xpenv **head_ref, char *env)
+void	delete_node_xpenv(t_xpenv **head_ref, char *env, t_xpenv *prev)
 {
 	t_xpenv	*temp;
-	t_xpenv	*prev;
+	char	*tmp;
 
 	temp = *head_ref;
-	prev = NULL;
 	while (temp)
 	{
-		if (!ft_strncmp(env, temp->var, ft_strlen(env) + 1))
+		if (ft_strrchr(temp->var, '='))
+			tmp = extract_variable(temp->var);
+		else
+			tmp = ft_strdup(temp->var);
+		if (!ft_strncmp(env, tmp, ft_strlen(env) + 1))
 		{
 			if (prev)
 				prev->next = temp->next;
@@ -79,9 +82,11 @@ void	delete_node_xpenv(t_xpenv **head_ref, char *env)
 				*head_ref = temp->next;
 			free_pntr(temp->var);
 			free_pntr(temp);
+			free_pntr(tmp);
 			return ;
 		}
 		prev = temp;
 		temp = temp->next;
+		free_pntr(tmp);
 	}
 }

@@ -41,7 +41,7 @@ int	ft_unset(t_exec *exec, char **arg)
 					ft_printf(STDERR_FILENO, \
 						"minishell: unset: calloc failed\n");
 			}
-			delete_node_xpenv(&exec->exp_env, arg[i]);
+			delete_node_xpenv(&exec->exp_env, arg[i], NULL);
 		}
 		i++;
 	}
