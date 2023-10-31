@@ -60,16 +60,16 @@ int	check_syntax_unset(char *var)
 	if (!ft_isalpha(var[0]) && var[0] != '_')
 	{
 		ft_printf(STDERR_FILENO, \
-			"minishell: export: `%s': not a valid identifier\n", var);
+			"minishell: unset: `%s': not a valid identifier\n", var);
 		return (0);
 	}
 	i = -1;
 	while (var[++i])
 	{
-		if (!ft_isalnum(var[i]) && var[i] != '_' && var[i] == '=')
+		if ((!ft_isalnum(var[i]) && !(var[i] == '_')) || var[i] == '=')
 		{
 			ft_printf(STDERR_FILENO, \
-				"minishell: export: `%s': not a valid identifier\n", var);
+				"minishell: unset: `%s': not a valid identifier\n", var);
 			return (0);
 		}
 	}
